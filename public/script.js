@@ -32,12 +32,15 @@ const randomColumn = () => {
 const randomStart = () => Math.floor(Math.random() * (10 * fontSize) * -1);
 
 const writeStuff = () => {
-  let YLOC = randomStart();
   let XLOC = randomColumn() * fontSize;
+  let YLOC = randomStart();
   const drawInterval = setInterval(() => {
     const randChar = string.charAt(
       Math.floor(Math.random() * string.length - 1)
     );
+    ctx.fillStyle = "rgba(0, 0, 0, 0.75)";
+    ctx.fillRect(XLOC, YLOC, fontSize, fontSize);
+
     ctx.fillStyle = `${settledColor}`;
     ctx.fillText(randChar, XLOC, YLOC);
     YLOC += fontSize;
