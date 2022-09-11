@@ -38,6 +38,7 @@ const writeStuff = () => {
   let YLOC = randomStart();
 
   let lastChar = null;
+  let secondLastChar = null;
 
   const drawInterval = setInterval(() => {
     const randChar = string.charAt(
@@ -47,9 +48,15 @@ const writeStuff = () => {
     ctx.fillStyle = "rgba(0, 0, 0, 0.75)";
     ctx.fillRect(XLOC, YLOC, fontSize, fontSize);
 
+    if (secondLastChar) {
+      ctx.fillStyle = `${settledColor}`;
+      ctx.fillText(secondLastChar, XLOC, YLOC - fontSize * 2);
+    }
+
     if (lastChar) {
       ctx.fillStyle = `${secondColor}`;
       ctx.fillText(lastChar, XLOC, YLOC - fontSize);
+      secondLastChar = lastChar;
     }
 
     ctx.fillStyle = `${initialColor}`;
