@@ -30,6 +30,7 @@ const randomColumn = () => {
 };
 
 const randomStart = () => Math.floor(Math.random() * (10 * fontSize) * -1);
+const randomSpeed = () => Math.floor(Math.random() * (250 - 50 + 1)) + 50;
 
 const writeStuff = () => {
   let XLOC = randomColumn() * fontSize;
@@ -48,7 +49,7 @@ const writeStuff = () => {
       // console.log("Kill me");
       window.clearInterval(drawInterval);
     }
-  }, 100);
+  }, randomSpeed());
 };
 
 window.setInterval(() => {
