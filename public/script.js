@@ -54,7 +54,7 @@ const writeStuff = () => {
 
 window.setInterval(() => {
   writeStuff();
-}, 500);
+}, 300);
 
 window.setInterval(() => {
   ctx.fillStyle = "rgba(0, 0, 0, 0.105)";
