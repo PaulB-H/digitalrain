@@ -45,7 +45,7 @@ const writeStuff = () => {
       Math.floor(Math.random() * string.length - 1)
     );
 
-    ctx.fillStyle = "rgba(0, 0, 0, 0.75)";
+    ctx.fillStyle = "rgba(0, 0, 0, 0.85)";
     ctx.fillRect(XLOC, YLOC, fontSize, fontSize);
 
     if (secondLastChar) {
@@ -70,7 +70,7 @@ const writeStuff = () => {
   }, randomSpeed());
 };
 
-window.setInterval(() => {
+const startWriting = window.setInterval(() => {
   writeStuff();
 }, 300);
 
@@ -78,3 +78,9 @@ window.setInterval(() => {
   ctx.fillStyle = "rgba(0, 0, 0, 0.105)";
   ctx.fillRect(0, 0, canvas.width, canvas.height);
 }, 100);
+
+window.addEventListener("resize", () => {
+  canvas.width = window.innerWidth;
+  canvas.height = window.innerHeight;
+  ctx.font = `${fontSize}px "Cutive Mono", monospace`;
+});
