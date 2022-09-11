@@ -38,6 +38,7 @@ const writeStuff = () => {
     const randChar = string.charAt(
       Math.floor(Math.random() * string.length - 1)
     );
+    ctx.fillStyle = `${settledColor}`;
     ctx.fillText(randChar, XLOC, YLOC);
     YLOC += fontSize;
   }, 100);
@@ -46,3 +47,8 @@ const writeStuff = () => {
 window.setInterval(() => {
   writeStuff();
 }, 500);
+
+window.setInterval(() => {
+  ctx.fillStyle = "rgba(0, 0, 0, 0.105)";
+  ctx.fillRect(0, 0, canvas.width, canvas.height);
+}, 100);
