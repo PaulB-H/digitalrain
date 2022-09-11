@@ -1,3 +1,4 @@
-An implementation of "Digital Rain"
+An implementation of "Matrix Digital Rain"
 
-https://en.wikipedia.org/wiki/Matrix_digital_rain
+See it live:
+https://paulb-h.github.io/digitalrain/
