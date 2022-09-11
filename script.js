@@ -62,8 +62,8 @@ const writeStuff = () => {
     ctx.fillStyle = `${initialColor}`;
     ctx.fillText(randChar, XLOC, YLOC);
     YLOC += fontSize;
-    if (YLOC > window.innerHeight) {
-      // console.log("Kill me");
+    if (YLOC > window.innerHeight + fontSize * 2) {
+      // console.log("Am kill");
       window.clearInterval(drawInterval);
     }
     lastChar = randChar;
