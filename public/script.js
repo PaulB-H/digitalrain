@@ -44,6 +44,10 @@ const writeStuff = () => {
     ctx.fillStyle = `${settledColor}`;
     ctx.fillText(randChar, XLOC, YLOC);
     YLOC += fontSize;
+    if (YLOC > window.innerHeight) {
+      // console.log("Kill me");
+      window.clearInterval(drawInterval);
+    }
   }, 100);
 };
 
