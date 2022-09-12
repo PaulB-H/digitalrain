@@ -34,7 +34,7 @@ let colsActive = 0;
 let colTracker = new Set();
 
 const createWriteStream = () => {
-  if (colsActive > window.innerWidth / fontSize) return;
+  if (colsActive > window.innerWidth / (0.7 * fontSize)) return;
 
   let XLOC = randomColumn() * (0.7 * fontSize);
   let YLOC = randomYStart();
