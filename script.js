@@ -30,12 +30,34 @@ const randomColumn = () => {
   return Math.ceil(Math.random() * columns);
 };
 
+let colsActive = 0;
+
+let colTracker = new Set();
+
 const randomStart = () => Math.floor(Math.random() * (10 * fontSize) * -1);
 const randomSpeed = () => Math.floor(Math.random() * (250 - 50 + 1)) + 50;
 
 const writeStuff = () => {
+  if (colsActive > window.innerWidth / fontSize) {
+    console.log("Too many col's active...");
+    return;
+  }
+
   let XLOC = randomColumn() * fontSize;
   let YLOC = randomStart();
+
+  let colExist = false;
+  colTracker.forEach((item, idx) => {
+    if (item.col === XLOC && item.date + 3000 > Date.now()) {
+      colExist = true;
+      return;
+    }
+  });
+  if (colExist) return;
+
+  colsActive++;
+
+  colTracker.add({ col: XLOC, date: Date.now() });
 
   let lastChar = null;
   let secondLastChar = null;
@@ -65,6 +87,7 @@ const writeStuff = () => {
     if (YLOC > window.innerHeight + fontSize * 2) {
       // console.log("Am kill");
       window.clearInterval(drawInterval);
+      colsActive--;
     }
     lastChar = randChar;
   }, randomSpeed());
