@@ -82,7 +82,11 @@ const writeStuff = () => {
     }
 
     ctx.fillStyle = `${initialColor}`;
+    ctx.shadowColor = "rgba(228,230,227,1)";
+    ctx.shadowBlur = "5";
     ctx.fillText(randChar, XLOC, YLOC);
+    ctx.shadowColor = null;
+    ctx.shadowBlur = null;
     YLOC += fontSize;
     if (YLOC > window.innerHeight + fontSize * 2) {
       // console.log("Am kill");
