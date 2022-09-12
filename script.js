@@ -51,6 +51,9 @@ const writeStuff = () => {
     if (item.col === XLOC && item.date + 3000 > Date.now()) {
       colExist = true;
       return;
+    } else if (item.col === XLOC && item.date + 3000 < Date.now()) {
+      // You expired
+      colTracker.delete(item);
     }
   });
   if (colExist) return;
