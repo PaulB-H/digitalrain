@@ -24,7 +24,7 @@ ctx.font = `${fontSize}px "Cutive Mono", monospace`;
 ctx.textBaseline = "top";
 
 const randomColumn = () => {
-  const columns = window.innerWidth / fontSize;
+  const columns = window.innerWidth / (0.7 * fontSize);
   return Math.ceil(Math.random() * columns);
 };
 const randomYStart = () => Math.floor(Math.random() * (10 * fontSize) * -1);
@@ -36,15 +36,15 @@ let colTracker = new Set();
 const createWriteStream = () => {
   if (colsActive > window.innerWidth / fontSize) return;
 
-  let XLOC = randomColumn() * fontSize;
+  let XLOC = randomColumn() * (0.7 * fontSize);
   let YLOC = randomYStart();
 
   let colExist = false;
   colTracker.forEach((item, idx) => {
-    if (item.col === XLOC && item.date + 3000 > Date.now()) {
+    if (item.col === XLOC && item.date + 5000 > Date.now()) {
       colExist = true;
       return;
-    } else if (item.col === XLOC && item.date + 3000 < Date.now()) {
+    } else if (item.col === XLOC && item.date + 5000 < Date.now()) {
       colTracker.delete(item);
     }
   });
@@ -62,7 +62,7 @@ const createWriteStream = () => {
     );
 
     ctx.fillStyle = "rgba(0, 0, 0, 0.75)";
-    ctx.fillRect(XLOC, YLOC, fontSize, fontSize);
+    ctx.fillRect(XLOC, YLOC, 0.7 * fontSize, fontSize);
 
     if (secondLastChar) {
       ctx.fillStyle = `${settledColor}`;
