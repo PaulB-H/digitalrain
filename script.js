@@ -5,7 +5,7 @@ const ctx = canvas.getContext("2d");
 canvas.width = window.innerWidth;
 canvas.height = window.innerHeight;
 
-const string =
+const characters =
   "ABCDEFGHIJKLMNOPQRSTUVWXYZ123456789ｦｧｨｩｪｫｬｭｮｯｱｲｳｴｵｶｷｸｹｺｻｼｽｾｿﾀﾁﾂﾃﾄﾅﾆﾇﾈﾉﾊﾋﾌﾍﾎﾏﾐﾑﾒﾓﾔﾕﾖﾗﾘﾙﾚﾛﾜﾝ-ｦｧｨｩｪｫｬｭｮｯｱｲｳｴｵｶｷｸｹｺｻｼｽｾｿﾀﾁﾂﾃﾄﾅﾆﾇﾈﾉﾊﾋﾌﾍﾎﾏﾐﾑﾒﾓﾔﾕﾖﾗﾘﾙﾚﾛﾜﾝ-ｦｧｨｩｪｫｬｭｮｯｱｲｳｴｵｶｷｸｹｺｻｼｽｾｿﾀﾁﾂﾃﾄﾅﾆﾇﾈﾉﾊﾋﾌﾍﾎﾏﾐﾑﾒﾓﾔﾕﾖﾗﾘﾙﾚﾛﾜﾝ-ｦｧｨｩｪｫｬｭｮｯｱｲｳｴｵｶｷｸｹｺｻｼｽｾｿﾀﾁﾂﾃﾄﾅﾆﾇﾈﾉﾊﾋﾌﾍﾎﾏﾐﾑﾒﾓﾔﾕﾖﾗﾘﾙﾚﾛﾜﾝ";
 
 const initialColor = "#e4e6e3";
@@ -19,9 +19,7 @@ ctx.scale(-1, 1);
 ctx.fillStyle = "black";
 ctx.fillRect(0, 0, canvas.width, canvas.height);
 
-ctx.fillStyle = `${settledColor}`;
 const fontSize = 50;
-// ctx.font = `${fontSize}px 'IBM Plex Mono', monospace`;
 ctx.font = `${fontSize}px "Cutive Mono", monospace`;
 ctx.textBaseline = "top";
 
@@ -29,22 +27,17 @@ const randomColumn = () => {
   const columns = window.innerWidth / fontSize;
   return Math.ceil(Math.random() * columns);
 };
-
-let colsActive = 0;
-
-let colTracker = new Set();
-
-const randomStart = () => Math.floor(Math.random() * (10 * fontSize) * -1);
+const randomYStart = () => Math.floor(Math.random() * (10 * fontSize) * -1);
 const randomSpeed = () => Math.floor(Math.random() * (250 - 50 + 1)) + 50;
 
-const writeStuff = () => {
-  if (colsActive > window.innerWidth / fontSize) {
-    console.log("Too many col's active...");
-    return;
-  }
+let colsActive = 0;
+let colTracker = new Set();
+
+const createWriteStream = () => {
+  if (colsActive > window.innerWidth / fontSize) return;
 
   let XLOC = randomColumn() * fontSize;
-  let YLOC = randomStart();
+  let YLOC = randomYStart();
 
   let colExist = false;
   colTracker.forEach((item, idx) => {
@@ -52,25 +45,23 @@ const writeStuff = () => {
       colExist = true;
       return;
     } else if (item.col === XLOC && item.date + 3000 < Date.now()) {
-      // You expired
       colTracker.delete(item);
     }
   });
   if (colExist) return;
 
   colsActive++;
-
   colTracker.add({ col: XLOC, date: Date.now() });
 
   let lastChar = null;
   let secondLastChar = null;
 
   const drawInterval = setInterval(() => {
-    const randChar = string.charAt(
-      Math.floor(Math.random() * string.length - 1)
+    const randChar = characters.charAt(
+      Math.floor(Math.random() * characters.length - 1)
     );
 
-    ctx.fillStyle = "rgba(0, 0, 0, 0.85)";
+    ctx.fillStyle = "rgba(0, 0, 0, 0.75)";
     ctx.fillRect(XLOC, YLOC, fontSize, fontSize);
 
     if (secondLastChar) {
@@ -90,18 +81,20 @@ const writeStuff = () => {
     ctx.fillText(randChar, XLOC, YLOC);
     ctx.shadowColor = null;
     ctx.shadowBlur = null;
+
     YLOC += fontSize;
+
     if (YLOC > window.innerHeight + fontSize * 2) {
-      // console.log("Am kill");
       window.clearInterval(drawInterval);
       colsActive--;
     }
     lastChar = randChar;
   }, randomSpeed());
+  // END drawInterval
 };
 
 const startWriting = window.setInterval(() => {
-  writeStuff();
+  createWriteStream();
 }, 300);
 
 window.setInterval(() => {
