@@ -9,23 +9,28 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Cutive+Mono&family=IBM+Plex+Mono&display=swap" rel="stylesheet">
-  <style>
-    * {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
-    }
-
-    html {
-      height: 100%;
-      overflow: hidden;
-      background-color: black;
-    }
-  </style>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css" />
+  <link rel="stylesheet" href="./style.css">
 </head>
 
 <body>
-  <canvas id="canvas"></canvas>
+  <canvas class="animate__animated animate__fadeIn animate__slower" id="canvas"
+    style="--animate-duration: 3s; position: absolute; z-index: -1"></canvas>
+
+  <div id="header" class="animate__animated animate__fadeIn">
+    <h1>Paul Bernard-Hall</h1>
+
+    <p class="animate__animated animate__fadeIn animate__delay-1s" style="--animate-delay: 0.5s;">
+      HTML - CSS - JS
+    </p>
+    <p class="animate__animated animate__fadeIn animate__delay-1s" style="--animate-delay: 0.75s;">
+      Responsive - React
+    </p>
+    <p class="animate__animated animate__fadeIn animate__delay-1s" style="--animate-delay: 1s;">
+      Node - Express - MongoDB
+    </p>
+
+  </div>
 
   <script src="./script.js"></script>
 </body>
