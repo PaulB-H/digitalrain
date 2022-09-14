@@ -2,8 +2,15 @@
 const canvas = document.getElementById("canvas");
 const ctx = canvas.getContext("2d");
 
-canvas.width = window.innerWidth;
-canvas.height = window.innerHeight;
+const setCanvasSize = () => {
+  if (window.innerWidth > document.querySelector("body").offsetWidth)
+    canvas.width = window.innerWidth;
+  else canvas.width = document.querySelector("body").offsetWidth;
+  if (window.innerHeight > document.querySelector("body").offsetHeight)
+    canvas.height = window.innerHeight;
+  else canvas.height = document.querySelector("body").offsetHeight;
+};
+setCanvasSize();
 
 const characters =
   "ABCDEFGHIJKLMNOPQRSTUVWXYZ123456789ｦｧｨｩｪｫｬｭｮｯｱｲｳｴｵｶｷｸｹｺｻｼｽｾｿﾀﾁﾂﾃﾄﾅﾆﾇﾈﾉﾊﾋﾌﾍﾎﾏﾐﾑﾒﾓﾔﾕﾖﾗﾘﾙﾚﾛﾜﾝ-ｦｧｨｩｪｫｬｭｮｯｱｲｳｴｵｶｷｸｹｺｻｼｽｾｿﾀﾁﾂﾃﾄﾅﾆﾇﾈﾉﾊﾋﾌﾍﾎﾏﾐﾑﾒﾓﾔﾕﾖﾗﾘﾙﾚﾛﾜﾝ-ｦｧｨｩｪｫｬｭｮｯｱｲｳｴｵｶｷｸｹｺｻｼｽｾｿﾀﾁﾂﾃﾄﾅﾆﾇﾈﾉﾊﾋﾌﾍﾎﾏﾐﾑﾒﾓﾔﾕﾖﾗﾘﾙﾚﾛﾜﾝ-ｦｧｨｩｪｫｬｭｮｯｱｲｳｴｵｶｷｸｹｺｻｼｽｾｿﾀﾁﾂﾃﾄﾅﾆﾇﾈﾉﾊﾋﾌﾍﾎﾏﾐﾑﾒﾓﾔﾕﾖﾗﾘﾙﾚﾛﾜﾝ";
@@ -27,7 +34,7 @@ const randomColumn = () => {
   const columns = window.innerWidth / (0.7 * fontSize);
   return Math.ceil(Math.random() * columns);
 };
-const randomYStart = () => Math.floor(Math.random() * (10 * fontSize) * -1);
+const randomYStart = () => Math.floor(Math.random() * 10) * fontSize * -1;
 const randomSpeed = () => Math.floor(Math.random() * (250 - 50 + 1)) + 50;
 
 let colsActive = 0;
@@ -41,10 +48,10 @@ const createWriteStream = () => {
 
   let colExist = false;
   colTracker.forEach((item, idx) => {
-    if (item.col === XLOC && item.date + 5000 > Date.now()) {
+    if (item.col === XLOC && item.date + 8000 > Date.now()) {
       colExist = true;
       return;
-    } else if (item.col === XLOC && item.date + 5000 < Date.now()) {
+    } else if (item.col === XLOC && item.date + 8000 < Date.now()) {
       colTracker.delete(item);
     }
   });
@@ -61,30 +68,49 @@ const createWriteStream = () => {
       Math.floor(Math.random() * characters.length - 1)
     );
 
-    ctx.fillStyle = "rgba(0, 0, 0, 0.75)";
-    ctx.fillRect(XLOC, YLOC, 0.7 * fontSize, fontSize);
+    // Clean up crew
+    ctx.fillStyle = "rgba(0, 0, 0, 0.25)";
+    ctx.fillRect(XLOC, YLOC - 18 * fontSize, 0.75 * fontSize, fontSize);
+    ctx.fillStyle = "rgba(0, 0, 0, 0.5)";
+    ctx.fillRect(XLOC, YLOC - 19 * fontSize, 0.75 * fontSize, fontSize);
+    ctx.fillStyle = "rgba(0, 0, 0, 1)";
+    ctx.fillRect(XLOC, YLOC - 20 * fontSize, 0.75 * fontSize, fontSize);
 
+    // Second last character
     if (secondLastChar) {
       ctx.fillStyle = `${settledColor}`;
-      ctx.fillText(secondLastChar, XLOC, YLOC - fontSize * 2);
+      ctx.fillText(
+        secondLastChar,
+        XLOC + 3,
+        YLOC - fontSize * 2,
+        0.5 * fontSize
+      );
     }
 
+    // Last character
     if (lastChar) {
+      // Print clean square to clean glow from
+      // first characters shadow, resulting in cleaner
+      // looking trail left behind
+      ctx.fillStyle = "rgba(0, 0, 0, 1)";
+      ctx.fillRect(XLOC, YLOC - fontSize, 0.75 * fontSize, fontSize);
+
       ctx.fillStyle = `${secondColor}`;
-      ctx.fillText(lastChar, XLOC, YLOC - fontSize);
+      ctx.fillText(lastChar, XLOC + 3, YLOC - fontSize, 0.5 * fontSize);
       secondLastChar = lastChar;
     }
 
+    // New character
     ctx.fillStyle = `${initialColor}`;
     ctx.shadowColor = "rgba(228,230,227,1)";
     ctx.shadowBlur = "5";
-    ctx.fillText(randChar, XLOC, YLOC);
+    ctx.fillText(randChar, XLOC + 3, YLOC, 0.5 * fontSize);
     ctx.shadowColor = null;
     ctx.shadowBlur = null;
 
     YLOC += fontSize;
 
-    if (YLOC > window.innerHeight + fontSize * 2) {
+    if (YLOC > canvas.offsetHeight + fontSize * 20) {
       window.clearInterval(drawInterval);
       colsActive--;
     }
