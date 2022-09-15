@@ -76,6 +76,12 @@ const createWriteStream = () => {
     ctx.fillStyle = "rgba(0, 0, 0, 1)";
     ctx.fillRect(XLOC, YLOC - 20 * fontSize, 0.75 * fontSize, fontSize);
 
+    // We are now fading locally per-stream
+    for (let i = 3; i < 18; i++) {
+      ctx.fillStyle = "rgba(0, 0, 0, 0.12)";
+      ctx.fillRect(XLOC, YLOC - i * fontSize, 0.75 * fontSize, fontSize);
+    }
+
     // Second last character
     if (secondLastChar) {
       ctx.fillStyle = `${settledColor}`;
@@ -123,10 +129,10 @@ const startWriting = window.setInterval(() => {
   createWriteStream();
 }, 300);
 
-window.setInterval(() => {
-  ctx.fillStyle = "rgba(0, 0, 0, 0.105)";
-  ctx.fillRect(0, 0, canvas.width, canvas.height);
-}, 100);
+// window.setInterval(() => {
+//   ctx.fillStyle = "rgba(0, 0, 0, 0.105)";
+//   ctx.fillRect(0, 0, canvas.width, canvas.height);
+// }, 100);
 
 window.addEventListener("resize", () => {
   canvas.width = window.innerWidth;
