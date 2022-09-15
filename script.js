@@ -40,6 +40,7 @@ ctx.fillRect(0, 0, canvas.width, canvas.height);
 
 const fontSize = 50;
 ctx.font = `${fontSize}px "Cutive Mono", monospace`;
+ctx.fontWeght = "bold";
 ctx.textBaseline = "top";
 
 const randomColumn = () => {
@@ -101,7 +102,6 @@ const createWriteStream = () => {
     // Reprint Random... Maybe
     if (Math.floor(Math.random() * 5) === 1) {
       let loc = Math.floor(Math.random() * 17 + 3);
-      console.log(loc);
 
       ctx.fillStyle = "rgba(0, 0, 0, 1)";
       ctx.fillRect(XLOC, YLOC - fontSize * loc, 0.75 * fontSize, fontSize);
