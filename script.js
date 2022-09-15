@@ -1,14 +1,24 @@
 // Setup canvas / context
 const canvas = document.getElementById("canvas");
 const ctx = canvas.getContext("2d");
+const canvas2 = document.getElementById("canvas2");
+const ctx2 = canvas2.getContext("2d");
 
 const setCanvasSize = () => {
-  if (window.innerWidth > document.querySelector("body").offsetWidth)
+  if (window.innerWidth > document.querySelector("body").offsetWidth) {
     canvas.width = window.innerWidth;
-  else canvas.width = document.querySelector("body").offsetWidth;
-  if (window.innerHeight > document.querySelector("body").offsetHeight)
+    canvas2.width = window.innerWidth;
+  } else {
+    canvas.width = document.querySelector("body").offsetWidth;
+    canvas2.width = document.querySelector("body").offsetWidth;
+  }
+  if (window.innerHeight > document.querySelector("body").offsetHeight) {
     canvas.height = window.innerHeight;
-  else canvas.height = document.querySelector("body").offsetHeight;
+    canvas2.height = window.innerHeight;
+  } else {
+    canvas.height = document.querySelector("body").offsetHeight;
+    canvas2.height = document.querySelector("body").offsetHeight;
+  }
 };
 setCanvasSize();
 
@@ -22,6 +32,8 @@ const aboutToFade = "#002003";
 
 ctx.translate(canvas.width, 0);
 ctx.scale(-1, 1);
+ctx2.translate(canvas.width, 0);
+ctx2.scale(-1, 1);
 
 ctx.fillStyle = "black";
 ctx.fillRect(0, 0, canvas.width, canvas.height);
@@ -76,10 +88,13 @@ const createWriteStream = () => {
     ctx.fillStyle = "rgba(0, 0, 0, 1)";
     ctx.fillRect(XLOC, YLOC - 20 * fontSize, 0.75 * fontSize, fontSize);
 
+    // Clear up the last shadow layer, to prepare for next stream
+    ctx2.clearRect(XLOC, YLOC - 21 * fontSize, 0.75 * fontSize, fontSize);
+
     // We are now fading locally per-stream
     for (let i = 3; i < 18; i++) {
-      ctx.fillStyle = "rgba(0, 0, 0, 0.12)";
-      ctx.fillRect(XLOC, YLOC - i * fontSize, 0.75 * fontSize, fontSize);
+      ctx2.fillStyle = "rgba(0, 0, 0, 0.12)";
+      ctx2.fillRect(XLOC, YLOC - i * fontSize, 0.75 * fontSize, fontSize);
     }
 
     // Second last character
@@ -129,6 +144,7 @@ const startWriting = window.setInterval(() => {
   createWriteStream();
 }, 300);
 
+// RIP global shader
 // window.setInterval(() => {
 //   ctx.fillStyle = "rgba(0, 0, 0, 0.105)";
 //   ctx.fillRect(0, 0, canvas.width, canvas.height);
@@ -140,4 +156,7 @@ window.addEventListener("resize", () => {
   ctx.translate(canvas.width, 0);
   ctx.scale(-1, 1);
   ctx.font = `${fontSize}px "Cutive Mono", monospace`;
+  // Don't forget to flip the shadow context
+  ctx2.translate(canvas.width, 0);
+  ctx2.scale(-1, 1);
 });
