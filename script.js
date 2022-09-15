@@ -131,5 +131,7 @@ window.setInterval(() => {
 window.addEventListener("resize", () => {
   canvas.width = window.innerWidth;
   canvas.height = window.innerHeight;
+  ctx.translate(canvas.width, 0);
+  ctx.scale(-1, 1);
   ctx.font = `${fontSize}px "Cutive Mono", monospace`;
 });
