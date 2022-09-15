@@ -23,7 +23,7 @@ const setCanvasSize = () => {
 setCanvasSize();
 
 const characters =
-  "ABCDEFGHIJKLMNOPQRSTUVWXYZ123456789ｦｧｨｩｪｫｬｭｮｯｱｲｳｴｵｶｷｸｹｺｻｼｽｾｿﾀﾁﾂﾃﾄﾅﾆﾇﾈﾉﾊﾋﾌﾍﾎﾏﾐﾑﾒﾓﾔﾕﾖﾗﾘﾙﾚﾛﾜﾝ-ｦｧｨｩｪｫｬｭｮｯｱｲｳｴｵｶｷｸｹｺｻｼｽｾｿﾀﾁﾂﾃﾄﾅﾆﾇﾈﾉﾊﾋﾌﾍﾎﾏﾐﾑﾒﾓﾔﾕﾖﾗﾘﾙﾚﾛﾜﾝ-ｦｧｨｩｪｫｬｭｮｯｱｲｳｴｵｶｷｸｹｺｻｼｽｾｿﾀﾁﾂﾃﾄﾅﾆﾇﾈﾉﾊﾋﾌﾍﾎﾏﾐﾑﾒﾓﾔﾕﾖﾗﾘﾙﾚﾛﾜﾝ-ｦｧｨｩｪｫｬｭｮｯｱｲｳｴｵｶｷｸｹｺｻｼｽｾｿﾀﾁﾂﾃﾄﾅﾆﾇﾈﾉﾊﾋﾌﾍﾎﾏﾐﾑﾒﾓﾔﾕﾖﾗﾘﾙﾚﾛﾜﾝ";
+  "MATRIXMATRIXMATRIXMATRIXMA1234567890ｦｧｨｩｪｫｬｭｮｯｱｲｳｴｵｶｷｸｹｺｻｼｽｾｿﾀﾁﾂﾃﾄﾅﾆﾇﾈﾉﾊﾋﾌﾍﾎﾏﾐﾑﾒﾓﾔﾕﾖﾗﾘﾙﾚﾛﾜﾝ-ｦｧｨｩｪｫｬｭｮｯｱｲｳｴｵｶｷｸｹｺｻｼｽｾｿﾀﾁﾂﾃﾄﾅﾆﾇﾈﾉﾊﾋﾌﾍﾎﾏﾐﾑﾒﾓﾔﾕﾖﾗﾘﾙﾚﾛﾜﾝ-ｦｧｨｩｪｫｬｭｮｯｱｲｳｴｵｶｷｸｹｺｻｼｽｾｿﾀﾁﾂﾃﾄﾅﾆﾇﾈﾉﾊﾋﾌﾍﾎﾏﾐﾑﾒﾓﾔﾕﾖﾗﾘﾙﾚﾛﾜﾝ-ｦｧｨｩｪｫｬｭｮｯｱｲｳｴｵｶｷｸｹｺｻｼｽｾｿﾀﾁﾂﾃﾄﾅﾆﾇﾈﾉﾊﾋﾌﾍﾎﾏﾐﾑﾒﾓﾔﾕﾖﾗﾘﾙﾚﾛﾜﾝ";
 
 const initialColor = "#e4e6e3";
 const secondColor = "#6cfe6b";
@@ -86,15 +86,33 @@ const createWriteStream = () => {
     ctx.fillStyle = "rgba(0, 0, 0, 0.5)";
     ctx.fillRect(XLOC, YLOC - 19 * fontSize, 0.75 * fontSize, fontSize);
     ctx.fillStyle = "rgba(0, 0, 0, 1)";
-    ctx.fillRect(XLOC, YLOC - 20 * fontSize, 0.75 * fontSize, fontSize);
+    ctx.fillRect(XLOC, YLOC - 21 * fontSize, 0.75 * fontSize, fontSize * 2);
+    ctx.clearRect(XLOC, YLOC - 21 * fontSize, 0.75 * fontSize, fontSize * 2);
 
     // Clear up the last shadow layer, to prepare for next stream
     ctx2.clearRect(XLOC, YLOC - 21 * fontSize, 0.75 * fontSize, fontSize);
 
     // We are now fading locally per-stream
     for (let i = 3; i < 18; i++) {
-      ctx2.fillStyle = "rgba(0, 0, 0, 0.12)";
+      ctx2.fillStyle = "rgba(0, 0, 0, 0.1)";
       ctx2.fillRect(XLOC, YLOC - i * fontSize, 0.75 * fontSize, fontSize);
+    }
+
+    // Reprint Random... Maybe
+    if (Math.floor(Math.random() * 5) === 1) {
+      let loc = Math.floor(Math.random() * 17 + 3);
+      console.log(loc);
+
+      ctx.fillStyle = "rgba(0, 0, 0, 1)";
+      ctx.fillRect(XLOC, YLOC - fontSize * loc, 0.75 * fontSize, fontSize);
+
+      ctx.fillStyle = `${settledColor}`;
+      ctx.fillText(
+        characters.charAt(Math.floor(Math.random() * characters.length - 1)),
+        XLOC + 3,
+        YLOC - fontSize * loc,
+        0.5 * fontSize
+      );
     }
 
     // Second last character
