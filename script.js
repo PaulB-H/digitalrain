@@ -4,6 +4,8 @@ const ctx = canvas.getContext("2d");
 const canvas2 = document.getElementById("canvas2");
 const ctx2 = canvas2.getContext("2d");
 
+const fontSize = 50;
+
 const setCanvasSize = () => {
   if (window.innerWidth > document.querySelector("body").offsetWidth) {
     canvas.width = window.innerWidth;
@@ -19,6 +21,17 @@ const setCanvasSize = () => {
     canvas.height = document.querySelector("body").offsetHeight;
     canvas2.height = document.querySelector("body").offsetHeight;
   }
+
+  ctx.translate(canvas.width, 0);
+  ctx.scale(-1, 1);
+  ctx2.translate(canvas.width, 0);
+  ctx2.scale(-1, 1);
+
+  ctx.fillStyle = "black";
+  ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+  ctx.font = `${fontSize}px "Cutive Mono", monospace`;
+  ctx.textBaseline = "top";
 };
 setCanvasSize();
 
@@ -29,19 +42,6 @@ const initialColor = "#e4e6e3";
 const secondColor = "#6cfe6b";
 const settledColor = "#00dd00";
 const aboutToFade = "#002003";
-
-ctx.translate(canvas.width, 0);
-ctx.scale(-1, 1);
-ctx2.translate(canvas.width, 0);
-ctx2.scale(-1, 1);
-
-ctx.fillStyle = "black";
-ctx.fillRect(0, 0, canvas.width, canvas.height);
-
-const fontSize = 50;
-ctx.font = `${fontSize}px "Cutive Mono", monospace`;
-ctx.fontWeght = "bold";
-ctx.textBaseline = "top";
 
 const randomColumn = () => {
   const columns = window.innerWidth / (0.7 * fontSize);
@@ -169,12 +169,5 @@ const startWriting = window.setInterval(() => {
 // }, 100);
 
 window.addEventListener("resize", () => {
-  canvas.width = window.innerWidth;
-  canvas.height = window.innerHeight;
-  ctx.translate(canvas.width, 0);
-  ctx.scale(-1, 1);
-  ctx.font = `${fontSize}px "Cutive Mono", monospace`;
-  // Don't forget to flip the shadow context
-  ctx2.translate(canvas.width, 0);
-  ctx2.scale(-1, 1);
+  setCanvasSize();
 });
