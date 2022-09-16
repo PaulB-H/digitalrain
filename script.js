@@ -79,16 +79,19 @@ const createWriteStream = () => {
   const drawInterval = setInterval(() => {
     // Clean up crew
     ctx.fillStyle = "rgba(0, 0, 0, 0.25)";
-    ctx.fillRect(XLOC, YLOC - 18 * fontSize, 0.75 * fontSize, fontSize);
+    ctx.fillRect(XLOC - 1, YLOC - 18 * fontSize, 0.85 * fontSize, fontSize);
     ctx.fillStyle = "rgba(0, 0, 0, 0.5)";
-    ctx.fillRect(XLOC, YLOC - 19 * fontSize, 0.75 * fontSize, fontSize);
-    ctx.clearRect(XLOC, YLOC - 21 * fontSize, 0.8 * fontSize, fontSize);
+    ctx.fillRect(XLOC - 1, YLOC - 19 * fontSize, 0.85 * fontSize, fontSize);
+    ctx.fillStyle = "rgba(0, 0, 0, 0.75)";
+    ctx.fillRect(XLOC - 1, YLOC - 21 * fontSize, 0.85 * fontSize, fontSize);
+
+    ctx.clearRect(XLOC - 1, YLOC - 21 * fontSize, 0.85 * fontSize, fontSize);
 
     // Clear up the last shadow layer, to prepare for next stream
     ctx2.clearRect(XLOC, YLOC - 21 * fontSize, 0.75 * fontSize, fontSize);
 
     // Fading per-stream, on other canvas
-    for (let i = 3; i < 18; i++) {
+    for (let i = 3; i < 20; i++) {
       ctx2.fillStyle = "rgba(0, 0, 0, 0.1)";
       ctx2.fillRect(XLOC, YLOC - i * fontSize, 0.75 * fontSize, fontSize);
     }
@@ -124,8 +127,7 @@ const createWriteStream = () => {
     if (firstChar) {
       // Clear square to clean glow from first char
       ctx.fillStyle = "rgba(0, 0, 0, 1)";
-      ctx.fillRect(XLOC, YLOC - fontSize, 0.75 * fontSize, fontSize);
-
+      ctx.fillRect(XLOC - 1, YLOC - fontSize - 10, 0.85 * fontSize, fontSize);
       ctx.fillStyle = `${secondColor}`;
       ctx.fillText(firstChar, XLOC + 3, YLOC - fontSize, 0.5 * fontSize);
       secondChar = firstChar;
