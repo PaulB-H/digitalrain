@@ -73,33 +73,27 @@ const createWriteStream = () => {
   colsActive++;
   colTracker.add({ col: XLOC, date: Date.now() });
 
-  let lastChar = null;
-  let secondLastChar = null;
+  let firstChar = null;
+  let secondChar = null;
 
   const drawInterval = setInterval(() => {
-    const randChar = characters.charAt(
-      Math.floor(Math.random() * characters.length - 1)
-    );
-
     // Clean up crew
     ctx.fillStyle = "rgba(0, 0, 0, 0.25)";
     ctx.fillRect(XLOC, YLOC - 18 * fontSize, 0.75 * fontSize, fontSize);
     ctx.fillStyle = "rgba(0, 0, 0, 0.5)";
     ctx.fillRect(XLOC, YLOC - 19 * fontSize, 0.75 * fontSize, fontSize);
-    ctx.fillStyle = "rgba(0, 0, 0, 1)";
-    ctx.fillRect(XLOC, YLOC - 21 * fontSize, 0.75 * fontSize, fontSize * 2);
     ctx.clearRect(XLOC, YLOC - 21 * fontSize, 0.75 * fontSize, fontSize * 2);
 
     // Clear up the last shadow layer, to prepare for next stream
     ctx2.clearRect(XLOC, YLOC - 21 * fontSize, 0.75 * fontSize, fontSize);
 
-    // We are now fading locally per-stream
+    // Fading per-stream, on other canvas
     for (let i = 3; i < 18; i++) {
       ctx2.fillStyle = "rgba(0, 0, 0, 0.1)";
       ctx2.fillRect(XLOC, YLOC - i * fontSize, 0.75 * fontSize, fontSize);
     }
 
-    // Reprint Random... Maybe
+    // Chance to flip an already placed character
     if (Math.floor(Math.random() * 5) === 1) {
       let loc = Math.floor(Math.random() * 17 + 3);
 
@@ -108,52 +102,49 @@ const createWriteStream = () => {
 
       ctx.fillStyle = `${settledColor}`;
       ctx.fillText(
-        characters.charAt(Math.floor(Math.random() * characters.length - 1)),
+        characters.charAt(Math.floor(Math.random() * characters.length)),
         XLOC + 3,
         YLOC - fontSize * loc,
         0.5 * fontSize
       );
     }
 
-    // Second last character
-    if (secondLastChar) {
+    // Third character
+    if (secondChar) {
       ctx.fillStyle = `${settledColor}`;
-      ctx.fillText(
-        secondLastChar,
-        XLOC + 3,
-        YLOC - fontSize * 2,
-        0.5 * fontSize
-      );
+      ctx.fillText(secondChar, XLOC + 3, YLOC - fontSize * 2, 0.5 * fontSize);
     }
 
-    // Last character
-    if (lastChar) {
-      // Print clean square to clean glow from
-      // first characters shadow, resulting in cleaner
-      // looking trail left behind
-      ctx.fillStyle = "rgba(0, 0, 0, 1)";
+    // Second Character
+    if (firstChar) {
+      // Clear square to clean glow from first char
+      ctx.fillStyle = "rgba(100, 0, 0, 1)";
       ctx.fillRect(XLOC, YLOC - fontSize, 0.75 * fontSize, fontSize);
 
       ctx.fillStyle = `${secondColor}`;
-      ctx.fillText(lastChar, XLOC + 3, YLOC - fontSize, 0.5 * fontSize);
-      secondLastChar = lastChar;
+      ctx.fillText(firstChar, XLOC + 3, YLOC - fontSize, 0.5 * fontSize);
+      secondChar = firstChar;
     }
 
-    // New character
+    // First (new) character
+    firstChar = characters.charAt(
+      Math.floor(Math.random() * characters.length)
+    );
+
     ctx.fillStyle = `${initialColor}`;
-    ctx.shadowColor = "rgba(228,230,227,1)";
+    ctx.shadowColor = "rgba(230,230,230,1)";
     ctx.shadowBlur = "5";
-    ctx.fillText(randChar, XLOC + 3, YLOC, 0.5 * fontSize);
+    ctx.fillText(firstChar, XLOC + 3, YLOC, 0.5 * fontSize);
     ctx.shadowColor = null;
     ctx.shadowBlur = null;
 
+    // Sets YLOC for next draw interval
     YLOC += fontSize;
 
-    if (YLOC > canvas.offsetHeight + fontSize * 20) {
+    if (YLOC > canvas.offsetHeight + fontSize * 21) {
       window.clearInterval(drawInterval);
       colsActive--;
     }
-    lastChar = randChar;
   }, randomSpeed());
   // END drawInterval
 };
@@ -161,12 +152,6 @@ const createWriteStream = () => {
 const startWriting = window.setInterval(() => {
   createWriteStream();
 }, 300);
-
-// RIP global shader
-// window.setInterval(() => {
-//   ctx.fillStyle = "rgba(0, 0, 0, 0.105)";
-//   ctx.fillRect(0, 0, canvas.width, canvas.height);
-// }, 100);
 
 window.addEventListener("resize", () => {
   setCanvasSize();
