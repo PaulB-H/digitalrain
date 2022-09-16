@@ -82,7 +82,7 @@ const createWriteStream = () => {
     ctx.fillRect(XLOC, YLOC - 18 * fontSize, 0.75 * fontSize, fontSize);
     ctx.fillStyle = "rgba(0, 0, 0, 0.5)";
     ctx.fillRect(XLOC, YLOC - 19 * fontSize, 0.75 * fontSize, fontSize);
-    ctx.clearRect(XLOC, YLOC - 21 * fontSize, 0.75 * fontSize, fontSize * 2);
+    ctx.clearRect(XLOC, YLOC - 21 * fontSize, 0.8 * fontSize, fontSize);
 
     // Clear up the last shadow layer, to prepare for next stream
     ctx2.clearRect(XLOC, YLOC - 21 * fontSize, 0.75 * fontSize, fontSize);
@@ -98,7 +98,12 @@ const createWriteStream = () => {
       let loc = Math.floor(Math.random() * 17 + 3);
 
       ctx.fillStyle = "rgba(0, 0, 0, 1)";
-      ctx.fillRect(XLOC, YLOC - fontSize * loc, 0.75 * fontSize, fontSize);
+      ctx.fillRect(
+        XLOC - 3,
+        YLOC - fontSize * loc - 3,
+        0.8 * fontSize,
+        fontSize + 3
+      );
 
       ctx.fillStyle = `${settledColor}`;
       ctx.fillText(
@@ -118,7 +123,7 @@ const createWriteStream = () => {
     // Second Character
     if (firstChar) {
       // Clear square to clean glow from first char
-      ctx.fillStyle = "rgba(100, 0, 0, 1)";
+      ctx.fillStyle = "rgba(0, 0, 0, 1)";
       ctx.fillRect(XLOC, YLOC - fontSize, 0.75 * fontSize, fontSize);
 
       ctx.fillStyle = `${secondColor}`;
