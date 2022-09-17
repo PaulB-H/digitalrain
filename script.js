@@ -75,7 +75,7 @@ const characters =
 
 const randomColumn = () => {
   const columns = window.innerWidth / (0.7 * textProperties.fontSize);
-  return Math.ceil(Math.random() * columns);
+  return Math.floor(Math.random() * columns);
 };
 const randomYStart = () =>
   Math.floor(Math.random() * 10) * textProperties.fontSize * -1;
