@@ -101,9 +101,6 @@ const createWriteStream = () => {
   });
   if (colExist) return;
 
-  colsActive++;
-  colTracker.add({ col: XLOC, date: Date.now() });
-
   let firstChar = null;
   let secondChar = null;
 
@@ -257,6 +254,8 @@ const createWriteStream = () => {
     }
   }, randomSpeed());
   // END drawInterval
+  colsActive++;
+  colTracker.add({ col: XLOC, date: Date.now(), interval: drawInterval });
 };
 
 const activeStreamsSpan = document.getElementById("active-streams");
@@ -264,13 +263,47 @@ const streamMaxLengthSpan = document.getElementById("max-length");
 const streamMinLengthSpan = document.getElementById("min-length");
 const streamFontSize = document.getElementById("font-size");
 
-const startWriting = window.setInterval(() => {
-  createWriteStream();
-  activeStreamsSpan.innerText = colsActive;
-  streamMaxLengthSpan.innerText = textProperties.maxLength;
-  streamMinLengthSpan.innerText = textProperties.minLength;
-  streamFontSize.innerText = textProperties.fontSize;
-}, 300);
+let writeInterval;
+const startWriting = () => {
+  writeInterval = window.setInterval(() => {
+    createWriteStream();
+
+    // Update debug info
+    activeStreamsSpan.innerText = colsActive;
+    streamMaxLengthSpan.innerText = textProperties.maxLength;
+    streamMinLengthSpan.innerText = textProperties.minLength;
+    streamFontSize.innerText = textProperties.fontSize;
+  }, 300);
+};
+startWriting();
+
+const setFontSizeInput = document.getElementById("set-font-size");
+setFontSizeInput.style.width = `60px`;
+
+let setFontTimeout;
+const setFontSize = () => {
+  setFontTimeout = window.setTimeout(() => {
+    window.clearInterval(writeInterval);
+
+    if (setFontSizeInput.value < 5 || setFontSizeInput.value > 100) {
+      textProperties.fontSize = 50;
+      setFontSizeInput.value = 50;
+    } else {
+      textProperties.fontSize = parseInt(setFontSizeInput.value);
+    }
+
+    colTracker.forEach((item, idx) => {
+      window.clearInterval(item.interval);
+    });
+
+    colsActive = 0;
+    colTracker = new Set();
+
+    startWriting();
+
+    setCanvasSize();
+  }, 2000);
+};
 
 window.addEventListener("resize", () => {
   setCanvasSize();
