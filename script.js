@@ -259,8 +259,10 @@ const createWriteStream = () => {
   // END drawInterval
 };
 
+const activeStreamsSpan = document.getElementById("active-streams");
 const startWriting = window.setInterval(() => {
   createWriteStream();
+  activeStreamsSpan.innerText = colsActive;
 }, 300);
 
 window.addEventListener("resize", () => {
