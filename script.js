@@ -62,7 +62,6 @@ const setTheme = (themeName, fontSize) => {
     case "pink":
       changeTextProperties("lightpink", "pink", "palevioletred", fontSize);
       break;
-
     default:
       break;
   }
@@ -113,45 +112,45 @@ const createWriteStream = () => {
     // Clean up crew
     ctx.fillStyle = "rgba(0, 0, 0, 0.25)";
     ctx.fillRect(
-      XLOC - 1,
+      XLOC,
       YLOC - 18 * textProperties.fontSize,
-      0.65 * textProperties.fontSize,
+      0.7 * textProperties.fontSize,
       textProperties.fontSize
     );
     ctx.fillStyle = "rgba(0, 0, 0, 0.5)";
     ctx.fillRect(
-      XLOC - 1,
+      XLOC,
       YLOC - 19 * textProperties.fontSize,
-      0.65 * textProperties.fontSize,
+      0.7 * textProperties.fontSize,
       textProperties.fontSize
     );
     ctx.fillStyle = "rgba(0, 0, 0, 0.75)";
     ctx.fillRect(
-      XLOC - 1,
-      YLOC - 21 * textProperties.fontSize,
-      0.65 * textProperties.fontSize,
+      XLOC,
+      YLOC - 20 * textProperties.fontSize,
+      0.7 * textProperties.fontSize,
       textProperties.fontSize
     );
-    ctx.fillStyle = "rgba(0, 0, 0, 1)";
-    ctx.fillRect(
-      XLOC - 1,
+    // ctx.fillStyle = "rgba(0, 0, 0, 1)";
+    // ctx.fillRect(
+    //   XLOC,
+    //   YLOC - 21 * textProperties.fontSize,
+    //   0.7 * textProperties.fontSize,
+    //   textProperties.fontSize
+    // );
+
+    ctx.clearRect(
+      XLOC,
       YLOC - 21 * textProperties.fontSize,
       0.7 * textProperties.fontSize,
       textProperties.fontSize
     );
 
-    // ctx.clearRect(
-    //   XLOC - 1,
-    //   YLOC - 21 * textProperties.fontSize,
-    //   0.85 * textProperties.fontSize,
-    //   textProperties.fontSize
-    // );
-
     // Clear up the last shadow layer, to prepare for next stream
     ctx2.clearRect(
       XLOC,
       YLOC - 21 * textProperties.fontSize,
-      0.75 * textProperties.fontSize,
+      0.7 * textProperties.fontSize,
       textProperties.fontSize
     );
 
@@ -161,7 +160,7 @@ const createWriteStream = () => {
       ctx2.fillRect(
         XLOC,
         YLOC - i * textProperties.fontSize,
-        0.65 * textProperties.fontSize,
+        0.7 * textProperties.fontSize,
         textProperties.fontSize
       );
     }
@@ -172,16 +171,18 @@ const createWriteStream = () => {
 
       ctx.fillStyle = "rgba(0, 0, 0, 1)";
       ctx.fillRect(
-        XLOC - 3,
-        YLOC - textProperties.fontSize * loc - 3,
-        0.65 * textProperties.fontSize,
-        textProperties.fontSize + 3
+        XLOC,
+        YLOC -
+          loc * textProperties.fontSize -
+          (7 / 100) * textProperties.fontSize,
+        0.7 * textProperties.fontSize,
+        textProperties.fontSize
       );
 
       ctx.fillStyle = `${textProperties.settledColor}`;
       ctx.fillText(
         characters.charAt(Math.floor(Math.random() * characters.length)),
-        XLOC + 3,
+        XLOC,
         YLOC - textProperties.fontSize * loc,
         0.5 * textProperties.fontSize
       );
@@ -192,7 +193,7 @@ const createWriteStream = () => {
       ctx.fillStyle = `${textProperties.settledColor}`;
       ctx.fillText(
         secondChar,
-        XLOC + 3,
+        XLOC,
         YLOC - textProperties.fontSize * 2,
         0.5 * textProperties.fontSize
       );
@@ -203,15 +204,15 @@ const createWriteStream = () => {
       // Clear square to clean glow from first char
       ctx.fillStyle = "rgba(0, 0, 0, 1)";
       ctx.fillRect(
-        XLOC - 1,
-        YLOC - textProperties.fontSize,
-        0.65 * textProperties.fontSize,
+        XLOC,
+        YLOC - textProperties.fontSize - (7 / 100) * textProperties.fontSize,
+        0.7 * textProperties.fontSize,
         textProperties.fontSize
       );
       ctx.fillStyle = `${textProperties.secondColor}`;
       ctx.fillText(
         firstChar,
-        XLOC + 3,
+        XLOC,
         YLOC - textProperties.fontSize,
         0.5 * textProperties.fontSize
       );
@@ -227,7 +228,7 @@ const createWriteStream = () => {
     // ctx.shadowColor = "rgba(230,230,230,1)";
     ctx.shadowColor = textProperties.initialColor;
     ctx.shadowBlur = textProperties.fontSize / 80;
-    ctx.fillText(firstChar, XLOC + 3, YLOC, 0.5 * textProperties.fontSize);
+    ctx.fillText(firstChar, XLOC, YLOC, 0.5 * textProperties.fontSize);
     ctx.shadowColor = null;
     ctx.shadowBlur = null;
 
