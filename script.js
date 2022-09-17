@@ -183,7 +183,7 @@ const createWriteStream = () => {
 
     // Chance to flip an already placed character
     if (Math.floor(Math.random() * 5) === 1) {
-      let loc = Math.floor(Math.random() * streamLength);
+      let loc = Math.floor(Math.random() * (streamLength - 4) + 4);
 
       ctx.fillStyle = "rgba(0, 0, 0, 1)";
       ctx.fillRect(
