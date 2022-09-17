@@ -260,9 +260,16 @@ const createWriteStream = () => {
 };
 
 const activeStreamsSpan = document.getElementById("active-streams");
+const streamMaxLengthSpan = document.getElementById("max-length");
+const streamMinLengthSpan = document.getElementById("min-length");
+const streamFontSize = document.getElementById("font-size");
+
 const startWriting = window.setInterval(() => {
   createWriteStream();
   activeStreamsSpan.innerText = colsActive;
+  streamMaxLengthSpan.innerText = textProperties.maxLength;
+  streamMinLengthSpan.innerText = textProperties.minLength;
+  streamFontSize.innerText = textProperties.fontSize;
 }, 300);
 
 window.addEventListener("resize", () => {
