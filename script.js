@@ -9,6 +9,9 @@ const textProperties = {
   secondColor: "#6cfe6b",
   settledColor: "#00dd00",
   fontSize: 50,
+
+  maxLength: 21,
+  minLength: 21,
 };
 
 const setCanvasSize = () => {
@@ -70,10 +73,6 @@ const setTheme = (themeName, fontSize) => {
 const characters =
   "MATRIXMATRIXMATRIXMATRIXMA1234567890ｦｧｨｩｪｫｬｭｮｯｱｲｳｴｵｶｷｸｹｺｻｼｽｾｿﾀﾁﾂﾃﾄﾅﾆﾇﾈﾉﾊﾋﾌﾍﾎﾏﾐﾑﾒﾓﾔﾕﾖﾗﾘﾙﾚﾛﾜﾝ-ｦｧｨｩｪｫｬｭｮｯｱｲｳｴｵｶｷｸｹｺｻｼｽｾｿﾀﾁﾂﾃﾄﾅﾆﾇﾈﾉﾊﾋﾌﾍﾎﾏﾐﾑﾒﾓﾔﾕﾖﾗﾘﾙﾚﾛﾜﾝ-ｦｧｨｩｪｫｬｭｮｯｱｲｳｴｵｶｷｸｹｺｻｼｽｾｿﾀﾁﾂﾃﾄﾅﾆﾇﾈﾉﾊﾋﾌﾍﾎﾏﾐﾑﾒﾓﾔﾕﾖﾗﾘﾙﾚﾛﾜﾝ-ｦｧｨｩｪｫｬｭｮｯｱｲｳｴｵｶｷｸｹｺｻｼｽｾｿﾀﾁﾂﾃﾄﾅﾆﾇﾈﾉﾊﾋﾌﾍﾎﾏﾐﾑﾒﾓﾔﾕﾖﾗﾘﾙﾚﾛﾜﾝ";
 
-// const initialColor = "#e4e6e3";
-// const secondColor = "#6cfe6b";
-// const settledColor = "#00dd00";
-
 const randomColumn = () => {
   const columns = window.innerWidth / (0.7 * textProperties.fontSize);
   return Math.ceil(Math.random() * columns);
@@ -108,26 +107,37 @@ const createWriteStream = () => {
   let firstChar = null;
   let secondChar = null;
 
+  const streamLength =
+    Math.floor(
+      Math.random() * (textProperties.maxLength - textProperties.minLength + 1)
+    ) + textProperties.minLength;
+
   const drawInterval = setInterval(() => {
     // Clean up crew
     ctx.fillStyle = "rgba(0, 0, 0, 0.25)";
     ctx.fillRect(
       XLOC,
-      YLOC - 18 * textProperties.fontSize,
+      YLOC -
+        (streamLength - 3) * textProperties.fontSize -
+        (7 / 100) * textProperties.fontSize,
       0.7 * textProperties.fontSize,
       textProperties.fontSize
     );
     ctx.fillStyle = "rgba(0, 0, 0, 0.5)";
     ctx.fillRect(
       XLOC,
-      YLOC - 19 * textProperties.fontSize,
+      YLOC -
+        (streamLength - 2) * textProperties.fontSize -
+        (7 / 100) * textProperties.fontSize,
       0.7 * textProperties.fontSize,
       textProperties.fontSize
     );
     ctx.fillStyle = "rgba(0, 0, 0, 0.75)";
     ctx.fillRect(
       XLOC,
-      YLOC - 20 * textProperties.fontSize,
+      YLOC -
+        (streamLength - 1) * textProperties.fontSize -
+        (7 / 100) * textProperties.fontSize,
       0.7 * textProperties.fontSize,
       textProperties.fontSize
     );
@@ -141,7 +151,9 @@ const createWriteStream = () => {
 
     ctx.clearRect(
       XLOC,
-      YLOC - 21 * textProperties.fontSize,
+      YLOC -
+        streamLength * textProperties.fontSize -
+        (7 / 100) * textProperties.fontSize,
       0.7 * textProperties.fontSize,
       textProperties.fontSize
     );
@@ -149,17 +161,21 @@ const createWriteStream = () => {
     // Clear up the last shadow layer, to prepare for next stream
     ctx2.clearRect(
       XLOC,
-      YLOC - 21 * textProperties.fontSize,
+      YLOC -
+        streamLength * textProperties.fontSize -
+        (7 / 100) * textProperties.fontSize,
       0.7 * textProperties.fontSize,
       textProperties.fontSize
     );
 
     // Fading per-stream, on other canvas
-    for (let i = 3; i < 20; i++) {
+    for (let i = 3; i < streamLength; i++) {
       ctx2.fillStyle = "rgba(0, 0, 0, 0.1)";
       ctx2.fillRect(
         XLOC,
-        YLOC - i * textProperties.fontSize,
+        YLOC -
+          i * textProperties.fontSize -
+          (7 / 100) * textProperties.fontSize,
         0.7 * textProperties.fontSize,
         textProperties.fontSize
       );
@@ -167,7 +183,7 @@ const createWriteStream = () => {
 
     // Chance to flip an already placed character
     if (Math.floor(Math.random() * 5) === 1) {
-      let loc = Math.floor(Math.random() * 17 + 3);
+      let loc = Math.floor(Math.random() * streamLength);
 
       ctx.fillStyle = "rgba(0, 0, 0, 1)";
       ctx.fillRect(
@@ -235,7 +251,7 @@ const createWriteStream = () => {
     // Sets YLOC for next draw interval
     YLOC += textProperties.fontSize;
 
-    if (YLOC > canvas.offsetHeight + textProperties.fontSize * 21) {
+    if (YLOC > canvas.offsetHeight + textProperties.fontSize * streamLength) {
       window.clearInterval(drawInterval);
       colsActive--;
     }
