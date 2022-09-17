@@ -40,12 +40,32 @@ const setCanvasSize = () => {
 };
 setCanvasSize();
 
-const changeTextProperties = (color1, color2, color3, fontSize = 50) => {
+const changeTextProperties = (color1, color2, color3, fontSize) => {
   textProperties.initialColor = color1;
   textProperties.secondColor = color2;
   textProperties.settledColor = color3;
-  textProperties.fontSize = fontSize;
+  if (fontSize) textProperties.fontSize = fontSize;
   setCanvasSize();
+};
+
+const setTheme = (themeName, fontSize) => {
+  switch (themeName.toLowerCase()) {
+    case "matrix":
+      changeTextProperties("#e4e6e3", "#6cfe6b", "#00dd00", fontSize);
+      break;
+    case "fire":
+      changeTextProperties("Yellow", "Orange", "Red", fontSize);
+      break;
+    case "ice":
+      changeTextProperties("aqua", "skyblue", "darkcyan", fontSize);
+      break;
+    case "pink":
+      changeTextProperties("lightpink", "pink", "palevioletred", fontSize);
+      break;
+
+    default:
+      break;
+  }
 };
 
 const characters =
@@ -95,30 +115,37 @@ const createWriteStream = () => {
     ctx.fillRect(
       XLOC - 1,
       YLOC - 18 * textProperties.fontSize,
-      0.85 * textProperties.fontSize,
+      0.65 * textProperties.fontSize,
       textProperties.fontSize
     );
     ctx.fillStyle = "rgba(0, 0, 0, 0.5)";
     ctx.fillRect(
       XLOC - 1,
       YLOC - 19 * textProperties.fontSize,
-      0.85 * textProperties.fontSize,
+      0.65 * textProperties.fontSize,
       textProperties.fontSize
     );
     ctx.fillStyle = "rgba(0, 0, 0, 0.75)";
     ctx.fillRect(
       XLOC - 1,
       YLOC - 21 * textProperties.fontSize,
-      0.85 * textProperties.fontSize,
+      0.65 * textProperties.fontSize,
+      textProperties.fontSize
+    );
+    ctx.fillStyle = "rgba(0, 0, 0, 1)";
+    ctx.fillRect(
+      XLOC - 1,
+      YLOC - 21 * textProperties.fontSize,
+      0.7 * textProperties.fontSize,
       textProperties.fontSize
     );
 
-    ctx.clearRect(
-      XLOC - 1,
-      YLOC - 21 * textProperties.fontSize,
-      0.85 * textProperties.fontSize,
-      textProperties.fontSize
-    );
+    // ctx.clearRect(
+    //   XLOC - 1,
+    //   YLOC - 21 * textProperties.fontSize,
+    //   0.85 * textProperties.fontSize,
+    //   textProperties.fontSize
+    // );
 
     // Clear up the last shadow layer, to prepare for next stream
     ctx2.clearRect(
@@ -134,7 +161,7 @@ const createWriteStream = () => {
       ctx2.fillRect(
         XLOC,
         YLOC - i * textProperties.fontSize,
-        0.75 * textProperties.fontSize,
+        0.65 * textProperties.fontSize,
         textProperties.fontSize
       );
     }
@@ -147,7 +174,7 @@ const createWriteStream = () => {
       ctx.fillRect(
         XLOC - 3,
         YLOC - textProperties.fontSize * loc - 3,
-        0.8 * textProperties.fontSize,
+        0.65 * textProperties.fontSize,
         textProperties.fontSize + 3
       );
 
@@ -178,7 +205,7 @@ const createWriteStream = () => {
       ctx.fillRect(
         XLOC - 1,
         YLOC - textProperties.fontSize,
-        0.85 * textProperties.fontSize,
+        0.65 * textProperties.fontSize,
         textProperties.fontSize
       );
       ctx.fillStyle = `${textProperties.secondColor}`;
