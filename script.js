@@ -289,7 +289,7 @@ const setFontSizeInput = document.getElementById("set-font-size");
 setFontSizeInput.style.width = `60px`;
 
 let setFontTimeout;
-const setFontSize = () => {
+const setFontSize = (timeout = 5000) => {
   setFontTimeout = window.setTimeout(() => {
     window.clearInterval(writeInterval);
 
@@ -313,7 +313,7 @@ const setFontSize = () => {
     startWriting();
 
     setCanvasSize();
-  }, 2000);
+  }, timeout);
 };
 
 window.addEventListener("resize", () => {
