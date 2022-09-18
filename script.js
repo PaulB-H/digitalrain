@@ -8,10 +8,10 @@ const textProperties = {
   initialColor: "#e4e6e3",
   secondColor: "#6cfe6b",
   settledColor: "#00dd00",
-  fontSize: 15,
+  fontSize: 30,
 
   minLength: 5,
-  maxLength: 21,
+  maxLength: 20,
 };
 
 const setCanvasSize = () => {
@@ -143,6 +143,14 @@ const createWriteStream = () => {
       XLOC - (7 / 100) * textProperties.fontSize,
       YLOC -
         streamLength * textProperties.fontSize -
+        (7 / 100) * textProperties.fontSize,
+      0.7 * textProperties.fontSize,
+      textProperties.fontSize
+    );
+    ctx.clearRect(
+      XLOC - (7 / 100) * textProperties.fontSize,
+      YLOC -
+        (streamLength + 1) * textProperties.fontSize -
         (7 / 100) * textProperties.fontSize,
       0.7 * textProperties.fontSize,
       textProperties.fontSize
