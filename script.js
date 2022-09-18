@@ -8,10 +8,10 @@ const textProperties = {
   initialColor: "#e4e6e3",
   secondColor: "#6cfe6b",
   settledColor: "#00dd00",
-  fontSize: 50,
+  fontSize: 15,
 
+  minLength: 5,
   maxLength: 21,
-  minLength: 21,
 };
 
 const setCanvasSize = () => {
@@ -111,8 +111,8 @@ const createWriteStream = () => {
 
   const drawInterval = setInterval(() => {
     // Clean up crew
-    ctx.fillStyle = "rgba(0, 0, 0, 0.25)";
-    ctx.fillRect(
+    ctx2.fillStyle = "rgba(0, 0, 0, 0.25)";
+    ctx2.fillRect(
       XLOC,
       YLOC -
         (streamLength - 3) * textProperties.fontSize -
@@ -120,8 +120,8 @@ const createWriteStream = () => {
       0.7 * textProperties.fontSize,
       textProperties.fontSize
     );
-    ctx.fillStyle = "rgba(0, 0, 0, 0.5)";
-    ctx.fillRect(
+    ctx2.fillStyle = "rgba(0, 0, 0, 0.5)";
+    ctx2.fillRect(
       XLOC,
       YLOC -
         (streamLength - 2) * textProperties.fontSize -
@@ -129,8 +129,8 @@ const createWriteStream = () => {
       0.7 * textProperties.fontSize,
       textProperties.fontSize
     );
-    ctx.fillStyle = "rgba(0, 0, 0, 0.75)";
-    ctx.fillRect(
+    ctx2.fillStyle = "rgba(0, 0, 0, 0.75)";
+    ctx2.fillRect(
       XLOC,
       YLOC -
         (streamLength - 1) * textProperties.fontSize -
@@ -138,16 +138,9 @@ const createWriteStream = () => {
       0.7 * textProperties.fontSize,
       textProperties.fontSize
     );
-    // ctx.fillStyle = "rgba(0, 0, 0, 1)";
-    // ctx.fillRect(
-    //   XLOC,
-    //   YLOC - 21 * textProperties.fontSize,
-    //   0.7 * textProperties.fontSize,
-    //   textProperties.fontSize
-    // );
 
     ctx.clearRect(
-      XLOC,
+      XLOC - (7 / 100) * textProperties.fontSize,
       YLOC -
         streamLength * textProperties.fontSize -
         (7 / 100) * textProperties.fontSize,
@@ -160,14 +153,14 @@ const createWriteStream = () => {
       XLOC,
       YLOC -
         streamLength * textProperties.fontSize -
-        (7 / 100) * textProperties.fontSize,
+        (8 / 100) * textProperties.fontSize,
       0.7 * textProperties.fontSize,
       textProperties.fontSize
     );
 
     // Fading per-stream, on other canvas
-    for (let i = 3; i < streamLength; i++) {
-      ctx2.fillStyle = "rgba(0, 0, 0, 0.1)";
+    for (let i = 4; i < streamLength - 3; i++) {
+      ctx2.fillStyle = "rgba(0, 0, 0, 0.075)";
       ctx2.fillRect(
         XLOC,
         YLOC -
@@ -235,6 +228,13 @@ const createWriteStream = () => {
     // First (new) character
     firstChar = characters.charAt(
       Math.floor(Math.random() * characters.length)
+    );
+
+    ctx.clearRect(
+      XLOC,
+      YLOC - (7 / 100) * textProperties.fontSize,
+      0.7 * textProperties.fontSize,
+      textProperties.fontSize
     );
 
     ctx.fillStyle = `${textProperties.initialColor}`;
