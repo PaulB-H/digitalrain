@@ -293,9 +293,12 @@ const setFontSize = () => {
   setFontTimeout = window.setTimeout(() => {
     window.clearInterval(writeInterval);
 
-    if (setFontSizeInput.value < 5 || setFontSizeInput.value > 100) {
-      textProperties.fontSize = 50;
-      setFontSizeInput.value = 50;
+    if (setFontSizeInput.value < 5) {
+      textProperties.fontSize = 5;
+      setFontSizeInput.value = 5;
+    } else if (setFontSizeInput.value > 100) {
+      textProperties.fontSize = 100;
+      setFontSizeInput.value = 100;
     } else {
       textProperties.fontSize = parseInt(setFontSizeInput.value);
     }
