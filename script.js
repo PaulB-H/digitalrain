@@ -280,7 +280,7 @@ const startWriting = () => {
     activeStreamsSpan.innerText = colsActive;
     streamMaxLengthSpan.innerText = textProperties.maxLength;
     streamMinLengthSpan.innerText = textProperties.minLength;
-  }, 100);
+  }, 300);
 };
 startWriting();
 
