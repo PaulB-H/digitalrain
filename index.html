@@ -42,8 +42,9 @@
     }
 
     #set-font-size {
-      font-weight: bolder;
-      font-size: 1em;
+      width: 100%;
+      margin: 15px;
+      margin-bottom: 0;
     }
 
     #profiles>button {
@@ -63,11 +64,10 @@
       <p>Active Streams: <span id="active-streams"></span></p>
       <p>Stream Max-Length: <span id="max-length"></span></p>
       <p>Stream Min-Length: <span id="min-length"></span></p>
-      <p>Font-Size: <span id="font-size"></span></p>
-      <label for="set-font-size">Set Font Size:</label>
-      <input type="number" id="set-font-size" name="set-font-size" min="5" max="100" onchange="setFontSize(0)"
-        autocomplete="off" style="padding-left: 3px">
-      <p style="text-align: center;"><sub>(Between 5 and 100)</sub></p>
+      <p>Font-Size: <span id="font-size">20</span></p>
+      <label for="set-font-size">Set Font Size</label>
+      <br />
+      <input id="set-font-size" autocomplete="off" type="range" min="5" max="100" value="20" oninput="setFontSize()">
     </div>
 
     <div id="profiles">

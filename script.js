@@ -8,7 +8,7 @@ const textProperties = {
   initialColor: "#e4e6e3",
   secondColor: "#6cfe6b",
   settledColor: "#00dd00",
-  fontSize: 30,
+  fontSize: 20,
 
   minLength: 5,
   maxLength: 20,
@@ -92,10 +92,10 @@ const createWriteStream = () => {
 
   let colExist = false;
   colTracker.forEach((item, idx) => {
-    if (item.col === XLOC && item.date + 8000 > Date.now()) {
+    if (item.col === XLOC && item.date + 5000 > Date.now()) {
       colExist = true;
       return;
-    } else if (item.col === XLOC && item.date + 8000 < Date.now()) {
+    } else if (item.col === XLOC && item.date + 5000 < Date.now()) {
       colTracker.delete(item);
     }
   });
@@ -150,7 +150,7 @@ const createWriteStream = () => {
     ctx.clearRect(
       XLOC - (7 / 100) * textProperties.fontSize,
       YLOC -
-        (streamLength + 1) * textProperties.fontSize -
+        (streamLength + 2) * textProperties.fontSize -
         (7 / 100) * textProperties.fontSize,
       0.7 * textProperties.fontSize,
       textProperties.fontSize
@@ -280,16 +280,15 @@ const startWriting = () => {
     activeStreamsSpan.innerText = colsActive;
     streamMaxLengthSpan.innerText = textProperties.maxLength;
     streamMinLengthSpan.innerText = textProperties.minLength;
-    streamFontSize.innerText = textProperties.fontSize;
   }, 300);
 };
 startWriting();
 
 const setFontSizeInput = document.getElementById("set-font-size");
-setFontSizeInput.style.width = `60px`;
 
 let setFontTimeout;
-const setFontSize = (timeout = 5000) => {
+const setFontSize = (timeout = 1500) => {
+  streamFontSize.innerText = setFontSizeInput.value;
   setFontTimeout = window.setTimeout(() => {
     window.clearInterval(writeInterval);
 
