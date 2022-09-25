@@ -4,7 +4,19 @@ const ctx = canvas.getContext("2d");
 const canvas2 = document.getElementById("canvas2");
 const ctx2 = canvas2.getContext("2d");
 
-const textProperties = {
+const characters =
+  "MATRIXMATRIXMATRIXMATRIXMAØ1Ø1Ø1Ø1Ø#$%@&#$%@&ｦｧｨｩｪｫｬｭｮｯｱｲｳｴｵｶｷｸｹｺｻｼｽｾｿﾀﾁﾂﾃﾄﾅﾇﾈﾉﾊﾋﾌﾍﾎﾏﾐﾑﾒﾓﾔﾕﾖﾗﾘﾙﾚﾛﾜﾝｦｧｨｩｪｫｬｭｮｯｱｲｳｴｵｶｷｸｹｺｻｼｽｾｿﾀﾁﾂﾃﾄﾅﾇﾈﾉﾊﾋﾌﾍﾎﾏﾐﾑﾒﾓﾔﾕﾖﾗﾘﾙﾚﾛﾜﾝｦｧｨｩｪｫｬｭｮｯｱｲｳｴｵｶｷｸｹｺｻｼｽｾｿﾀﾁﾂﾃﾄﾅﾇﾈﾉﾊﾋﾌﾍﾎﾏﾐﾑﾒﾓﾔﾕﾖﾗﾘﾙﾚﾛﾜﾝｦｧｨｩｪｫｬｭｮｯｱｲｳｴｵｶｷｸｹｺｻｼｽｾｿﾀﾁﾂﾃﾄﾅﾇﾈﾉﾊﾋﾌﾍﾎﾏﾐﾑﾒﾓﾔﾕﾖﾗﾘﾙﾚﾛﾜﾝ";
+
+const activeStreamsSpan = document.getElementById("active-streams");
+const streamMaxLengthSpan = document.getElementById("max-length");
+const streamMinLengthSpan = document.getElementById("min-length");
+const numOfIntervalsSpan = document.getElementById("num-intervals");
+const streamMaxSpeedSpan = document.getElementById("max-speed");
+const streamMinSpeedSpan = document.getElementById("min-speed");
+const streamFontSize = document.getElementById("font-size");
+const setFontSizeInput = document.getElementById("set-font-size");
+
+const streamProperties = {
   initialColor: "#e4e6e3",
   secondColor: "#6cfe6b",
   settledColor: "#00dd00",
@@ -12,6 +24,22 @@ const textProperties = {
 
   minLength: 5,
   maxLength: 20,
+
+  minSpeed: 500,
+  maxSpeed: 50,
+
+  maxIntervals: 100,
+  maxStreams: null,
+};
+
+const updateReadout = () => {
+  activeStreamsSpan.innerText = streamProperties.maxStreams;
+  streamMaxLengthSpan.innerText = streamProperties.maxLength;
+  streamMinLengthSpan.innerText = streamProperties.minLength;
+  numOfIntervalsSpan.innerText = streamProperties.maxIntervals;
+  streamFontSize.innerText = streamProperties.fontSize;
+  streamMaxSpeedSpan.innerText = streamProperties.maxSpeed;
+  streamMinSpeedSpan.innerText = streamProperties.minSpeed;
 };
 
 const setCanvasSize = () => {
@@ -38,283 +66,303 @@ const setCanvasSize = () => {
   ctx.fillStyle = "black";
   ctx.fillRect(0, 0, canvas.width, canvas.height);
 
-  ctx.font = `${textProperties.fontSize}px "Cutive Mono", monospace`;
+  ctx.font = `${streamProperties.fontSize}px "Cutive Mono", monospace`;
   ctx.textBaseline = "top";
 };
 setCanvasSize();
 
-const changeTextProperties = (color1, color2, color3, fontSize) => {
-  textProperties.initialColor = color1;
-  textProperties.secondColor = color2;
-  textProperties.settledColor = color3;
-  if (fontSize) textProperties.fontSize = fontSize;
-  setCanvasSize();
+const setStreamSpeed = (min = null, max = null) => {
+  if (min) streamProperties.minSpeed = min;
+  if (max) streamProperties.maxSpeed = max;
+  updateReadout();
 };
 
+const changeStreamProperties = (color1, color2, color3, fontSize) => {
+  streamProperties.initialColor = color1;
+  streamProperties.secondColor = color2;
+  streamProperties.settledColor = color3;
+  if (fontSize) {
+    streamProperties.fontSize = fontSize;
+    setCanvasSize();
+  }
+};
 const setTheme = (themeName, fontSize) => {
   switch (themeName.toLowerCase()) {
     case "matrix":
-      changeTextProperties("#e4e6e3", "#6cfe6b", "#00dd00", fontSize);
+      changeStreamProperties("#e4e6e3", "#6cfe6b", "#00dd00", fontSize);
       break;
     case "fire":
-      changeTextProperties("Yellow", "Orange", "Red", fontSize);
+      changeStreamProperties("Yellow", "Orange", "Red", fontSize);
       break;
     case "ice":
-      changeTextProperties("aqua", "skyblue", "darkcyan", fontSize);
+      changeStreamProperties("aqua", "skyblue", "darkcyan", fontSize);
       break;
     case "pink":
-      changeTextProperties("lightpink", "pink", "palevioletred", fontSize);
+      changeStreamProperties("lightpink", "pink", "palevioletred", fontSize);
+      break;
+    case "purple":
+      changeStreamProperties("#EA3FFA", "#C187E0", "#8115F5", fontSize);
       break;
     default:
       break;
   }
 };
 
-const characters =
-  "MATRIXMATRIXMATRIXMATRIXMAØ1Ø1Ø1Ø1Øｦｧｨｩｪｫｬｭｮｯｱｲｳｴｵｶｷｸｹｺｻｼｽｾｿﾀﾁﾂﾃﾄﾅﾇﾈﾉﾊﾋﾌﾍﾎﾏﾐﾑﾒﾓﾔﾕﾖﾗﾘﾙﾚﾛﾜﾝｦｧｨｩｪｫｬｭｮｯｱｲｳｴｵｶｷｸｹｺｻｼｽｾｿﾀﾁﾂﾃﾄﾅﾇﾈﾉﾊﾋﾌﾍﾎﾏﾐﾑﾒﾓﾔﾕﾖﾗﾘﾙﾚﾛﾜﾝｦｧｨｩｪｫｬｭｮｯｱｲｳｴｵｶｷｸｹｺｻｼｽｾｿﾀﾁﾂﾃﾄﾅﾇﾈﾉﾊﾋﾌﾍﾎﾏﾐﾑﾒﾓﾔﾕﾖﾗﾘﾙﾚﾛﾜﾝｦｧｨｩｪｫｬｭｮｯｱｲｳｴｵｶｷｸｹｺｻｼｽｾｿﾀﾁﾂﾃﾄﾅﾇﾈﾉﾊﾋﾌﾍﾎﾏﾐﾑﾒﾓﾔﾕﾖﾗﾘﾙﾚﾛﾜﾝ";
-
 const randomColumn = () => {
-  const columns = window.innerWidth / (0.7 * textProperties.fontSize);
+  const columns = window.innerWidth / (0.7 * streamProperties.fontSize);
   return Math.floor(Math.random() * columns);
 };
 const randomYStart = () =>
-  Math.floor(Math.random() * 10) * textProperties.fontSize * -1;
-const randomSpeed = () => Math.floor(Math.random() * (250 - 50 + 1)) + 50;
+  Math.floor(Math.random() * canvas.height) * streamProperties.fontSize * -1;
 
-let colsActive = 0;
-let colTracker = new Set();
+const updateStreams = (set) => {
+  set.forEach((item, idx) => {
+    const fontSizeMinus7Percent =
+      streamProperties.fontSize - (7 / 100) * streamProperties.fontSize;
 
-const createWriteStream = () => {
-  if (colsActive > window.innerWidth / (0.7 * textProperties.fontSize)) return;
+    const seventyPercentFontSize = 0.7 * streamProperties.fontSize;
+    const fiftyPercentFontSize = 0.5 * streamProperties.fontSize;
 
-  let XLOC = randomColumn() * (0.7 * textProperties.fontSize);
-  let YLOC = randomYStart();
-
-  let colExist = false;
-  colTracker.forEach((item, idx) => {
-    if (item.col === XLOC && item.date + 5000 > Date.now()) {
-      colExist = true;
-      return;
-    } else if (item.col === XLOC && item.date + 5000 < Date.now()) {
-      colTracker.delete(item);
-    }
-  });
-  if (colExist) return;
-
-  let firstChar = null;
-  let secondChar = null;
-
-  const streamLength =
-    Math.floor(
-      Math.random() * (textProperties.maxLength - textProperties.minLength + 1)
-    ) + textProperties.minLength;
-
-  const drawInterval = setInterval(() => {
-    // Clean up crew
-    ctx2.fillStyle = "rgba(0, 0, 0, 0.25)";
+    // New Clear Rect
+    ctx2.fillStyle = "black";
     ctx2.fillRect(
-      XLOC,
-      YLOC -
-        (streamLength - 3) * textProperties.fontSize -
-        (7 / 100) * textProperties.fontSize,
-      0.7 * textProperties.fontSize,
-      textProperties.fontSize
-    );
-    ctx2.fillStyle = "rgba(0, 0, 0, 0.5)";
-    ctx2.fillRect(
-      XLOC,
-      YLOC -
-        (streamLength - 2) * textProperties.fontSize -
-        (7 / 100) * textProperties.fontSize,
-      0.7 * textProperties.fontSize,
-      textProperties.fontSize
-    );
-    ctx2.fillStyle = "rgba(0, 0, 0, 0.75)";
-    ctx2.fillRect(
-      XLOC,
-      YLOC -
-        (streamLength - 1) * textProperties.fontSize -
-        (7 / 100) * textProperties.fontSize,
-      0.7 * textProperties.fontSize,
-      textProperties.fontSize
+      item.XLOC - 0.175 * streamProperties.fontSize,
+      item.YLOC -
+        streamProperties.fontSize * item.streamLength -
+        0.1 * streamProperties.fontSize,
+      0.9 * streamProperties.fontSize,
+      streamProperties.fontSize
     );
 
-    ctx.clearRect(
-      XLOC - (7 / 100) * textProperties.fontSize,
-      YLOC -
-        streamLength * textProperties.fontSize -
-        (7 / 100) * textProperties.fontSize,
-      0.7 * textProperties.fontSize,
-      textProperties.fontSize
-    );
-    ctx.clearRect(
-      XLOC - (7 / 100) * textProperties.fontSize,
-      YLOC -
-        (streamLength + 2) * textProperties.fontSize -
-        (7 / 100) * textProperties.fontSize,
-      0.7 * textProperties.fontSize,
-      textProperties.fontSize
-    );
-
-    // Clear up the last shadow layer, to prepare for next stream
-    ctx2.clearRect(
-      XLOC,
-      YLOC -
-        streamLength * textProperties.fontSize -
-        (8 / 100) * textProperties.fontSize,
-      0.7 * textProperties.fontSize,
-      textProperties.fontSize
-    );
-
+    /*
+      !! Drawing the fading this way is very detrimental to performance !!
+    */
+    // // Clear up the last shadow layer, to prepare for next stream
+    // ctx2.clearRect(
+    //   item.XLOC,
+    //   Math.floor(item.YLOC - item.streamLength * fontSizeMinus7Percent),
+    //   seventyPercentFontSize,
+    //   streamProperties.fontSize
+    // );
     // Fading per-stream, on other canvas
-    for (let i = 4; i < streamLength - 3; i++) {
+    // if (streamProperties.totalStreams < 5000) {
+    for (let i = 4; i < item.streamLength - 3; i++) {
       ctx2.fillStyle = "rgba(0, 0, 0, 0.075)";
       ctx2.fillRect(
-        XLOC,
-        YLOC -
-          i * textProperties.fontSize -
-          (7 / 100) * textProperties.fontSize,
-        0.7 * textProperties.fontSize,
-        textProperties.fontSize
+        item.XLOC,
+        item.YLOC -
+          streamProperties.fontSize * i -
+          0.1 * streamProperties.fontSize,
+        seventyPercentFontSize,
+        streamProperties.fontSize
       );
     }
+    // }
 
     // Chance to flip an already placed character
-    if (Math.floor(Math.random() * 5) === 1) {
-      let loc = Math.floor(Math.random() * (streamLength - 4) + 4);
+    if (Math.floor(Math.random() * 3) === 1) {
+      let loc = Math.floor(Math.random() * (item.streamLength - 4) + 4);
 
-      ctx.fillStyle = "rgba(0, 0, 0, 1)";
+      ctx.fillStyle = "black";
       ctx.fillRect(
-        XLOC,
-        YLOC -
-          loc * textProperties.fontSize -
-          (7 / 100) * textProperties.fontSize,
-        0.7 * textProperties.fontSize,
-        textProperties.fontSize
+        item.XLOC - 0.1 * streamProperties.fontSize,
+
+        item.YLOC -
+          streamProperties.fontSize * loc -
+          0.1 * streamProperties.fontSize,
+        seventyPercentFontSize,
+        streamProperties.fontSize
       );
 
-      ctx.fillStyle = `${textProperties.settledColor}`;
+      ctx.fillStyle = `${streamProperties.settledColor}`;
       ctx.fillText(
         characters.charAt(Math.floor(Math.random() * characters.length)),
-        XLOC,
-        YLOC - textProperties.fontSize * loc,
-        0.5 * textProperties.fontSize
+        item.XLOC,
+        item.YLOC - streamProperties.fontSize * loc,
+        fiftyPercentFontSize
       );
     }
 
     // Third character
-    if (secondChar) {
-      ctx.fillStyle = `${textProperties.settledColor}`;
+    if (item.secondChar) {
+      ctx.fillStyle = "black";
+      ctx.fillRect(
+        item.XLOC - (7 / 100) * streamProperties.fontSize,
+
+        item.YLOC -
+          streamProperties.fontSize * 2 -
+          0.1 * streamProperties.fontSize,
+        seventyPercentFontSize,
+        streamProperties.fontSize
+      );
+
+      ctx.fillStyle = `${streamProperties.settledColor}`;
       ctx.fillText(
-        secondChar,
-        XLOC,
-        YLOC - textProperties.fontSize * 2,
-        0.5 * textProperties.fontSize
+        item.secondChar,
+        item.XLOC,
+        item.YLOC - streamProperties.fontSize * 2,
+        fiftyPercentFontSize
       );
     }
 
     // Second Character
-    if (firstChar) {
+    if (item.firstChar) {
       // Clear square to clean glow from first char
-      ctx.fillStyle = "rgba(0, 0, 0, 1)";
+      ctx.fillStyle = "black";
       ctx.fillRect(
-        XLOC,
-        YLOC - textProperties.fontSize - (7 / 100) * textProperties.fontSize,
-        0.7 * textProperties.fontSize,
-        textProperties.fontSize
+        item.XLOC,
+        item.YLOC - streamProperties.fontSize - 0.1 * streamProperties.fontSize,
+        seventyPercentFontSize,
+        streamProperties.fontSize
       );
-      ctx.fillStyle = `${textProperties.secondColor}`;
+      ctx.fillStyle = `${streamProperties.secondColor}`;
       ctx.fillText(
-        firstChar,
-        XLOC,
-        YLOC - textProperties.fontSize,
-        0.5 * textProperties.fontSize
+        item.firstChar,
+        item.XLOC,
+        item.YLOC - streamProperties.fontSize,
+        fiftyPercentFontSize
       );
-      secondChar = firstChar;
+      item.secondChar = item.firstChar;
     }
+
+    ctx.fillStyle = "black";
+    ctx.fillRect(
+      item.XLOC,
+      item.YLOC - 0.1 * streamProperties.fontSize,
+      seventyPercentFontSize,
+      streamProperties.fontSize
+    );
+    // ctx.fillStyle = "black";
+    ctx2.clearRect(
+      item.XLOC - 0.1 * streamProperties.fontSize,
+      item.YLOC - 0.1 * streamProperties.fontSize,
+      seventyPercentFontSize,
+      streamProperties.fontSize
+    );
 
     // First (new) character
-    firstChar = characters.charAt(
-      Math.floor(Math.random() * characters.length)
-    );
-
-    ctx.clearRect(
-      XLOC,
-      YLOC - (7 / 100) * textProperties.fontSize,
-      0.7 * textProperties.fontSize,
-      textProperties.fontSize
-    );
-
-    ctx.fillStyle = `${textProperties.initialColor}`;
+    const randNum = Math.floor(Math.random() * characters.length);
+    item.firstChar = characters.charAt(randNum);
+    ctx.fillStyle = `${streamProperties.initialColor}`;
     // ctx.shadowColor = "rgba(230,230,230,1)";
-    ctx.shadowColor = textProperties.initialColor;
-    ctx.shadowBlur = textProperties.fontSize / 80;
-    ctx.fillText(firstChar, XLOC, YLOC, 0.5 * textProperties.fontSize);
+    // ctx.shadowColor = streamProperties.initialColor;
+    // ctx.shadowBlur = streamProperties.fontSize / 80;
+    ctx.fillText(item.firstChar, item.XLOC, item.YLOC, fiftyPercentFontSize);
     ctx.shadowColor = null;
     ctx.shadowBlur = null;
-
     // Sets YLOC for next draw interval
-    YLOC += textProperties.fontSize;
-
-    if (YLOC > canvas.offsetHeight + textProperties.fontSize * streamLength) {
-      window.clearInterval(drawInterval);
-      colsActive--;
+    item.YLOC += streamProperties.fontSize;
+    if (
+      item.YLOC >
+      canvas.offsetHeight + streamProperties.fontSize * item.streamLength
+    ) {
+      item.YLOC = randomYStart();
+      item.firstChar = null;
     }
-  }, randomSpeed());
-  // END drawInterval
-  colsActive++;
-  colTracker.add({ col: XLOC, date: Date.now(), interval: drawInterval });
+  });
 };
 
-const activeStreamsSpan = document.getElementById("active-streams");
-const streamMaxLengthSpan = document.getElementById("max-length");
-const streamMinLengthSpan = document.getElementById("min-length");
-const streamFontSize = document.getElementById("font-size");
+let intervalStore = [];
+const genStreams = (minSpeed, maxSpeed, numOfIntervals, numOfStreams) => {
+  const allSets = [];
+  for (let i = 0; i < numOfIntervals; i++) {
+    allSets.push(new Set());
+  }
 
-let writeInterval;
-const startWriting = () => {
-  writeInterval = window.setInterval(() => {
-    createWriteStream();
+  do {
+    const randStream = Math.floor(Math.random() * allSets.length);
 
-    // Update debug info
-    activeStreamsSpan.innerText = colsActive;
-    streamMaxLengthSpan.innerText = textProperties.maxLength;
-    streamMinLengthSpan.innerText = textProperties.minLength;
-  }, 300);
+    allSets[randStream].add({
+      XLOC: Math.floor(randomColumn() * 0.7 * streamProperties.fontSize),
+      YLOC: randomYStart(),
+      streamLength:
+        Math.ceil(Math.random() * streamProperties.maxLength) +
+        streamProperties.minLength,
+      firstChar: null,
+      secondChar: null,
+    });
+    numOfStreams--;
+  } while (numOfStreams > 0);
+
+  for (let i = 0; i < numOfIntervals; i++) {
+    const randSpeed =
+      Math.floor(Math.random() * streamProperties.minSpeed) +
+      streamProperties.maxSpeed;
+    let newInterval = window.setInterval(() => {
+      updateStreams(allSets[i]);
+    }, randSpeed);
+    intervalStore.push(newInterval);
+  }
+
+  updateReadout();
 };
-startWriting();
 
-const setFontSizeInput = document.getElementById("set-font-size");
+const calculateMaxStreams = () => {
+  const columns = Math.floor(
+    window.innerWidth / (0.7 * streamProperties.fontSize)
+  );
+  let totalStreams = Math.floor(
+    columns *
+      (canvas.height /
+        (streamProperties.maxLength - streamProperties.minLength))
+  );
+
+  totalStreams = Math.floor(0.5 * totalStreams);
+
+  if (totalStreams > 15000) totalStreams = 15000;
+
+  streamProperties.maxStreams = totalStreams;
+  activeStreamsSpan.innerText = totalStreams;
+  return totalStreams;
+};
 
 let setFontTimeout;
 const setFontSize = (timeout = 1500) => {
+  window.clearInterval(setFontTimeout);
   streamFontSize.innerText = setFontSizeInput.value;
   setFontTimeout = window.setTimeout(() => {
-    window.clearInterval(writeInterval);
-
-    if (setFontSizeInput.value < 5) {
-      textProperties.fontSize = 5;
-      setFontSizeInput.value = 5;
-    } else if (setFontSizeInput.value > 100) {
-      textProperties.fontSize = 100;
-      setFontSizeInput.value = 100;
-    } else {
-      textProperties.fontSize = parseInt(setFontSizeInput.value);
-    }
-
-    colTracker.forEach((item, idx) => {
-      window.clearInterval(item.interval);
+    intervalStore.forEach((interval, idx) => {
+      window.clearInterval(interval);
     });
 
-    colsActive = 0;
-    colTracker = new Set();
-
-    startWriting();
+    if (setFontSizeInput.value < 5) {
+      streamProperties.fontSize = 5;
+      setFontSizeInput.value = 5;
+    } else if (setFontSizeInput.value > 100) {
+      streamProperties.fontSize = 100;
+      setFontSizeInput.value = 100;
+    } else {
+      streamProperties.fontSize = parseInt(setFontSizeInput.value);
+    }
 
     setCanvasSize();
+
+    genStreams(
+      streamProperties.maxSpeed,
+      streamProperties.minSpeed,
+      streamProperties.maxIntervals,
+      calculateMaxStreams()
+    );
   }, timeout);
 };
 
 window.addEventListener("resize", () => {
+  intervalStore.forEach((interval, idx) => {
+    window.clearInterval(interval);
+  });
   setCanvasSize();
+  genStreams(
+    streamProperties.maxSpeed,
+    streamProperties.minSpeed,
+    streamProperties.maxIntervals,
+    calculateMaxStreams()
+  );
+  updateReadout();
 });
+
+genStreams(
+  streamProperties.maxSpeed,
+  streamProperties.minSpeed,
+  streamProperties.maxIntervals,
+  calculateMaxStreams()
+);
