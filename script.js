@@ -140,12 +140,27 @@ const setStreamLength = (min = null, max = null) => {
   clearAllIntervals();
   if (min) streamProperties.minLength = min;
   if (max) streamProperties.maxLength = max;
+  setCanvasSize();
+  genStreamsAndIntervals(
+    streamProperties.maxSpeed,
+    streamProperties.minSpeed,
+    streamProperties.maxIntervals,
+    calculateMaxStreams()
+  );
   updateReadout();
 };
 
 const setStreamSpeed = (min = null, max = null) => {
+  clearAllIntervals();
   if (min) streamProperties.minSpeed = min;
   if (max) streamProperties.maxSpeed = max;
+  setCanvasSize();
+  genStreamsAndIntervals(
+    streamProperties.maxSpeed,
+    streamProperties.minSpeed,
+    streamProperties.maxIntervals,
+    calculateMaxStreams()
+  );
   updateReadout();
 };
 // END streamProperties & functions
