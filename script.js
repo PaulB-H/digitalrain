@@ -1,4 +1,4 @@
-// Setup canvas / context
+// Setup canvas & contexts
 const canvas = document.getElementById("canvas");
 const ctx = canvas.getContext("2d");
 const canvas2 = document.getElementById("canvas2");
@@ -7,6 +7,7 @@ const ctx2 = canvas2.getContext("2d");
 const characters =
   "MATRIXMATRIXMATRIXMATRIXMAØ1Ø1Ø1Ø1Ø#$%@&#$%@&ｦｧｨｩｪｫｬｭｮｯｱｲｳｴｵｶｷｸｹｺｻｼｽｾｿﾀﾁﾂﾃﾄﾅﾇﾈﾉﾊﾋﾌﾍﾎﾏﾐﾑﾒﾓﾔﾕﾖﾗﾘﾙﾚﾛﾜﾝｦｧｨｩｪｫｬｭｮｯｱｲｳｴｵｶｷｸｹｺｻｼｽｾｿﾀﾁﾂﾃﾄﾅﾇﾈﾉﾊﾋﾌﾍﾎﾏﾐﾑﾒﾓﾔﾕﾖﾗﾘﾙﾚﾛﾜﾝｦｧｨｩｪｫｬｭｮｯｱｲｳｴｵｶｷｸｹｺｻｼｽｾｿﾀﾁﾂﾃﾄﾅﾇﾈﾉﾊﾋﾌﾍﾎﾏﾐﾑﾒﾓﾔﾕﾖﾗﾘﾙﾚﾛﾜﾝｦｧｨｩｪｫｬｭｮｯｱｲｳｴｵｶｷｸｹｺｻｼｽｾｿﾀﾁﾂﾃﾄﾅﾇﾈﾉﾊﾋﾌﾍﾎﾏﾐﾑﾒﾓﾔﾕﾖﾗﾘﾙﾚﾛﾜﾝ";
 
+// Spans to update with stream info...
 const activeStreamsSpan = document.getElementById("active-streams");
 const streamMaxLengthSpan = document.getElementById("max-length");
 const streamMinLengthSpan = document.getElementById("min-length");
@@ -15,7 +16,18 @@ const streamMaxSpeedSpan = document.getElementById("max-speed");
 const streamMinSpeedSpan = document.getElementById("min-speed");
 const streamFontSize = document.getElementById("font-size");
 const setFontSizeInput = document.getElementById("set-font-size");
+// ... and a function update them
+const updateReadout = () => {
+  activeStreamsSpan.innerText = streamProperties.maxStreams;
+  streamMaxLengthSpan.innerText = streamProperties.maxLength;
+  streamMinLengthSpan.innerText = streamProperties.minLength;
+  numOfIntervalsSpan.innerText = streamProperties.maxIntervals;
+  streamFontSize.innerText = streamProperties.fontSize;
+  streamMaxSpeedSpan.innerText = streamProperties.maxSpeed;
+  streamMinSpeedSpan.innerText = streamProperties.minSpeed;
+};
 
+// streamProperties & functions
 const streamProperties = {
   initialColor: "#e4e6e3",
   secondColor: "#6cfe6b",
@@ -30,51 +42,6 @@ const streamProperties = {
 
   maxIntervals: 100,
   maxStreams: null,
-};
-
-const updateReadout = () => {
-  activeStreamsSpan.innerText = streamProperties.maxStreams;
-  streamMaxLengthSpan.innerText = streamProperties.maxLength;
-  streamMinLengthSpan.innerText = streamProperties.minLength;
-  numOfIntervalsSpan.innerText = streamProperties.maxIntervals;
-  streamFontSize.innerText = streamProperties.fontSize;
-  streamMaxSpeedSpan.innerText = streamProperties.maxSpeed;
-  streamMinSpeedSpan.innerText = streamProperties.minSpeed;
-};
-
-const setCanvasSize = () => {
-  if (window.innerWidth > document.querySelector("body").offsetWidth) {
-    canvas.width = window.innerWidth;
-    canvas2.width = window.innerWidth;
-  } else {
-    canvas.width = document.querySelector("body").offsetWidth;
-    canvas2.width = document.querySelector("body").offsetWidth;
-  }
-  if (window.innerHeight > document.querySelector("body").offsetHeight) {
-    canvas.height = window.innerHeight;
-    canvas2.height = window.innerHeight;
-  } else {
-    canvas.height = document.querySelector("body").offsetHeight;
-    canvas2.height = document.querySelector("body").offsetHeight;
-  }
-
-  ctx.translate(canvas.width, 0);
-  ctx.scale(-1, 1);
-  ctx2.translate(canvas.width, 0);
-  ctx2.scale(-1, 1);
-
-  ctx.fillStyle = "black";
-  ctx.fillRect(0, 0, canvas.width, canvas.height);
-
-  ctx.font = `${streamProperties.fontSize}px "Cutive Mono", monospace`;
-  ctx.textBaseline = "top";
-};
-setCanvasSize();
-
-const setStreamSpeed = (min = null, max = null) => {
-  if (min) streamProperties.minSpeed = min;
-  if (max) streamProperties.maxSpeed = max;
-  updateReadout();
 };
 
 const changeStreamProperties = (color1, color2, color3, fontSize) => {
@@ -108,12 +75,155 @@ const setTheme = (themeName, fontSize) => {
   }
 };
 
+let setFontTimeout;
+const setFontSize = (timeout = 1500) => {
+  window.clearInterval(setFontTimeout);
+  streamFontSize.innerText = setFontSizeInput.value;
+  setFontTimeout = window.setTimeout(() => {
+    clearAllIntervals();
+
+    if (setFontSizeInput.value < 5) {
+      streamProperties.fontSize = 5;
+      setFontSizeInput.value = 5;
+    } else if (setFontSizeInput.value > 100) {
+      streamProperties.fontSize = 100;
+      setFontSizeInput.value = 100;
+    } else {
+      streamProperties.fontSize = parseInt(setFontSizeInput.value);
+    }
+
+    setCanvasSize();
+
+    genStreamsAndIntervals(
+      streamProperties.maxSpeed,
+      streamProperties.minSpeed,
+      streamProperties.maxIntervals,
+      calculateMaxStreams()
+    );
+  }, timeout);
+};
+
+const setStreamLength = (min = null, max = null) => {
+  clearAllIntervals();
+  if (min) streamProperties.minLength = min;
+  if (max) streamProperties.maxLength = max;
+  updateReadout();
+};
+
+const setStreamSpeed = (min = null, max = null) => {
+  if (min) streamProperties.minSpeed = min;
+  if (max) streamProperties.maxSpeed = max;
+  updateReadout();
+};
+// END streamProperties & functions
+
+// Canvas sizing
+const setCanvasSize = () => {
+  if (window.innerWidth > document.querySelector("body").offsetWidth) {
+    canvas.width = window.innerWidth;
+    canvas2.width = window.innerWidth;
+  } else {
+    canvas.width = document.querySelector("body").offsetWidth;
+    canvas2.width = document.querySelector("body").offsetWidth;
+  }
+  if (window.innerHeight > document.querySelector("body").offsetHeight) {
+    canvas.height = window.innerHeight;
+    canvas2.height = window.innerHeight;
+  } else {
+    canvas.height = document.querySelector("body").offsetHeight;
+    canvas2.height = document.querySelector("body").offsetHeight;
+  }
+
+  ctx.translate(canvas.width, 0);
+  ctx.scale(-1, 1);
+  ctx2.translate(canvas.width, 0);
+  ctx2.scale(-1, 1);
+
+  ctx.fillStyle = "black";
+  ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+  ctx.font = `${streamProperties.fontSize}px "Cutive Mono", monospace`;
+  ctx.textBaseline = "top";
+};
+setCanvasSize();
+
+// Interval Management
+let intervalStore = [];
+const clearAllIntervals = () => {
+  intervalStore.forEach((interval, idx) => {
+    window.clearInterval(interval);
+  });
+};
+
+// Stream Generation & Main Draw (updateStreams)
 const randomColumn = () => {
   const columns = window.innerWidth / (0.7 * streamProperties.fontSize);
   return Math.floor(Math.random() * columns);
 };
-const randomYStart = () =>
-  Math.floor(Math.random() * canvas.height) * streamProperties.fontSize * -1;
+
+const randomYStart = () => {
+  return (
+    Math.floor(Math.random() * canvas.height) * streamProperties.fontSize * -1
+  );
+};
+
+const calculateMaxStreams = () => {
+  const columns = Math.floor(
+    window.innerWidth / (0.7 * streamProperties.fontSize)
+  );
+  let totalStreams = Math.floor(
+    columns *
+      (canvas.height /
+        (streamProperties.maxLength - streamProperties.minLength))
+  );
+
+  totalStreams = Math.floor(0.5 * totalStreams);
+
+  if (totalStreams > 15000) totalStreams = 15000;
+
+  streamProperties.maxStreams = totalStreams;
+  activeStreamsSpan.innerText = totalStreams;
+  return totalStreams;
+};
+
+const genStreamsAndIntervals = (
+  minSpeed,
+  maxSpeed,
+  numOfIntervals,
+  numOfStreams
+) => {
+  const allSets = [];
+  for (let i = 0; i < numOfIntervals; i++) {
+    allSets.push(new Set());
+  }
+
+  do {
+    const randStream = Math.floor(Math.random() * allSets.length);
+
+    allSets[randStream].add({
+      XLOC: Math.floor(randomColumn() * 0.7 * streamProperties.fontSize),
+      YLOC: randomYStart(),
+      streamLength:
+        Math.ceil(Math.random() * streamProperties.maxLength) +
+        streamProperties.minLength,
+      firstChar: null,
+      secondChar: null,
+    });
+    numOfStreams--;
+  } while (numOfStreams > 0);
+
+  for (let i = 0; i < numOfIntervals; i++) {
+    const randSpeed =
+      Math.floor(Math.random() * streamProperties.minSpeed) +
+      streamProperties.maxSpeed;
+    let newInterval = window.setInterval(() => {
+      updateStreams(allSets[i]);
+    }, randSpeed);
+    intervalStore.push(newInterval);
+  }
+
+  updateReadout();
+};
 
 const updateStreams = (set) => {
   set.forEach((item, idx) => {
@@ -261,97 +371,15 @@ const updateStreams = (set) => {
     }
   });
 };
+// END Stream Generation & Main Draw
 
-let intervalStore = [];
-const genStreams = (minSpeed, maxSpeed, numOfIntervals, numOfStreams) => {
-  const allSets = [];
-  for (let i = 0; i < numOfIntervals; i++) {
-    allSets.push(new Set());
-  }
-
-  do {
-    const randStream = Math.floor(Math.random() * allSets.length);
-
-    allSets[randStream].add({
-      XLOC: Math.floor(randomColumn() * 0.7 * streamProperties.fontSize),
-      YLOC: randomYStart(),
-      streamLength:
-        Math.ceil(Math.random() * streamProperties.maxLength) +
-        streamProperties.minLength,
-      firstChar: null,
-      secondChar: null,
-    });
-    numOfStreams--;
-  } while (numOfStreams > 0);
-
-  for (let i = 0; i < numOfIntervals; i++) {
-    const randSpeed =
-      Math.floor(Math.random() * streamProperties.minSpeed) +
-      streamProperties.maxSpeed;
-    let newInterval = window.setInterval(() => {
-      updateStreams(allSets[i]);
-    }, randSpeed);
-    intervalStore.push(newInterval);
-  }
-
-  updateReadout();
-};
-
-const calculateMaxStreams = () => {
-  const columns = Math.floor(
-    window.innerWidth / (0.7 * streamProperties.fontSize)
-  );
-  let totalStreams = Math.floor(
-    columns *
-      (canvas.height /
-        (streamProperties.maxLength - streamProperties.minLength))
-  );
-
-  totalStreams = Math.floor(0.5 * totalStreams);
-
-  if (totalStreams > 15000) totalStreams = 15000;
-
-  streamProperties.maxStreams = totalStreams;
-  activeStreamsSpan.innerText = totalStreams;
-  return totalStreams;
-};
-
-let setFontTimeout;
-const setFontSize = (timeout = 1500) => {
-  window.clearInterval(setFontTimeout);
-  streamFontSize.innerText = setFontSizeInput.value;
-  setFontTimeout = window.setTimeout(() => {
-    intervalStore.forEach((interval, idx) => {
-      window.clearInterval(interval);
-    });
-
-    if (setFontSizeInput.value < 5) {
-      streamProperties.fontSize = 5;
-      setFontSizeInput.value = 5;
-    } else if (setFontSizeInput.value > 100) {
-      streamProperties.fontSize = 100;
-      setFontSizeInput.value = 100;
-    } else {
-      streamProperties.fontSize = parseInt(setFontSizeInput.value);
-    }
-
-    setCanvasSize();
-
-    genStreams(
-      streamProperties.maxSpeed,
-      streamProperties.minSpeed,
-      streamProperties.maxIntervals,
-      calculateMaxStreams()
-    );
-  }, timeout);
-};
-
+// Resize function
 window.addEventListener("resize", () => {
   intervalStore.forEach((interval, idx) => {
     window.clearInterval(interval);
   });
   setCanvasSize();
-  genStreams(
+  genStreamsAndIntervals(
     streamProperties.maxSpeed,
     streamProperties.minSpeed,
     streamProperties.maxIntervals,
@@ -360,7 +388,8 @@ window.addEventListener("resize", () => {
   updateReadout();
 });
 
-genStreams(
+// Start drawing
+genStreamsAndIntervals(
   streamProperties.maxSpeed,
   streamProperties.minSpeed,
   streamProperties.maxIntervals,
