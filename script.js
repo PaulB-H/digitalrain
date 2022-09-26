@@ -8,6 +8,7 @@ const characters =
   "MATRIXMATRIXMATRIXMATRIXMAØ1Ø1Ø1Ø1Ø#$%@&#$%@&ｦｧｨｩｪｫｬｭｮｯｱｲｳｴｵｶｷｸｹｺｻｼｽｾｿﾀﾁﾂﾃﾄﾅﾇﾈﾉﾊﾋﾌﾍﾎﾏﾐﾑﾒﾓﾔﾕﾖﾗﾘﾙﾚﾛﾜﾝｦｧｨｩｪｫｬｭｮｯｱｲｳｴｵｶｷｸｹｺｻｼｽｾｿﾀﾁﾂﾃﾄﾅﾇﾈﾉﾊﾋﾌﾍﾎﾏﾐﾑﾒﾓﾔﾕﾖﾗﾘﾙﾚﾛﾜﾝｦｧｨｩｪｫｬｭｮｯｱｲｳｴｵｶｷｸｹｺｻｼｽｾｿﾀﾁﾂﾃﾄﾅﾇﾈﾉﾊﾋﾌﾍﾎﾏﾐﾑﾒﾓﾔﾕﾖﾗﾘﾙﾚﾛﾜﾝｦｧｨｩｪｫｬｭｮｯｱｲｳｴｵｶｷｸｹｺｻｼｽｾｿﾀﾁﾂﾃﾄﾅﾇﾈﾉﾊﾋﾌﾍﾎﾏﾐﾑﾒﾓﾔﾕﾖﾗﾘﾙﾚﾛﾜﾝ";
 
 // Spans to update with stream info...
+const mainDetailsDiv = document.getElementById("details");
 const activeStreamsSpan = document.getElementById("active-streams");
 const streamMaxLengthSpan = document.getElementById("max-length");
 const streamMinLengthSpan = document.getElementById("min-length");
@@ -26,6 +27,12 @@ const updateReadout = () => {
   streamMaxSpeedSpan.innerText = streamProperties.maxSpeed;
   streamMinSpeedSpan.innerText = streamProperties.minSpeed;
 };
+const toggleDetailsDiv = () => {
+  mainDetailsDiv.classList.contains("d-none")
+    ? mainDetailsDiv.classList.remove("d-none")
+    : mainDetailsDiv.classList.add("d-none");
+};
+
 // Canvas sizing
 const setCanvasSize = () => {
   if (window.innerWidth > document.querySelector("body").offsetWidth) {
