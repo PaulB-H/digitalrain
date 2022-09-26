@@ -26,6 +26,32 @@ const updateReadout = () => {
   streamMaxSpeedSpan.innerText = streamProperties.maxSpeed;
   streamMinSpeedSpan.innerText = streamProperties.minSpeed;
 };
+// Canvas sizing
+const setCanvasSize = () => {
+  if (window.innerWidth > document.querySelector("body").offsetWidth) {
+    canvas.width = window.innerWidth;
+    canvas2.width = window.innerWidth;
+  } else {
+    canvas.width = document.querySelector("body").offsetWidth;
+    canvas2.width = document.querySelector("body").offsetWidth;
+  }
+  if (window.innerHeight > document.querySelector("body").offsetHeight) {
+    canvas.height = window.innerHeight;
+    canvas2.height = window.innerHeight;
+  } else {
+    canvas.height = document.querySelector("body").offsetHeight;
+    canvas2.height = document.querySelector("body").offsetHeight;
+  }
+
+  ctx.translate(canvas.width, 0);
+  ctx.scale(-1, 1);
+  ctx2.translate(canvas.width, 0);
+  ctx2.scale(-1, 1);
+
+  ctx.fillStyle = "black";
+  ctx.fillRect(0, 0, canvas.width, canvas.height);
+};
+setCanvasSize();
 
 // streamProperties & functions
 const streamProperties = {
@@ -117,36 +143,6 @@ const setStreamSpeed = (min = null, max = null) => {
 };
 // END streamProperties & functions
 
-// Canvas sizing
-const setCanvasSize = () => {
-  if (window.innerWidth > document.querySelector("body").offsetWidth) {
-    canvas.width = window.innerWidth;
-    canvas2.width = window.innerWidth;
-  } else {
-    canvas.width = document.querySelector("body").offsetWidth;
-    canvas2.width = document.querySelector("body").offsetWidth;
-  }
-  if (window.innerHeight > document.querySelector("body").offsetHeight) {
-    canvas.height = window.innerHeight;
-    canvas2.height = window.innerHeight;
-  } else {
-    canvas.height = document.querySelector("body").offsetHeight;
-    canvas2.height = document.querySelector("body").offsetHeight;
-  }
-
-  ctx.translate(canvas.width, 0);
-  ctx.scale(-1, 1);
-  ctx2.translate(canvas.width, 0);
-  ctx2.scale(-1, 1);
-
-  ctx.fillStyle = "black";
-  ctx.fillRect(0, 0, canvas.width, canvas.height);
-
-  ctx.font = `${streamProperties.fontSize}px "Cutive Mono", monospace`;
-  ctx.textBaseline = "top";
-};
-setCanvasSize();
-
 // Interval Management
 let intervalStore = [];
 const clearAllIntervals = () => {
@@ -227,6 +223,9 @@ const genStreamsAndIntervals = (
 
 const updateStreams = (set) => {
   set.forEach((item, idx) => {
+    ctx.font = `${streamProperties.fontSize}px "Cutive Mono", monospace`;
+    ctx.textBaseline = "top";
+
     const fontSizeMinus7Percent =
       streamProperties.fontSize - (7 / 100) * streamProperties.fontSize;
 
