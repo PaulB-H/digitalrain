@@ -190,9 +190,7 @@ const calculateMaxStreams = () => {
     window.innerWidth / (0.7 * streamProperties.fontSize)
   );
   let totalStreams = Math.floor(
-    columns *
-      (canvas.height /
-        (streamProperties.maxLength - streamProperties.minLength))
+    columns * (canvas.height / streamProperties.maxLength)
   );
 
   totalStreams = Math.floor(0.5 * totalStreams);
