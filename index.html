@@ -47,7 +47,15 @@
       margin-top: 10px;
     }
 
+    #profiles {
+      max-width: 250px;
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+    }
+
     #profiles>button {
+      margin: 5px;
       padding: 3px 10px;
       font-size: 1em;
       font-weight: bold;
@@ -87,6 +95,7 @@
       <button id="matrix" onclick="setTheme('ice'); discoMode(true)">Ice</button>
       <button id="matrix" onclick="setTheme('pink'); discoMode(true)">Pink</button>
       <button id="matrix" onclick="setTheme('purple'); discoMode(true)">Vanu</button>
+      <button id="disco" onclick="discoMode()">Disco</button>
     </div>
   </div>
 
