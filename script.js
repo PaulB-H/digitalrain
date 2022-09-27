@@ -414,3 +414,18 @@ genStreamsAndIntervals(
   streamProperties.maxIntervals,
   calculateMaxStreams()
 );
+
+let discoInterval;
+const discoMode = (stop = false) => {
+  if (stop) {
+    window.clearInterval(discoInterval);
+    return;
+  }
+  const themes = ["matrix", "fire", "ice", "pink", "purple"];
+  let currentTheme = 0;
+  discoInterval = window.setInterval(() => {
+    setTheme(themes[currentTheme]);
+    currentTheme++;
+    if (currentTheme === 5) currentTheme = 0;
+  }, 250);
+};
