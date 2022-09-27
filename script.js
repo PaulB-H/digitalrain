@@ -100,7 +100,7 @@ const setTheme = (themeName, fontSize) => {
     case "pink":
       changeStreamProperties("lightpink", "pink", "palevioletred", fontSize);
       break;
-    case "purple":
+    case "vanu":
       changeStreamProperties("#EA3FFA", "#C187E0", "#8115F5", fontSize);
       break;
     default:
@@ -421,7 +421,7 @@ const discoMode = (stop = false) => {
     window.clearInterval(discoInterval);
     return;
   }
-  const themes = ["matrix", "fire", "ice", "pink", "purple"];
+  const themes = ["matrix", "fire", "ice", "pink", "vanu"];
   let currentTheme = 0;
   discoInterval = window.setInterval(() => {
     setTheme(themes[currentTheme]);
