@@ -421,6 +421,7 @@ const discoMode = (stop = false) => {
     window.clearInterval(discoInterval);
     return;
   }
+  window.clearInterval(discoInterval);
   const themes = ["matrix", "fire", "ice", "pink", "vanu"];
   let currentTheme = 0;
   discoInterval = window.setInterval(() => {
