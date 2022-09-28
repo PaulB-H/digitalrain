@@ -17,6 +17,7 @@ const streamMaxSpeedSpan = document.getElementById("max-speed");
 const streamMinSpeedSpan = document.getElementById("min-speed");
 const streamFontSize = document.getElementById("font-size");
 const setFontSizeInput = document.getElementById("set-font-size");
+const toggleDetailsButton = document.getElementById("toggle-details-btn");
 // ... and a function update them
 const updateReadout = () => {
   activeStreamsSpan.innerText = streamProperties.maxStreams;
@@ -28,9 +29,16 @@ const updateReadout = () => {
   streamMinSpeedSpan.innerText = streamProperties.minSpeed;
 };
 const toggleDetailsDiv = () => {
-  mainDetailsDiv.classList.contains("d-none")
-    ? mainDetailsDiv.classList.remove("d-none")
-    : mainDetailsDiv.classList.add("d-none");
+  const allDetails = document.querySelectorAll("#details div");
+  console.log(allDetails);
+  allDetails.forEach((element, idx) => {
+    element.classList.contains("d-none")
+      ? element.classList.remove("d-none")
+      : element.classList.add("d-none");
+  });
+  toggleDetailsButton.classList.contains("fade-button")
+    ? toggleDetailsButton.classList.remove("fade-button")
+    : toggleDetailsButton.classList.add("fade-button");
 };
 let getFontTimeout;
 const getFontSizeFromSlider = () => {

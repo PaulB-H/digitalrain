@@ -54,10 +54,10 @@
       justify-content: center;
     }
 
-    #profiles>button {
+    .big-gray-btn {
       margin: 5px;
       padding: 3px 10px;
-      font-size: 1em;
+      font-size: 1.1em;
       font-weight: bold;
       color: black;
       border: none;
@@ -66,7 +66,11 @@
     }
 
     .d-none {
-      display: none;
+      display: none !important;
+    }
+
+    .fade-button {
+      background-color: rgba(100, 100, 100, 0.5) !important;
     }
   </style>
 </head>
@@ -75,7 +79,9 @@
   <canvas id="canvas"></canvas>
   <canvas id="canvas2" style="position: absolute; top: 0; left: 0; z-index: 10;"></canvas>
 
+
   <div id="details">
+    <button id="toggle-details-btn" class="big-gray-btn" onclick="toggleDetailsDiv()">Toggle Details</button>
     <div id="debug">
       <p>Total Streams: <span id="active-streams"></span></p>
       <p>Min Length: <span id="min-length"></span></p>
@@ -90,12 +96,12 @@
     </div>
 
     <div id="profiles">
-      <button id="matrix" onclick="setTheme('matrix'); discoMode(true)">Matrix</button>
-      <button id="matrix" onclick="setTheme('fire'); discoMode(true)">Fire</button>
-      <button id="matrix" onclick="setTheme('ice'); discoMode(true)">Ice</button>
-      <button id="matrix" onclick="setTheme('pink'); discoMode(true)">Pink</button>
-      <button id="matrix" onclick="setTheme('vanu'); discoMode(true)">Vanu</button>
-      <button id="disco" onclick="discoMode()">Disco</button>
+      <button id="matrix" class="big-gray-btn" onclick="setTheme('matrix'); discoMode(true)">Matrix</button>
+      <button id="matrix" class="big-gray-btn" onclick="setTheme('fire'); discoMode(true)">Fire</button>
+      <button id="matrix" class="big-gray-btn" onclick="setTheme('ice'); discoMode(true)">Ice</button>
+      <button id="matrix" class="big-gray-btn" onclick="setTheme('pink'); discoMode(true)">Pink</button>
+      <button id="matrix" class="big-gray-btn" onclick="setTheme('vanu'); discoMode(true)">Vanu</button>
+      <button id="disco" class="big-gray-btn" onclick="discoMode()">Disco</button>
     </div>
   </div>
 
