@@ -32,6 +32,14 @@ const toggleDetailsDiv = () => {
     ? mainDetailsDiv.classList.remove("d-none")
     : mainDetailsDiv.classList.add("d-none");
 };
+let getFontTimeout;
+const getFontSizeFromSlider = () => {
+  streamFontSize.innerText = setFontSizeInput.value;
+  window.clearInterval(getFontTimeout);
+  getFontTimeout = window.setTimeout(() => {
+    setFontSize(setFontSizeInput.value);
+  }, 1500);
+};
 
 // Canvas sizing
 const setCanvasSize = () => {
@@ -108,32 +116,25 @@ const setTheme = (themeName, fontSize) => {
   }
 };
 
-let setFontTimeout;
-const setFontSize = (timeout = 1500) => {
-  window.clearInterval(setFontTimeout);
-  streamFontSize.innerText = setFontSizeInput.value;
-  setFontTimeout = window.setTimeout(() => {
-    clearAllIntervals();
+const setFontSize = (fontSize) => {
+  clearAllIntervals();
 
-    if (setFontSizeInput.value < 5) {
-      streamProperties.fontSize = 5;
-      setFontSizeInput.value = 5;
-    } else if (setFontSizeInput.value > 100) {
-      streamProperties.fontSize = 100;
-      setFontSizeInput.value = 100;
-    } else {
-      streamProperties.fontSize = parseInt(setFontSizeInput.value);
-    }
+  if (fontSize < 5) {
+    streamProperties.fontSize = 5;
+  } else if (fontSize > 100) {
+    streamProperties.fontSize = 100;
+  } else {
+    streamProperties.fontSize = parseInt(setFontSizeInput.value);
+  }
 
-    setCanvasSize();
+  setCanvasSize();
 
-    genStreamsAndIntervals(
-      streamProperties.maxSpeed,
-      streamProperties.minSpeed,
-      streamProperties.maxIntervals,
-      calculateMaxStreams()
-    );
-  }, timeout);
+  genStreamsAndIntervals(
+    streamProperties.maxSpeed,
+    streamProperties.minSpeed,
+    streamProperties.maxIntervals,
+    calculateMaxStreams()
+  );
 };
 
 const setStreamLength = (min = null, max = null) => {
