@@ -255,10 +255,12 @@ const updateStreams = (set) => {
     // New Clear Rect
     ctx2.fillStyle = "black";
     ctx2.fillRect(
-      item.XLOC - 0.175 * streamProperties.fontSize,
-      item.YLOC -
-        streamProperties.fontSize * item.streamLength -
-        0.1 * streamProperties.fontSize,
+      Math.floor(item.XLOC - 0.175 * streamProperties.fontSize),
+      Math.floor(
+        item.YLOC -
+          streamProperties.fontSize * item.streamLength -
+          0.1 * streamProperties.fontSize
+      ),
       0.9 * streamProperties.fontSize,
       streamProperties.fontSize
     );
@@ -278,10 +280,12 @@ const updateStreams = (set) => {
     for (let i = 4; i < item.streamLength - 3; i++) {
       ctx2.fillStyle = "rgba(0, 0, 0, 0.075)";
       ctx2.fillRect(
-        item.XLOC,
-        item.YLOC -
-          streamProperties.fontSize * i -
-          0.1 * streamProperties.fontSize,
+        Math.floor(item.XLOC),
+        Math.floor(
+          item.YLOC -
+            streamProperties.fontSize * i -
+            0.1 * streamProperties.fontSize
+        ),
         seventyPercentFontSize,
         streamProperties.fontSize
       );
@@ -294,11 +298,12 @@ const updateStreams = (set) => {
 
       ctx.fillStyle = "black";
       ctx.fillRect(
-        item.XLOC - 0.1 * streamProperties.fontSize,
-
-        item.YLOC -
-          streamProperties.fontSize * loc -
-          0.1 * streamProperties.fontSize,
+        Math.floor(item.XLOC - 0.1 * streamProperties.fontSize),
+        Math.floor(
+          item.YLOC -
+            streamProperties.fontSize * loc -
+            0.1 * streamProperties.fontSize
+        ),
         seventyPercentFontSize,
         streamProperties.fontSize
       );
@@ -306,8 +311,8 @@ const updateStreams = (set) => {
       ctx.fillStyle = `${streamProperties.settledColor}`;
       ctx.fillText(
         characters.charAt(Math.floor(Math.random() * characters.length)),
-        item.XLOC,
-        item.YLOC - streamProperties.fontSize * loc,
+        Math.floor(item.XLOC),
+        Math.floor(item.YLOC - streamProperties.fontSize * loc),
         fiftyPercentFontSize
       );
     }
@@ -316,11 +321,12 @@ const updateStreams = (set) => {
     if (item.secondChar) {
       ctx.fillStyle = "black";
       ctx.fillRect(
-        item.XLOC - (7 / 100) * streamProperties.fontSize,
-
-        item.YLOC -
-          streamProperties.fontSize * 2 -
-          0.1 * streamProperties.fontSize,
+        Math.floor(item.XLOC - (7 / 100) * streamProperties.fontSize),
+        Math.floor(
+          item.YLOC -
+            streamProperties.fontSize * 2 -
+            0.1 * streamProperties.fontSize
+        ),
         seventyPercentFontSize,
         streamProperties.fontSize
       );
@@ -328,8 +334,8 @@ const updateStreams = (set) => {
       ctx.fillStyle = `${streamProperties.settledColor}`;
       ctx.fillText(
         item.secondChar,
-        item.XLOC,
-        item.YLOC - streamProperties.fontSize * 2,
+        Math.floor(item.XLOC),
+        Math.floor(item.YLOC - streamProperties.fontSize * 2),
         fiftyPercentFontSize
       );
     }
@@ -339,16 +345,20 @@ const updateStreams = (set) => {
       // Clear square to clean glow from first char
       ctx.fillStyle = "black";
       ctx.fillRect(
-        item.XLOC,
-        item.YLOC - streamProperties.fontSize - 0.1 * streamProperties.fontSize,
+        Math.floor(item.XLOC),
+        Math.floor(
+          item.YLOC -
+            streamProperties.fontSize -
+            0.1 * streamProperties.fontSize
+        ),
         seventyPercentFontSize,
         streamProperties.fontSize
       );
       ctx.fillStyle = `${streamProperties.secondColor}`;
       ctx.fillText(
         item.firstChar,
-        item.XLOC,
-        item.YLOC - streamProperties.fontSize,
+        Math.floor(item.XLOC),
+        Math.floor(item.YLOC - streamProperties.fontSize),
         fiftyPercentFontSize
       );
       item.secondChar = item.firstChar;
@@ -356,15 +366,15 @@ const updateStreams = (set) => {
 
     ctx.fillStyle = "black";
     ctx.fillRect(
-      item.XLOC,
-      item.YLOC - 0.1 * streamProperties.fontSize,
+      Math.floor(item.XLOC),
+      Math.floor(item.YLOC - 0.1 * streamProperties.fontSize),
       seventyPercentFontSize,
       streamProperties.fontSize
     );
     // ctx.fillStyle = "black";
     ctx2.clearRect(
-      item.XLOC - 0.1 * streamProperties.fontSize,
-      item.YLOC - 0.1 * streamProperties.fontSize,
+      Math.floor(item.XLOC - 0.1 * streamProperties.fontSize),
+      Math.floor(item.YLOC - 0.1 * streamProperties.fontSize),
       seventyPercentFontSize,
       streamProperties.fontSize
     );
@@ -376,7 +386,12 @@ const updateStreams = (set) => {
     // ctx.shadowColor = "rgba(230,230,230,1)";
     // ctx.shadowColor = streamProperties.initialColor;
     // ctx.shadowBlur = streamProperties.fontSize / 80;
-    ctx.fillText(item.firstChar, item.XLOC, item.YLOC, fiftyPercentFontSize);
+    ctx.fillText(
+      item.firstChar,
+      Math.floor(item.XLOC),
+      Math.floor(item.YLOC),
+      fiftyPercentFontSize
+    );
     ctx.shadowColor = null;
     ctx.shadowBlur = null;
     // Sets YLOC for next draw interval
