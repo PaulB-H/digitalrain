@@ -30,7 +30,6 @@ const updateReadout = () => {
 };
 const toggleDetailsDiv = () => {
   const allDetails = document.querySelectorAll("#details div");
-  console.log(allDetails);
   allDetails.forEach((element, idx) => {
     element.classList.contains("d-none")
       ? element.classList.remove("d-none")
