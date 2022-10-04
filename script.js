@@ -286,6 +286,20 @@ const updateStreams = (set) => {
       }
     };
 
+    const textTweak = (context, character, xloc, yloc, charPos) => {
+      context.fillText(
+        character,
+        Math.floor(xloc),
+        Math.floor(yloc - streamProperties.fontSize * charPos),
+        fiftyPercentFontSize
+      );
+    };
+
+    getRandomChar = () => {
+      const randNum = Math.floor(Math.random() * characters.length);
+      return characters.charAt(randNum);
+    };
+
     // New Clear Rect
     ctx2.fillStyle = "black";
     rectTweak("fill", ctx2, item.XLOC, item.YLOC, item.streamLength);
@@ -316,12 +330,7 @@ const updateStreams = (set) => {
       rectTweak("fill", ctx, item.XLOC, item.YLOC, loc);
 
       ctx.fillStyle = `${streamProperties.settledColor}`;
-      ctx.fillText(
-        characters.charAt(Math.floor(Math.random() * characters.length)),
-        Math.floor(item.XLOC),
-        Math.floor(item.YLOC - streamProperties.fontSize * loc),
-        fiftyPercentFontSize
-      );
+      textTweak(ctx, getRandomChar(), item.XLOC, item.YLOC, loc);
     }
 
     // Third character
@@ -330,12 +339,7 @@ const updateStreams = (set) => {
       rectTweak("fill", ctx, item.XLOC, item.YLOC, 2);
 
       ctx.fillStyle = `${streamProperties.settledColor}`;
-      ctx.fillText(
-        item.secondChar,
-        Math.floor(item.XLOC),
-        Math.floor(item.YLOC - streamProperties.fontSize * 2),
-        fiftyPercentFontSize
-      );
+      textTweak(ctx, item.secondChar, item.XLOC, item.YLOC, 2);
     }
 
     // Second Character
@@ -345,12 +349,7 @@ const updateStreams = (set) => {
       rectTweak("fill", ctx, item.XLOC, item.YLOC, 1);
 
       ctx.fillStyle = `${streamProperties.secondColor}`;
-      ctx.fillText(
-        item.firstChar,
-        Math.floor(item.XLOC),
-        Math.floor(item.YLOC - streamProperties.fontSize),
-        fiftyPercentFontSize
-      );
+      textTweak(ctx, item.secondChar, item.XLOC, item.YLOC, 1);
       item.secondChar = item.firstChar;
     }
 
@@ -369,12 +368,7 @@ const updateStreams = (set) => {
     // ctx.shadowColor = "rgba(230,230,230,1)";
     // ctx.shadowColor = streamProperties.initialColor;
     // ctx.shadowBlur = streamProperties.fontSize / 80;
-    ctx.fillText(
-      item.firstChar,
-      Math.floor(item.XLOC),
-      Math.floor(item.YLOC),
-      fiftyPercentFontSize
-    );
+    textTweak(ctx, item.firstChar, item.XLOC, item.YLOC, 0);
     // ctx.shadowColor = null;
     // ctx.shadowBlur = null;
     // Sets YLOC for next draw interval
