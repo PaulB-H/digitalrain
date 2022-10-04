@@ -391,6 +391,7 @@ const updateStreams = (set) => {
     const randNum = Math.floor(Math.random() * characters.length);
     item.firstChar = characters.charAt(randNum);
     ctx.fillStyle = `${streamProperties.initialColor}`;
+    //!!!NOTE!!!! ShadowBlur below is very bad for performance!!
     // ctx.shadowColor = "rgba(230,230,230,1)";
     // ctx.shadowColor = streamProperties.initialColor;
     // ctx.shadowBlur = streamProperties.fontSize / 80;
@@ -400,8 +401,8 @@ const updateStreams = (set) => {
       Math.floor(item.YLOC),
       fiftyPercentFontSize
     );
-    ctx.shadowColor = null;
-    ctx.shadowBlur = null;
+    // ctx.shadowColor = null;
+    // ctx.shadowBlur = null;
     // Sets YLOC for next draw interval
     item.YLOC += streamProperties.fontSize;
     if (
