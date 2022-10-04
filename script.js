@@ -260,18 +260,35 @@ const updateStreams = (set) => {
     const seventyPercentFontSize = 0.7 * streamProperties.fontSize;
     const fiftyPercentFontSize = 0.5 * streamProperties.fontSize;
 
+    const rectTweak = (fillOrClear, context, xloc, yloc, charPos) => {
+      if (fillOrClear === "fill") {
+        context.fillRect(
+          Math.floor(xloc),
+          Math.floor(
+            yloc -
+              streamProperties.fontSize * charPos -
+              0.1 * streamProperties.fontSize
+          ),
+          fiftyPercentFontSize,
+          streamProperties.fontSize
+        );
+      } else if (fillOrClear === "clear") {
+        context.clearRect(
+          Math.floor(xloc),
+          Math.floor(
+            yloc -
+              streamProperties.fontSize * charPos -
+              0.1 * streamProperties.fontSize
+          ),
+          fiftyPercentFontSize,
+          streamProperties.fontSize
+        );
+      }
+    };
+
     // New Clear Rect
     ctx2.fillStyle = "black";
-    ctx2.fillRect(
-      Math.floor(item.XLOC),
-      Math.floor(
-        item.YLOC -
-          streamProperties.fontSize * item.streamLength -
-          0.1 * streamProperties.fontSize
-      ),
-      0.5 * streamProperties.fontSize,
-      streamProperties.fontSize
-    );
+    rectTweak("fill", ctx2, item.XLOC, item.YLOC, item.streamLength);
 
     /*
       !! Drawing the fading this way is very detrimental to performance !!
@@ -287,16 +304,7 @@ const updateStreams = (set) => {
     // if (streamProperties.totalStreams < 5000) {
     for (let i = 4; i < item.streamLength - 3; i++) {
       ctx2.fillStyle = "rgba(0, 0, 0, 0.075)";
-      ctx2.fillRect(
-        Math.floor(item.XLOC),
-        Math.floor(
-          item.YLOC -
-            streamProperties.fontSize * i -
-            0.1 * streamProperties.fontSize
-        ),
-        0.5 * streamProperties.fontSize,
-        streamProperties.fontSize
-      );
+      rectTweak("fill", ctx2, item.XLOC, item.YLOC, i);
     }
     // }
 
@@ -305,16 +313,7 @@ const updateStreams = (set) => {
       let loc = Math.floor(Math.random() * (item.streamLength - 4) + 4);
 
       ctx.fillStyle = "black";
-      ctx.fillRect(
-        Math.floor(item.XLOC - 0.1 * streamProperties.fontSize),
-        Math.floor(
-          item.YLOC -
-            streamProperties.fontSize * loc -
-            0.1 * streamProperties.fontSize
-        ),
-        seventyPercentFontSize,
-        streamProperties.fontSize
-      );
+      rectTweak("fill", ctx, item.XLOC, item.YLOC, loc);
 
       ctx.fillStyle = `${streamProperties.settledColor}`;
       ctx.fillText(
@@ -328,16 +327,7 @@ const updateStreams = (set) => {
     // Third character
     if (item.secondChar) {
       ctx.fillStyle = "black";
-      ctx.fillRect(
-        Math.floor(item.XLOC - (7 / 100) * streamProperties.fontSize),
-        Math.floor(
-          item.YLOC -
-            streamProperties.fontSize * 2 -
-            0.1 * streamProperties.fontSize
-        ),
-        seventyPercentFontSize,
-        streamProperties.fontSize
-      );
+      rectTweak("fill", ctx, item.XLOC, item.YLOC, 2);
 
       ctx.fillStyle = `${streamProperties.settledColor}`;
       ctx.fillText(
@@ -352,16 +342,8 @@ const updateStreams = (set) => {
     if (item.firstChar) {
       // Clear square to clean glow from first char
       ctx.fillStyle = "black";
-      ctx.fillRect(
-        Math.floor(item.XLOC),
-        Math.floor(
-          item.YLOC -
-            streamProperties.fontSize -
-            0.1 * streamProperties.fontSize
-        ),
-        seventyPercentFontSize,
-        streamProperties.fontSize
-      );
+      rectTweak("fill", ctx, item.XLOC, item.YLOC, 1);
+
       ctx.fillStyle = `${streamProperties.secondColor}`;
       ctx.fillText(
         item.firstChar,
@@ -375,19 +357,9 @@ const updateStreams = (set) => {
     // Clear spot on draw ctx for new character
     // (we clear it here instead of end of stream ¯\_(ツ)_/¯ )
     ctx.fillStyle = "black";
-    ctx.fillRect(
-      Math.floor(item.XLOC),
-      Math.floor(item.YLOC - 0.1 * streamProperties.fontSize),
-      0.5 * streamProperties.fontSize,
-      streamProperties.fontSize
-    );
+    rectTweak("fill", ctx, item.XLOC, item.YLOC, 0);
     // Clear spot on shadow ctx
-    ctx2.clearRect(
-      Math.floor(item.XLOC),
-      Math.floor(item.YLOC - 0.1 * streamProperties.fontSize),
-      0.5 * streamProperties.fontSize,
-      streamProperties.fontSize
-    );
+    rectTweak("clear", ctx2, item.XLOC, item.YLOC, 0);
 
     // First (new) character
     const randNum = Math.floor(Math.random() * characters.length);
