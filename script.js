@@ -372,18 +372,20 @@ const updateStreams = (set) => {
       item.secondChar = item.firstChar;
     }
 
+    // Clear spot on draw ctx for new character
+    // (we clear it here instead of end of stream ¯\_(ツ)_/¯ )
     ctx.fillStyle = "black";
     ctx.fillRect(
       Math.floor(item.XLOC),
       Math.floor(item.YLOC - 0.1 * streamProperties.fontSize),
-      seventyPercentFontSize,
+      0.5 * streamProperties.fontSize,
       streamProperties.fontSize
     );
-    // ctx.fillStyle = "black";
+    // Clear spot on shadow ctx
     ctx2.clearRect(
-      Math.floor(item.XLOC - 0.1 * streamProperties.fontSize),
+      Math.floor(item.XLOC),
       Math.floor(item.YLOC - 0.1 * streamProperties.fontSize),
-      seventyPercentFontSize,
+      0.5 * streamProperties.fontSize,
       streamProperties.fontSize
     );
 
