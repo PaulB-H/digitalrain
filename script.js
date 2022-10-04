@@ -263,13 +263,13 @@ const updateStreams = (set) => {
     // New Clear Rect
     ctx2.fillStyle = "black";
     ctx2.fillRect(
-      Math.floor(item.XLOC - 0.175 * streamProperties.fontSize),
+      Math.floor(item.XLOC),
       Math.floor(
         item.YLOC -
           streamProperties.fontSize * item.streamLength -
           0.1 * streamProperties.fontSize
       ),
-      0.9 * streamProperties.fontSize,
+      0.5 * streamProperties.fontSize,
       streamProperties.fontSize
     );
 
@@ -294,7 +294,7 @@ const updateStreams = (set) => {
             streamProperties.fontSize * i -
             0.1 * streamProperties.fontSize
         ),
-        seventyPercentFontSize,
+        0.5 * streamProperties.fontSize,
         streamProperties.fontSize
       );
     }
