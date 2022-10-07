@@ -349,7 +349,7 @@ const updateStreams = (set) => {
       rectTweak("fill", ctx, item.XLOC, item.YLOC, 1);
 
       ctx.fillStyle = `${streamProperties.secondColor}`;
-      textTweak(ctx, item.secondChar, item.XLOC, item.YLOC, 1);
+      textTweak(ctx, item.firstChar, item.XLOC, item.YLOC, 1);
       item.secondChar = item.firstChar;
     }
 
