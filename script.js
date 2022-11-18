@@ -254,10 +254,6 @@ const updateStreams = (set) => {
     ctx.font = `${streamProperties.fontSize}px "Cutive Mono", monospace`;
     ctx.textBaseline = "top";
 
-    const fontSizeMinus7Percent =
-      streamProperties.fontSize - (7 / 100) * streamProperties.fontSize;
-
-    const seventyPercentFontSize = 0.7 * streamProperties.fontSize;
     const fiftyPercentFontSize = 0.5 * streamProperties.fontSize;
 
     const rectTweak = (fillOrClear, context, xloc, yloc, charPos) => {
