@@ -181,7 +181,7 @@ const clearAllIntervals = () => {
   });
 };
 
-// Stream Generation & Main Draw (updateStreams)
+// Stream Generation & Update
 const randomColumn = () => {
   const columns = window.innerWidth / (0.7 * streamProperties.fontSize);
   return Math.floor(Math.random() * columns);
@@ -367,7 +367,7 @@ const updateStreams = (set) => {
     }
   });
 };
-// END Stream Generation & Main Draw
+// END Stream Generation & Update
 
 // Resize function
 window.addEventListener("resize", () => {
