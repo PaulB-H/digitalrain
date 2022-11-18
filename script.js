@@ -136,12 +136,7 @@ const setFontSize = (fontSize) => {
 
   setCanvasSize();
 
-  genStreamsAndIntervals(
-    streamProperties.maxSpeed,
-    streamProperties.minSpeed,
-    streamProperties.maxIntervals,
-    calculateMaxStreams()
-  );
+  genStreamsAndIntervals();
 };
 
 const setStreamLength = (min = null, max = null) => {
@@ -149,12 +144,7 @@ const setStreamLength = (min = null, max = null) => {
   if (min) streamProperties.minLength = min;
   if (max) streamProperties.maxLength = max;
   setCanvasSize();
-  genStreamsAndIntervals(
-    streamProperties.maxSpeed,
-    streamProperties.minSpeed,
-    streamProperties.maxIntervals,
-    calculateMaxStreams()
-  );
+  genStreamsAndIntervals();
   updateReadout();
 };
 
@@ -167,12 +157,7 @@ const setStreamSpeed = (min = null, max = null) => {
   if (min) streamProperties.minSpeed = min;
   if (max) streamProperties.maxSpeed = max;
   setCanvasSize();
-  genStreamsAndIntervals(
-    streamProperties.maxSpeed,
-    streamProperties.minSpeed,
-    streamProperties.maxIntervals,
-    calculateMaxStreams()
-  );
+  genStreamsAndIntervals();
   updateReadout();
 };
 // END streamProperties & functions
@@ -214,14 +199,11 @@ const calculateMaxStreams = () => {
   return totalStreams;
 };
 
-const genStreamsAndIntervals = (
-  minSpeed,
-  maxSpeed,
-  numOfIntervals,
-  numOfStreams
-) => {
+const genStreamsAndIntervals = () => {
+  let numOfStreams = calculateMaxStreams();
+
   const allSets = [];
-  for (let i = 0; i < numOfIntervals; i++) {
+  for (let i = 0; i < streamProperties.maxIntervals; i++) {
     allSets.push(new Set());
   }
 
@@ -240,7 +222,7 @@ const genStreamsAndIntervals = (
     numOfStreams--;
   } while (numOfStreams > 0);
 
-  for (let i = 0; i < numOfIntervals; i++) {
+  for (let i = 0; i < streamProperties.maxIntervals; i++) {
     const randSpeed =
       Math.floor(Math.random() * streamProperties.minSpeed) +
       streamProperties.maxSpeed;
@@ -379,22 +361,12 @@ window.addEventListener("resize", () => {
     window.clearInterval(interval);
   });
   setCanvasSize();
-  genStreamsAndIntervals(
-    streamProperties.maxSpeed,
-    streamProperties.minSpeed,
-    streamProperties.maxIntervals,
-    calculateMaxStreams()
-  );
+  genStreamsAndIntervals();
   updateReadout();
 });
 
 // Start drawing
-genStreamsAndIntervals(
-  streamProperties.maxSpeed,
-  streamProperties.minSpeed,
-  streamProperties.maxIntervals,
-  calculateMaxStreams()
-);
+genStreamsAndIntervals();
 
 let discoInterval;
 const discoMode = (stop = false) => {
