@@ -300,27 +300,20 @@ const updateStreams = (set) => {
       return characters.charAt(randNum);
     };
 
-    // New Clear Rect
+    /*
+      Think of the end of the stream being at the top of the code here...
+    */
+
+    // Clean up at the end of the stream
     ctx2.fillStyle = "black";
     rectTweak("fill", ctx2, item.XLOC, item.YLOC, item.streamLength);
 
-    /*
-      !! Drawing the fading this way is very detrimental to performance !!
-    */
-    // // Clear up the last shadow layer, to prepare for next stream
-    // ctx2.clearRect(
-    //   item.XLOC,
-    //   Math.floor(item.YLOC - item.streamLength * fontSizeMinus7Percent),
-    //   seventyPercentFontSize,
-    //   streamProperties.fontSize
-    // );
-    // Fading per-stream, on other canvas
-    // if (streamProperties.totalStreams < 5000) {
+    // Shading with rgba() is detrimental to performance because
+    // the browser has to calculate the blending on each draw
     for (let i = 4; i < item.streamLength - 3; i++) {
       ctx2.fillStyle = "rgba(0, 0, 0, 0.075)";
       rectTweak("fill", ctx2, item.XLOC, item.YLOC, i);
     }
-    // }
 
     // Chance to flip an already placed character
     if (Math.floor(Math.random() * 3) === 1) {
@@ -353,25 +346,21 @@ const updateStreams = (set) => {
       item.secondChar = item.firstChar;
     }
 
-    // Clear spot on draw ctx for new character
-    // (we clear it here instead of end of stream ¯\_(ツ)_/¯ )
+    // Paint area for new character black
     ctx.fillStyle = "black";
     rectTweak("fill", ctx, item.XLOC, item.YLOC, 0);
-    // Clear spot on shadow ctx
+
+    // Clear the shadow layer at the same spot
     rectTweak("clear", ctx2, item.XLOC, item.YLOC, 0);
 
     // First (new) character
     const randNum = Math.floor(Math.random() * characters.length);
     item.firstChar = characters.charAt(randNum);
     ctx.fillStyle = `${streamProperties.initialColor}`;
-    //!!!NOTE!!!! ShadowBlur below is very bad for performance!!
-    // ctx.shadowColor = "rgba(230,230,230,1)";
-    // ctx.shadowColor = streamProperties.initialColor;
-    // ctx.shadowBlur = streamProperties.fontSize / 80;
     textTweak(ctx, item.firstChar, item.XLOC, item.YLOC, 0);
-    // ctx.shadowColor = null;
-    // ctx.shadowBlur = null;
-    // Sets YLOC for next draw interval
+
+    // Set YLOC for next draw interval...
+    // ... or send to top if entire stream off page
     item.YLOC += streamProperties.fontSize;
     if (
       item.YLOC >
