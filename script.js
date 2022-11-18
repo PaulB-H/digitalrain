@@ -158,7 +158,11 @@ const setStreamLength = (min = null, max = null) => {
   updateReadout();
 };
 
+// ... Because this sets an interval timer:
+// min being larger = slower interval,
+// max being smaller = faster interval
 const setStreamSpeed = (min = null, max = null) => {
+  if (max > min) return "min must be greater than max";
   clearAllIntervals();
   if (min) streamProperties.minSpeed = min;
   if (max) streamProperties.maxSpeed = max;
