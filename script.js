@@ -18,6 +18,7 @@ const streamMinSpeedSpan = document.getElementById("min-speed");
 const streamFontSize = document.getElementById("font-size");
 const setFontSizeInput = document.getElementById("set-font-size");
 const toggleDetailsButton = document.getElementById("toggle-details-btn");
+const toggleBoldCheckbox = document.getElementById("bold-checkbox");
 // ... and a function update them
 const updateReadout = () => {
   activeStreamsSpan.innerText = streamProperties.maxStreams;
@@ -47,6 +48,11 @@ const getFontSizeFromSlider = () => {
     setFontSize(setFontSizeInput.value);
   }, 1500);
 };
+toggleBoldCheckbox.addEventListener("change", (e) => {
+  if (e.target.checked) streamProperties.bold = true;
+  else streamProperties.bold = false;
+  setCanvasSize();
+});
 
 // Canvas sizing
 const setCanvasSize = () => {
@@ -86,6 +92,8 @@ const streamProperties = {
 
   maxIntervals: 100,
   maxStreams: null,
+
+  bold: true,
 };
 
 const changeStreamProperties = (color1, color2, color3) => {
@@ -250,9 +258,16 @@ const genStreamsAndIntervals = () => {
 const updateStreams = (set) => {
   set.forEach((item, idx) => {
     ctx.font = `${streamProperties.fontSize}px "Cutive Mono", monospace`;
+    if (streamProperties.bold === true) {
+      ctx.font = `bold ${streamProperties.fontSize}px "Cutive Mono", monospace`;
+    }
+
     ctx.textBaseline = "top";
 
-    const fiftyPercentFontSize = 0.5 * streamProperties.fontSize;
+    let fiftyPercentFontSize = 0.5 * streamProperties.fontSize;
+    if (streamProperties.bold === true) {
+      fiftyPercentFontSize = 0.7 * streamProperties.fontSize;
+    }
 
     const rectTweak = (fillOrClear, context, xloc, yloc, charPos) => {
       if (fillOrClear === "fill") {

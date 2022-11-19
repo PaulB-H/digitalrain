@@ -42,6 +42,10 @@
       margin: 15px;
     }
 
+    #debug p {
+      margin: 5px 0;
+    }
+
     #debug>p>span {
       font-weight: bold;
     }
@@ -97,6 +101,11 @@
       <label for="set-font-size">Set Font Size</label>
       <input id="set-font-size" autocomplete="off" type="range" min="10" max="100" value="20"
         oninput="getFontSizeFromSlider()">
+      <div style="display: flex; align-items: center; margin: 10px;">
+        <label style="font-weight: bold; margin-right: 15px;" for="bold-checkbox">Bold</label>
+        <input style="width: 25px; height: 25px" type="checkbox" id="bold-checkbox" name="bold" checked autocomplete="off">
+      </div>
+      
     </div>
 
     <div id="profiles">
