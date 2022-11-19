@@ -50,13 +50,9 @@ const getFontSizeFromSlider = () => {
 
 // Canvas sizing
 const setCanvasSize = () => {
-  if (window.innerWidth > document.querySelector("body").offsetWidth) {
-    canvas.width = window.innerWidth;
-    canvas2.width = window.innerWidth;
-  } else {
-    canvas.width = document.querySelector("body").offsetWidth;
-    canvas2.width = document.querySelector("body").offsetWidth;
-  }
+  canvas.width = document.querySelector("body").offsetWidth;
+  canvas2.width = document.querySelector("body").offsetWidth;
+
   if (window.innerHeight > document.querySelector("body").offsetHeight) {
     canvas.height = window.innerHeight;
     canvas2.height = window.innerHeight;
@@ -67,7 +63,7 @@ const setCanvasSize = () => {
 
   ctx.translate(canvas.width, 0);
   ctx.scale(-1, 1);
-  ctx2.translate(canvas.width, 0);
+  ctx2.translate(canvas2.width, 0);
   ctx2.scale(-1, 1);
 
   ctx.fillStyle = "black";
@@ -372,11 +368,15 @@ const updateStreams = (set) => {
 // END Stream Generation & Update
 
 // Resize function
+let resizeTimer;
 window.addEventListener("resize", () => {
-  clearAllIntervals();
-  setCanvasSize();
-  genStreamsAndIntervals();
-  updateReadout();
+  window.clearInterval(resizeTimer);
+  resizeTimer = window.setTimeout(() => {
+    clearAllIntervals();
+    setCanvasSize();
+    genStreamsAndIntervals();
+    updateReadout();
+  }, 750);
 });
 
 // Start drawing
