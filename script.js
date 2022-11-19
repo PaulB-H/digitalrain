@@ -51,7 +51,9 @@ const getFontSizeFromSlider = () => {
 toggleBoldCheckbox.addEventListener("change", (e) => {
   if (e.target.checked) streamProperties.bold = true;
   else streamProperties.bold = false;
+  clearAllIntervals();
   setCanvasSize();
+  genStreamsAndIntervals();
 });
 
 // Canvas sizing
@@ -266,24 +268,37 @@ const updateStreams = (set) => {
 
     let fiftyPercentFontSize = 0.5 * streamProperties.fontSize;
     if (streamProperties.bold === true) {
-      fiftyPercentFontSize = 0.7 * streamProperties.fontSize;
+      fiftyPercentFontSize = 0.75 * streamProperties.fontSize;
     }
 
     const rectTweak = (fillOrClear, context, xloc, yloc, charPos) => {
       if (fillOrClear === "fill") {
-        context.fillRect(
-          Math.floor(xloc),
-          Math.floor(
-            yloc -
-              streamProperties.fontSize * charPos -
-              0.1 * streamProperties.fontSize
-          ),
-          fiftyPercentFontSize,
-          streamProperties.fontSize
-        );
+        if (streamProperties.bold === false) {
+          context.fillRect(
+            Math.floor(xloc),
+            Math.floor(
+              yloc -
+                streamProperties.fontSize * charPos -
+                0.1 * streamProperties.fontSize
+            ),
+            fiftyPercentFontSize,
+            streamProperties.fontSize
+          );
+        } else {
+          context.fillRect(
+            Math.floor(xloc - 0.05 * streamProperties.fontSize),
+            Math.floor(
+              yloc -
+                streamProperties.fontSize * charPos -
+                0.1 * streamProperties.fontSize
+            ),
+            fiftyPercentFontSize,
+            streamProperties.fontSize
+          );
+        }
       } else if (fillOrClear === "clear") {
         context.clearRect(
-          Math.floor(xloc),
+          Math.floor(xloc - 0.05 * streamProperties.fontSize),
           Math.floor(
             yloc -
               streamProperties.fontSize * charPos -
@@ -316,6 +331,8 @@ const updateStreams = (set) => {
     // Clean up at the end of the stream
     ctx2.fillStyle = "black";
     rectTweak("fill", ctx2, item.XLOC, item.YLOC, item.streamLength);
+    ctx.fillStyle = "black";
+    rectTweak("fill", ctx, item.XLOC, item.YLOC, item.streamLength);
 
     // Shading with rgba() is detrimental to performance because
     // the browser has to calculate the blending on each draw
