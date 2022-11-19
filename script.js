@@ -92,35 +92,50 @@ const streamProperties = {
   maxStreams: null,
 };
 
-const changeStreamProperties = (color1, color2, color3, fontSize) => {
+const changeStreamProperties = (color1, color2, color3) => {
   streamProperties.initialColor = color1;
   streamProperties.secondColor = color2;
   streamProperties.settledColor = color3;
-  if (fontSize) {
-    streamProperties.fontSize = fontSize;
-    setCanvasSize();
-  }
 };
-const setTheme = (themeName, fontSize) => {
-  switch (themeName.toLowerCase()) {
-    case "matrix":
-      changeStreamProperties("#e4e6e3", "#6cfe6b", "#00dd00", fontSize);
-      break;
-    case "fire":
-      changeStreamProperties("Yellow", "Orange", "Red", fontSize);
-      break;
-    case "ice":
-      changeStreamProperties("aqua", "skyblue", "darkcyan", fontSize);
-      break;
-    case "pink":
-      changeStreamProperties("lightpink", "pink", "palevioletred", fontSize);
-      break;
-    case "vanu":
-      changeStreamProperties("#EA3FFA", "#C187E0", "#8115F5", fontSize);
-      break;
-    default:
-      break;
-  }
+
+const themes = new Set([
+  {
+    name: "matrix",
+    color1: "#e4e6e3",
+    color2: "#6cfe6b",
+    color3: "#00dd00",
+  },
+  {
+    name: "fire",
+    color1: "yellow",
+    color2: "orange",
+    color3: "red",
+  },
+  {
+    name: "ice",
+    color1: "aqua",
+    color2: "skyblue",
+    color3: "darkcyan",
+  },
+  {
+    name: "pink",
+    color1: "lightpink",
+    color2: "pink",
+    color3: "palevioletred",
+  },
+  {
+    name: "vanu",
+    color1: "#EA3FFA",
+    color2: "#C187E0",
+    color3: "#8115F5",
+  },
+]);
+const setTheme = (themeName) => {
+  themes.forEach((theme) => {
+    if (theme.name === themeName.toLowerCase()) {
+      changeStreamProperties(theme.color1, theme.color2, theme.color3);
+    }
+  });
 };
 
 const setFontSize = (fontSize) => {
