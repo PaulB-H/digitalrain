@@ -183,6 +183,7 @@ const clearAllIntervals = () => {
   intervalStore.forEach((interval, idx) => {
     window.clearInterval(interval);
   });
+  intervalStore = [];
 };
 
 // Stream Generation & Update
@@ -372,9 +373,7 @@ const updateStreams = (set) => {
 
 // Resize function
 window.addEventListener("resize", () => {
-  intervalStore.forEach((interval, idx) => {
-    window.clearInterval(interval);
-  });
+  clearAllIntervals();
   setCanvasSize();
   genStreamsAndIntervals();
   updateReadout();
