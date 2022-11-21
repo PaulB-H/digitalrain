@@ -98,10 +98,10 @@ const streamProperties = {
   bold: true,
 };
 
-const changeStreamProperties = (color1, color2, color3) => {
-  streamProperties.initialColor = color1;
-  streamProperties.secondColor = color2;
-  streamProperties.settledColor = color3;
+const changeStreamColors = (color1, color2, color3) => {
+  if (color1) streamProperties.initialColor = color1;
+  if (color2) streamProperties.secondColor = color2;
+  if (color3) streamProperties.settledColor = color3;
 };
 
 const themes = [
@@ -139,7 +139,7 @@ const themes = [
 const setTheme = (themeName) => {
   themes.forEach((theme) => {
     if (theme.name === themeName.toLowerCase()) {
-      changeStreamProperties(theme.color1, theme.color2, theme.color3);
+      changeStreamColors(theme.color1, theme.color2, theme.color3);
     }
   });
 };
