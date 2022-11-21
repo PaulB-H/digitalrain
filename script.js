@@ -104,7 +104,7 @@ const changeStreamProperties = (color1, color2, color3) => {
   streamProperties.settledColor = color3;
 };
 
-const themes = new Set([
+const themes = [
   {
     name: "matrix",
     color1: "#e4e6e3",
@@ -135,7 +135,7 @@ const themes = new Set([
     color2: "#C187E0",
     color3: "#8115F5",
   },
-]);
+];
 const setTheme = (themeName) => {
   themes.forEach((theme) => {
     if (theme.name === themeName.toLowerCase()) {
