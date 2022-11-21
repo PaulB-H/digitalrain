@@ -266,37 +266,39 @@ const updateStreams = (set) => {
 
     ctx.textBaseline = "top";
 
-    let fiftyPercentFontSize = 0.5 * streamProperties.fontSize;
+    let rectTrim = 0.5 * streamProperties.fontSize;
     if (streamProperties.bold === true) {
-      fiftyPercentFontSize = 0.75 * streamProperties.fontSize;
+      rectTrim = 0.75 * streamProperties.fontSize;
     }
 
-    const rectTweak = (fillOrClear, context, xloc, yloc, charPos) => {
-      if (fillOrClear === "fill") {
-        if (streamProperties.bold === false) {
-          context.fillRect(
-            Math.floor(xloc),
-            Math.floor(
-              yloc -
-                streamProperties.fontSize * charPos -
-                0.1 * streamProperties.fontSize
-            ),
-            fiftyPercentFontSize,
-            streamProperties.fontSize
-          );
-        } else {
-          context.fillRect(
-            Math.floor(xloc - 0.05 * streamProperties.fontSize),
-            Math.floor(
-              yloc -
-                streamProperties.fontSize * charPos -
-                0.1 * streamProperties.fontSize
-            ),
-            fiftyPercentFontSize,
-            streamProperties.fontSize
-          );
-        }
-      } else if (fillOrClear === "clear") {
+    const fillRectTweak = (context, xloc, yloc, charPos) => {
+      if (streamProperties.bold) {
+        context.fillRect(
+          Math.floor(xloc - 0.05 * streamProperties.fontSize),
+          Math.floor(
+            yloc -
+              streamProperties.fontSize * charPos -
+              0.1 * streamProperties.fontSize
+          ),
+          rectTrim,
+          streamProperties.fontSize
+        );
+      } else {
+        context.fillRect(
+          Math.floor(xloc),
+          Math.floor(
+            yloc -
+              streamProperties.fontSize * charPos -
+              0.1 * streamProperties.fontSize
+          ),
+          rectTrim,
+          streamProperties.fontSize
+        );
+      }
+    };
+
+    const clearRectTweak = (context, xloc, yloc, charPos) => {
+      if (streamProperties.bold) {
         context.clearRect(
           Math.floor(xloc - 0.05 * streamProperties.fontSize),
           Math.floor(
@@ -304,7 +306,18 @@ const updateStreams = (set) => {
               streamProperties.fontSize * charPos -
               0.1 * streamProperties.fontSize
           ),
-          fiftyPercentFontSize,
+          rectTrim,
+          streamProperties.fontSize
+        );
+      } else {
+        context.clearRect(
+          Math.floor(xloc - 0.05 * streamProperties.fontSize),
+          Math.floor(
+            yloc -
+              streamProperties.fontSize * charPos -
+              0.1 * streamProperties.fontSize
+          ),
+          rectTrim,
           streamProperties.fontSize
         );
       }
@@ -315,7 +328,7 @@ const updateStreams = (set) => {
         character,
         Math.floor(xloc),
         Math.floor(yloc - streamProperties.fontSize * charPos),
-        fiftyPercentFontSize
+        rectTrim
       );
     };
 
@@ -330,15 +343,15 @@ const updateStreams = (set) => {
 
     // Clean up at the end of the stream
     ctx2.fillStyle = "black";
-    rectTweak("fill", ctx2, item.XLOC, item.YLOC, item.streamLength);
+    fillRectTweak(ctx2, item.XLOC, item.YLOC, item.streamLength);
     ctx.fillStyle = "black";
-    rectTweak("fill", ctx, item.XLOC, item.YLOC, item.streamLength);
+    fillRectTweak(ctx, item.XLOC, item.YLOC, item.streamLength);
 
     // Shading with rgba() is detrimental to performance because
     // the browser has to calculate the blending on each draw
     for (let i = 4; i < item.streamLength - 3; i++) {
       ctx2.fillStyle = "rgba(0, 0, 0, 0.075)";
-      rectTweak("fill", ctx2, item.XLOC, item.YLOC, i);
+      fillRectTweak(ctx2, item.XLOC, item.YLOC, i);
     }
 
     // Chance to flip an already placed character
@@ -346,7 +359,7 @@ const updateStreams = (set) => {
       let loc = Math.floor(Math.random() * (item.streamLength - 4) + 4);
 
       ctx.fillStyle = "black";
-      rectTweak("fill", ctx, item.XLOC, item.YLOC, loc);
+      fillRectTweak(ctx, item.XLOC, item.YLOC, loc);
 
       ctx.fillStyle = `${streamProperties.settledColor}`;
       textTweak(ctx, getRandomChar(), item.XLOC, item.YLOC, loc);
@@ -355,7 +368,7 @@ const updateStreams = (set) => {
     // Third character
     if (item.secondChar) {
       ctx.fillStyle = "black";
-      rectTweak("fill", ctx, item.XLOC, item.YLOC, 2);
+      fillRectTweak(ctx, item.XLOC, item.YLOC, 2);
 
       ctx.fillStyle = `${streamProperties.settledColor}`;
       textTweak(ctx, item.secondChar, item.XLOC, item.YLOC, 2);
@@ -365,7 +378,7 @@ const updateStreams = (set) => {
     if (item.firstChar) {
       // Clear square to clean glow from first char
       ctx.fillStyle = "black";
-      rectTweak("fill", ctx, item.XLOC, item.YLOC, 1);
+      fillRectTweak(ctx, item.XLOC, item.YLOC, 1);
 
       ctx.fillStyle = `${streamProperties.secondColor}`;
       textTweak(ctx, item.firstChar, item.XLOC, item.YLOC, 1);
@@ -374,10 +387,10 @@ const updateStreams = (set) => {
 
     // Paint area for new character black
     ctx.fillStyle = "black";
-    rectTweak("fill", ctx, item.XLOC, item.YLOC, 0);
+    fillRectTweak(ctx, item.XLOC, item.YLOC, 0);
 
     // Clear the shadow layer at the same spot
-    rectTweak("clear", ctx2, item.XLOC, item.YLOC, 0);
+    clearRectTweak(ctx2, item.XLOC, item.YLOC, 0);
 
     // First (new) character
     const randNum = Math.floor(Math.random() * characters.length);
