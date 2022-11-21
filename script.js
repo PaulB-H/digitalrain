@@ -434,11 +434,10 @@ const discoMode = (stop = false) => {
     return;
   }
   window.clearInterval(discoInterval);
-  const themes = ["matrix", "fire", "ice", "pink", "vanu"];
   let currentTheme = 0;
   discoInterval = window.setInterval(() => {
-    setTheme(themes[currentTheme]);
+    setTheme(themes[currentTheme].name);
     currentTheme++;
-    if (currentTheme === 5) currentTheme = 0;
+    if (currentTheme === themes.length) currentTheme = 0;
   }, 250);
 };
