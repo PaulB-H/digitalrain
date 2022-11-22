@@ -27,6 +27,7 @@
     }
 
     #details {
+      max-width: 275px;
       color: white;
       z-index: 100;
       margin: 15px;
@@ -38,16 +39,13 @@
       background-color: rgba(0, 0, 0, 0.75);
     }
 
-    #details>div {
-      margin: 15px;
-    }
-
     #debug p {
       margin: 5px 0;
     }
 
     #debug>p>span {
       font-weight: bold;
+      color: lightgray;
     }
 
     #set-font-size {
@@ -56,10 +54,26 @@
     }
 
     #profiles {
-      max-width: 250px;
       display: flex;
       flex-wrap: wrap;
-      justify-content: center;
+      justify-content: space-around;
+      margin: 10px 0;
+    }
+
+    .color-input-div {
+      display: flex; 
+      flex-direction: column; 
+      align-items: center
+    }
+
+    #color-selectors {
+      display: flex; 
+      justify-content: center; 
+      margin: 0 20px;
+    }
+
+    #color-selectors input {
+      margin:  5px;
     }
 
     .big-gray-btn {
@@ -68,7 +82,6 @@
       font-size: 1.1em;
       font-weight: bold;
       color: black;
-      border: none;
       background-color: gray;
       border-radius: 5px;
     }
@@ -87,9 +100,9 @@
   <canvas id="canvas"></canvas>
   <canvas id="canvas2" style="position: absolute; top: 0; left: 0; z-index: 10;"></canvas>
 
-
   <div id="details">
     <button id="toggle-details-btn" class="big-gray-btn" onclick="toggleDetailsDiv()">Toggle Details</button>
+
     <div id="debug">
       <p>Total Streams: <span id="active-streams"></span></p>
       <p>Min Length: <span id="min-length"></span></p>
@@ -98,15 +111,45 @@
       <p>Max Speed: <span id="max-speed"></span>ms</p>
       <p>Min Speed: <span id="min-speed"></span>ms</p>
       <p>Font Size: <span id="font-size"></span>px</p>
+    </div>
+
+    <div id="change-stream-properties">
       <label for="set-font-size">Set Font Size</label>
-      <input id="set-font-size" autocomplete="off" type="range" min="10" max="100" value="20"
+      <input id="set-font-size" name="set-font-size" autocomplete="off" type="range" min="10" max="100" value="20"
         oninput="getFontSizeFromSlider()">
+
       <div style="display: flex; align-items: center; margin: 10px;">
-        <label style="font-weight: bold; margin-right: 15px;" for="bold-checkbox">Bold</label>
+        <label style="font-weight: bold; margin-right: 15px; font-size: 20px;" for="bold-checkbox">Bold</label>
         <input style="width: 25px; height: 25px" type="checkbox" id="bold-checkbox" name="bold" checked autocomplete="off">
       </div>
-      
+
+      <p style="text-align: center; margin-bottom: 5px;">&darr; Tap to set a color &darr;</p>
+      <div id="color-selectors">
+        <div class="color-input-div">
+          <label for="color1">Color 1</label>
+          <input type="color" name="color1" id="color1" autocomplete="off" value="#ff0000" 
+            onchange="changeStreamColors(this.value, null, null); discoMode(true)">
+        </div>
+
+        <div class="color-input-div">
+          <label for="color2">Color 2</label>
+          <input type="color" name="color2" id="color2" autocomplete="off" value="#ffff00" 
+            onchange="changeStreamColors(null, this.value, null); discoMode(true)">
+        </div>
+
+        <div class="color-input-div">
+          <label for="color3">Color 3</label>
+          <input type="color" name="color3" id="color3" autocomplete="off" value="#0000ff" 
+            onchange="changeStreamColors(null, null, this.value); discoMode(true)">
+        </div>
+      </div>
+      <!-- END #color-selectors -->
+      <button id="use-these-colors" onclick="useTheseColors(); discoMode(true)" style="width: 100%; " class="big-gray-btn">
+        ^ Use These Colors ^
+      </button>
+
     </div>
+    <!-- END #change-stream-properties -->
 
     <div id="profiles">
       <button class="big-gray-btn" onclick="setTheme('matrix'); discoMode(true)">Matrix</button>
