@@ -128,23 +128,23 @@
         <div class="color-input-div">
           <label for="color1">Color 1</label>
           <input type="color" name="color1" id="color1" autocomplete="off" value="#ff0000" 
-            onchange="changeStreamColors(this.value, null, null); discoMode(true)">
+            onchange="changeStreamColors(this.value, null, null)">
         </div>
 
         <div class="color-input-div">
           <label for="color2">Color 2</label>
           <input type="color" name="color2" id="color2" autocomplete="off" value="#ffff00" 
-            onchange="changeStreamColors(null, this.value, null); discoMode(true)">
+            onchange="changeStreamColors(null, this.value, null)">
         </div>
 
         <div class="color-input-div">
           <label for="color3">Color 3</label>
           <input type="color" name="color3" id="color3" autocomplete="off" value="#0000ff" 
-            onchange="changeStreamColors(null, null, this.value); discoMode(true)">
+            onchange="changeStreamColors(null, null, this.value)">
         </div>
       </div>
       <!-- END #color-selectors -->
-      <button id="use-these-colors" onclick="useTheseColors(); discoMode(true)" style="width: 100%; " class="big-gray-btn">
+      <button id="use-these-colors" onclick="useTheseColors()" style="width: 100%; " class="big-gray-btn">
         ^ Use These Colors ^
       </button>
 
@@ -152,11 +152,11 @@
     <!-- END #change-stream-properties -->
 
     <div id="profiles">
-      <button class="big-gray-btn" onclick="setTheme('matrix'); discoMode(true)">Matrix</button>
-      <button class="big-gray-btn" onclick="setTheme('fire'); discoMode(true)">Fire</button>
-      <button class="big-gray-btn" onclick="setTheme('ice'); discoMode(true)">Ice</button>
-      <button class="big-gray-btn" onclick="setTheme('pink'); discoMode(true)">Pink</button>
-      <button class="big-gray-btn" onclick="setTheme('vanu'); discoMode(true)">Vanu</button>
+      <button class="big-gray-btn" onclick="setTheme('matrix')">Matrix</button>
+      <button class="big-gray-btn" onclick="setTheme('fire')">Fire</button>
+      <button class="big-gray-btn" onclick="setTheme('ice')">Ice</button>
+      <button class="big-gray-btn" onclick="setTheme('pink')">Pink</button>
+      <button class="big-gray-btn" onclick="setTheme('vanu')">Vanu</button>
       <button class="big-gray-btn" onclick="discoMode()">Disco</button>
     </div>
   </div>

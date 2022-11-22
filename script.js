@@ -98,7 +98,14 @@ const streamProperties = {
   bold: true,
 };
 
+const changeDiscoColors = (color1, color2, color3) => {
+  if (color1) streamProperties.initialColor = color1;
+  if (color2) streamProperties.secondColor = color2;
+  if (color3) streamProperties.settledColor = color3;
+};
+
 const changeStreamColors = (color1, color2, color3) => {
+  window.clearInterval(discoInterval);
   if (color1) streamProperties.initialColor = color1;
   if (color2) streamProperties.secondColor = color2;
   if (color3) streamProperties.settledColor = color3;
@@ -433,15 +440,16 @@ window.addEventListener("resize", () => {
 genStreamsAndIntervals();
 
 let discoInterval;
-const discoMode = (stop = false) => {
-  if (stop) {
-    window.clearInterval(discoInterval);
-    return;
-  }
+const discoMode = () => {
   window.clearInterval(discoInterval);
+
   let currentTheme = 0;
   discoInterval = window.setInterval(() => {
-    setTheme(themes[currentTheme].name);
+    changeDiscoColors(
+      themes[currentTheme].color1,
+      themes[currentTheme].color2,
+      themes[currentTheme].color3
+    );
     currentTheme++;
     if (currentTheme === themes.length) currentTheme = 0;
   }, 250);
