@@ -13,8 +13,8 @@ const activeStreamsSpan = document.getElementById("active-streams");
 const streamMaxLengthSpan = document.getElementById("max-length");
 const streamMinLengthSpan = document.getElementById("min-length");
 const numOfIntervalsSpan = document.getElementById("num-intervals");
-const streamMaxSpeedSpan = document.getElementById("max-speed");
-const streamMinSpeedSpan = document.getElementById("min-speed");
+const fastestIntervalSpan = document.getElementById("fastest-interval");
+const slowestIntervalSpan = document.getElementById("slowest-interval");
 const streamFontSize = document.getElementById("font-size");
 const setFontSizeInput = document.getElementById("set-font-size");
 const toggleDetailsButton = document.getElementById("toggle-details-btn");
@@ -26,8 +26,8 @@ const updateReadout = () => {
   streamMinLengthSpan.innerText = streamProperties.minLength;
   numOfIntervalsSpan.innerText = streamProperties.maxIntervals;
   streamFontSize.innerText = streamProperties.fontSize;
-  streamMaxSpeedSpan.innerText = streamProperties.maxSpeed;
-  streamMinSpeedSpan.innerText = streamProperties.minSpeed;
+  fastestIntervalSpan.innerText = streamProperties.fastestInterval;
+  slowestIntervalSpan.innerText = streamProperties.slowestInterval;
 };
 const toggleDetailsDiv = () => {
   const allDetails = document.querySelectorAll("#details div");
@@ -89,8 +89,8 @@ const streamProperties = {
   minLength: 5,
   maxLength: 20,
 
-  minSpeed: 500,
-  maxSpeed: 50,
+  slowestInterval: 500,
+  fastestInterval: 50,
 
   maxIntervals: 100,
   maxStreams: null,
@@ -181,14 +181,12 @@ const setStreamLength = (min = null, max = null) => {
   updateReadout();
 };
 
-// ... Because this sets an interval timer:
-// min being larger = slower interval,
-// max being smaller = faster interval
-const setStreamSpeed = (min = null, max = null) => {
-  if (max > min) return "min must be greater than max";
+const setStreamSpeed = (slowestInterval = null, fastestInterval = null) => {
+  if (fastestInterval > slowestInterval)
+    return "first property (slowest interval) must be larger than second property (fastest interval)";
   clearAllIntervals();
-  if (min) streamProperties.minSpeed = min;
-  if (max) streamProperties.maxSpeed = max;
+  if (slowestInterval) streamProperties.slowestInterval = slowestInterval;
+  if (fastestInterval) streamProperties.fastestInterval = fastestInterval;
   setCanvasSize();
   genStreamsAndIntervals();
   updateReadout();
@@ -258,8 +256,8 @@ const genStreamsAndIntervals = () => {
 
   for (let i = 0; i < streamProperties.maxIntervals; i++) {
     const randSpeed =
-      Math.floor(Math.random() * streamProperties.minSpeed) +
-      streamProperties.maxSpeed;
+      Math.floor(Math.random() * streamProperties.slowestInterval) +
+      streamProperties.fastestInterval;
     let newInterval = window.setInterval(() => {
       updateStreams(allSets[i]);
     }, randSpeed);
