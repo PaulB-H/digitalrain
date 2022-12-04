@@ -19,6 +19,7 @@ const streamFontSize = document.getElementById("font-size");
 const setFontSizeInput = document.getElementById("set-font-size");
 const toggleDetailsButton = document.getElementById("toggle-details-btn");
 const toggleBoldCheckbox = document.getElementById("bold-checkbox");
+const toggleShadingCheckbox = document.getElementById("shading-checkbox");
 // ... and a function update them
 const updateReadout = () => {
   activeStreamsSpan.innerText = streamProperties.maxStreams;
@@ -54,6 +55,10 @@ toggleBoldCheckbox.addEventListener("change", (e) => {
   clearAllIntervals();
   setCanvasSize();
   genStreamsAndIntervals();
+});
+toggleShadingCheckbox.addEventListener("change", (e) => {
+  if (e.target.checked) streamProperties.shading = true;
+  else streamProperties.shading = false;
 });
 
 // Canvas sizing
@@ -96,6 +101,7 @@ const streamProperties = {
   maxStreams: null,
 
   bold: true,
+  shading: true,
 };
 
 const changeDiscoColors = (color1, color2, color3) => {
@@ -359,9 +365,11 @@ const updateStreams = (set) => {
 
     // Shading with rgba() is detrimental to performance because
     // the browser has to calculate the blending on each draw
-    for (let i = 4; i < item.streamLength - 3; i++) {
-      ctx2.fillStyle = "rgba(0, 0, 0, 0.075)";
-      fillRectTweak(ctx2, item.XLOC, item.YLOC, i);
+    if (streamProperties.shading) {
+      for (let i = 4; i < item.streamLength - 3; i++) {
+        ctx2.fillStyle = "rgba(0, 0, 0, 0.075)";
+        fillRectTweak(ctx2, item.XLOC, item.YLOC, i);
+      }
     }
 
     // Chance to flip an already placed character
