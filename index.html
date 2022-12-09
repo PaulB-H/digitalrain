@@ -1,175 +1,263 @@
 <!DOCTYPE html>
 <html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Digital Rain...</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Cutive+Mono&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+        color: darkgray;
+      }
 
-<head>
-  <meta charset="UTF-8">
-  <meta http-equiv="X-UA-Compatible" content="IE=edge">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Digital Rain...</title>
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Cutive+Mono&display=swap" rel="stylesheet">
-  <style>
-    * {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
-      color: darkgray;
-    }
+      body {
+        background-color: black;
+      }
 
-    body {
-      background-color: black;
-    }
+      #canvas,
+      #canvas2 {
+        display: block;
+        max-width: 100%;
+      }
 
-    #canvas, #canvas2 {
-      display: block;
-      max-width: 100%;
-    }
+      #details {
+        max-width: 275px;
+        color: white;
+        z-index: 100;
+        margin: 15px;
+        font-family: sans-serif;
+        position: absolute;
+        bottom: 0;
+        -webkit-box-shadow: 0px 0px 25px 10px rgba(0, 0, 0, 0.75);
+        box-shadow: 0px 0px 25px 10px rgba(0, 0, 0, 0.75);
+        background-color: rgba(0, 0, 0, 0.75);
+      }
 
-    #details {
-      max-width: 275px;
-      color: white;
-      z-index: 100;
-      margin: 15px;
-      font-family: sans-serif;
-      position: absolute;
-      bottom: 0;
-      -webkit-box-shadow: 0px 0px 25px 10px rgba(0, 0, 0, 0.75);
-      box-shadow: 0px 0px 25px 10px rgba(0, 0, 0, 0.75);
-      background-color: rgba(0, 0, 0, 0.75);
-    }
+      #debug p {
+        margin: 5px 0;
+      }
 
-    #debug p {
-      margin: 5px 0;
-    }
+      #debug > p > span {
+        font-weight: bold;
+        color: lightgray;
+      }
 
-    #debug>p>span {
-      font-weight: bold;
-      color: lightgray;
-    }
+      #set-font-size {
+        width: 100%;
+        margin-top: 10px;
+      }
 
-    #set-font-size {
-      width: 100%;
-      margin-top: 10px;
-    }
+      #profiles div {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: space-around;
+        margin: 10px 0;
+      }
 
-    #profiles div {
-      display: flex;
-      flex-wrap: wrap;
-      justify-content: space-around;
-      margin: 10px 0;
-    }
+      .color-input-div {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+      }
 
-    .color-input-div {
-      display: flex; 
-      flex-direction: column; 
-      align-items: center
-    }
+      #color-selectors {
+        display: flex;
+        justify-content: center;
+        margin: 0 20px;
+      }
 
-    #color-selectors {
-      display: flex; 
-      justify-content: center; 
-      margin: 0 20px;
-    }
+      #color-selectors input {
+        margin: 5px;
+      }
 
-    #color-selectors input {
-      margin:  5px;
-    }
+      .big-gray-btn {
+        margin: 5px;
+        padding: 3px 10px;
+        font-size: 1.1em;
+        font-weight: bold;
+        color: black;
+        background-color: gray;
+        border-radius: 5px;
+        border: none;
+      }
 
-    .big-gray-btn {
-      margin: 5px;
-      padding: 3px 10px;
-      font-size: 1.1em;
-      font-weight: bold;
-      color: black;
-      background-color: gray;
-      border-radius: 5px;
-      border: none;
-    }
+      .d-none {
+        display: none !important;
+      }
 
-    .d-none {
-      display: none !important;
-    }
+      .fade-button {
+        background-color: rgba(100, 100, 100, 0.5) !important;
+      }
+    </style>
+  </head>
 
-    .fade-button {
-      background-color: rgba(100, 100, 100, 0.5) !important;
-    }
-  </style>
-</head>
+  <body>
+    <canvas id="canvas"></canvas>
+    <canvas
+      id="canvas2"
+      style="position: absolute; top: 0; left: 0; z-index: 10"
+    ></canvas>
 
-<body>
-  <canvas id="canvas"></canvas>
-  <canvas id="canvas2" style="position: absolute; top: 0; left: 0; z-index: 10;"></canvas>
-
-  <div id="details">
-    <button id="toggle-details-btn" class="big-gray-btn" onclick="toggleDetailsDiv()">Toggle Details</button>
-
-    <div id="debug">
-      <p>Total Streams: <span id="active-streams"></span></p>
-      <p>Min Length: <span id="min-length"></span></p>
-      <p>Max Length: <span id="max-length"></span></p>
-      <p>Total Intervals: <span id="num-intervals"></span></p>
-      <p>Fastest Interval: <span id="fastest-interval"></span>ms</p>
-      <p>Slowest Interval: <span id="slowest-interval"></span>ms</p>
-      <p>Font Size: <span id="font-size"></span>px</p>
-    </div>
-
-    <div id="change-stream-properties">
-      <label for="set-font-size">Set Font Size</label>
-      <input id="set-font-size" name="set-font-size" autocomplete="off" type="range" min="10" max="100" value="20"
-        oninput="getFontSizeFromSlider()">
-
-      <div style="display: flex; align-items: center; margin: 10px;">
-        <label style="font-weight: bold; margin-right: 15px; font-size: 20px;" for="bold-checkbox">Bold</label>
-        <input style="width: 25px; height: 25px" type="checkbox" id="bold-checkbox" name="bold" checked autocomplete="off">
-
-        <label style="font-weight: bold; margin: 0 15px; font-size: 20px;" for="shading-checkbox">Shading</label>
-        <input style="width: 25px; height: 25px" type="checkbox" id="shading-checkbox" name="shading" checked autocomplete="off">
-      </div>
-
-      <p style="text-align: center; margin-bottom: 5px;">&darr; Tap to set a color &darr;</p>
-      <div id="color-selectors">
-        <div class="color-input-div">
-          <label for="color1">Color 1</label>
-          <input type="color" name="color1" id="color1" autocomplete="off" value="#ff0000" 
-            onchange="changeStreamColors(this.value, null, null)">
-        </div>
-
-        <div class="color-input-div">
-          <label for="color2">Color 2</label>
-          <input type="color" name="color2" id="color2" autocomplete="off" value="#ffff00" 
-            onchange="changeStreamColors(null, this.value, null)">
-        </div>
-
-        <div class="color-input-div">
-          <label for="color3">Color 3</label>
-          <input type="color" name="color3" id="color3" autocomplete="off" value="#0000ff" 
-            onchange="changeStreamColors(null, null, this.value)">
-        </div>
-      </div>
-      <!-- END #color-selectors -->
-      <button id="use-these-colors" onclick="useTheseColors()" style="width: 100%;" class="big-gray-btn">
-        ^ Use Selected Colors ^
+    <div id="details">
+      <button
+        id="toggle-details-btn"
+        class="big-gray-btn"
+        onclick="toggleDetailsDiv()"
+      >
+        Toggle Details
       </button>
 
-    </div>
-    <!-- END #change-stream-properties -->
+      <div id="debug">
+        <p>Total Streams: <span id="active-streams"></span></p>
+        <p>Min Length: <span id="min-length"></span></p>
+        <p>Max Length: <span id="max-length"></span></p>
+        <p>Total Intervals: <span id="num-intervals"></span></p>
+        <p>Fastest Interval: <span id="fastest-interval"></span>ms</p>
+        <label for="set-fastest-interval">-- Set Fastest Interval</label>
+        <input
+          id="set-fastest-interval"
+          name="set-fastest-interval"
+          autocomplete="off"
+          type="range"
+          min="10"
+          max="1000"
+          value="50"
+        />
+        <p>Slowest Interval: <span id="slowest-interval"></span>ms</p>
+        <label for="set-slowest-interval">-- Set Slowest Interval</label>
+        <input
+          id="set-slowest-interval"
+          name="set-slowest-interval"
+          autocomplete="off"
+          type="range"
+          min="10"
+          max="1000"
+          value="500"
+        />
+        <p>Font Size: <span id="font-size"></span>px</p>
+      </div>
 
+      <div id="change-stream-properties">
+        <label for="set-font-size">-- Set Font Size</label>
+        <input
+          id="set-font-size"
+          name="set-font-size"
+          autocomplete="off"
+          type="range"
+          min="10"
+          max="100"
+          value="20"
+          oninput="getFontSizeFromSlider()"
+        />
 
-    <div id="profiles">
-      <p style="text-align: center; font-size: 20px; margin: 10px 0 -10px 0;">Or Pick a Theme:</p>
-      <div>
-        <button class="big-gray-btn" onclick="setTheme('matrix')">Matrix</button>
-        <button class="big-gray-btn" onclick="setTheme('fire')">Fire</button>
-        <button class="big-gray-btn" onclick="setTheme('ice')">Ice</button>
-        <button class="big-gray-btn" onclick="setTheme('pink')">Pink</button>
-        <button class="big-gray-btn" onclick="setTheme('vanu')">Vanu</button>
-        <button class="big-gray-btn" onclick="discoMode()">Disco</button>
+        <div style="display: flex; align-items: center; margin: 10px">
+          <label
+            style="font-weight: bold; margin-right: 15px; font-size: 20px"
+            for="bold-checkbox"
+            >Bold</label
+          >
+          <input
+            style="width: 25px; height: 25px"
+            type="checkbox"
+            id="bold-checkbox"
+            name="bold"
+            checked
+            autocomplete="off"
+          />
+
+          <label
+            style="font-weight: bold; margin: 0 15px; font-size: 20px"
+            for="shading-checkbox"
+            >Shading</label
+          >
+          <input
+            style="width: 25px; height: 25px"
+            type="checkbox"
+            id="shading-checkbox"
+            name="shading"
+            checked
+            autocomplete="off"
+          />
+        </div>
+
+        <p style="text-align: center; margin-bottom: 5px">
+          &darr; Tap to set a color &darr;
+        </p>
+        <div id="color-selectors">
+          <div class="color-input-div">
+            <label for="color1">Color 1</label>
+            <input
+              type="color"
+              name="color1"
+              id="color1"
+              autocomplete="off"
+              value="#ff0000"
+              onchange="changeStreamColors(this.value, null, null)"
+            />
+          </div>
+
+          <div class="color-input-div">
+            <label for="color2">Color 2</label>
+            <input
+              type="color"
+              name="color2"
+              id="color2"
+              autocomplete="off"
+              value="#ffff00"
+              onchange="changeStreamColors(null, this.value, null)"
+            />
+          </div>
+
+          <div class="color-input-div">
+            <label for="color3">Color 3</label>
+            <input
+              type="color"
+              name="color3"
+              id="color3"
+              autocomplete="off"
+              value="#0000ff"
+              onchange="changeStreamColors(null, null, this.value)"
+            />
+          </div>
+        </div>
+        <!-- END #color-selectors -->
+        <button
+          id="use-these-colors"
+          onclick="useTheseColors()"
+          style="width: 100%"
+          class="big-gray-btn"
+        >
+          ^ Use Selected Colors ^
+        </button>
+      </div>
+      <!-- END #change-stream-properties -->
+
+      <div id="profiles">
+        <p style="text-align: center; font-size: 20px; margin: 10px 0 -10px 0">
+          Or Pick a Theme:
+        </p>
+        <div>
+          <button class="big-gray-btn" onclick="setTheme('matrix')">
+            Matrix
+          </button>
+          <button class="big-gray-btn" onclick="setTheme('fire')">Fire</button>
+          <button class="big-gray-btn" onclick="setTheme('ice')">Ice</button>
+          <button class="big-gray-btn" onclick="setTheme('pink')">Pink</button>
+          <button class="big-gray-btn" onclick="setTheme('vanu')">Vanu</button>
+          <button class="big-gray-btn" onclick="discoMode()">Disco</button>
+        </div>
       </div>
     </div>
-  </div>
 
-  <script src="./script.js" type="text/javascript"></script>
-</body>
-
+    <script src="./script.js" type="text/javascript"></script>
+  </body>
 </html>

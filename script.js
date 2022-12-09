@@ -13,6 +13,8 @@ const activeStreamsSpan = document.getElementById("active-streams");
 const streamMaxLengthSpan = document.getElementById("max-length");
 const streamMinLengthSpan = document.getElementById("min-length");
 const numOfIntervalsSpan = document.getElementById("num-intervals");
+const setFastestSlider = document.getElementById("set-fastest-interval");
+const setSlowestSlider = document.getElementById("set-slowest-interval");
 const fastestIntervalSpan = document.getElementById("fastest-interval");
 const slowestIntervalSpan = document.getElementById("slowest-interval");
 const streamFontSize = document.getElementById("font-size");
@@ -59,6 +61,28 @@ toggleBoldCheckbox.addEventListener("change", (e) => {
 toggleShadingCheckbox.addEventListener("change", (e) => {
   if (e.target.checked) streamProperties.shading = true;
   else streamProperties.shading = false;
+});
+
+let setFastestTimeout;
+setFastestSlider.addEventListener("input", (e) => {
+  window.clearTimeout(setFastestTimeout);
+  if (parseInt(e.target.value) > parseInt(setSlowestSlider.value))
+    e.target.value = setSlowestSlider.value;
+  fastestIntervalSpan.innerText = e.target.value;
+  setFastestTimeout = window.setTimeout(() => {
+    setStreamSpeed(null, parseInt(e.target.value));
+  }, 750);
+});
+
+let setSlowestTimeout;
+setSlowestSlider.addEventListener("input", (e) => {
+  window.clearTimeout(setSlowestTimeout);
+  if (parseInt(e.target.value) < parseInt(setFastestSlider.value))
+    e.target.value = setFastestSlider.value;
+  slowestIntervalSpan.innerText = e.target.value;
+  setSlowestTimeout = window.setTimeout(() => {
+    setStreamSpeed(parseInt(e.target.value), null);
+  }, 750);
 });
 
 // Canvas sizing
@@ -188,8 +212,9 @@ const setStreamLength = (min = null, max = null) => {
 };
 
 const setStreamSpeed = (slowestInterval = null, fastestInterval = null) => {
-  if (fastestInterval > slowestInterval)
-    return "first property (slowest interval) must be larger than second property (fastest interval)";
+  if (slowestInterval && fastestInterval) {
+    if (slowestInterval < fastestInterval) return;
+  }
   clearAllIntervals();
   if (slowestInterval) streamProperties.slowestInterval = slowestInterval;
   if (fastestInterval) streamProperties.fastestInterval = fastestInterval;
