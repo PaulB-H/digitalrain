@@ -235,7 +235,7 @@ const clearAllIntervals = () => {
 
 // Stream Generation & Update
 const randomColumn = () => {
-  const columns = window.innerWidth / (0.7 * streamProperties.fontSize);
+  const columns = window.innerWidth / (0.9 * streamProperties.fontSize);
   return Math.floor(Math.random() * columns);
 };
 
@@ -247,7 +247,7 @@ const randomYStart = () => {
 
 const calculateMaxStreams = () => {
   const columns = Math.floor(
-    window.innerWidth / (0.7 * streamProperties.fontSize)
+    window.innerWidth / (0.9 * streamProperties.fontSize)
   );
   let totalStreams = Math.floor(
     columns * (canvas.height / streamProperties.maxLength)
@@ -274,7 +274,7 @@ const genStreamsAndIntervals = () => {
     const randStream = Math.floor(Math.random() * allSets.length);
 
     allSets[randStream].add({
-      XLOC: Math.floor(randomColumn() * 0.7 * streamProperties.fontSize),
+      XLOC: Math.floor(randomColumn() * 0.9 * streamProperties.fontSize),
       YLOC: randomYStart(),
       streamLength:
         Math.ceil(Math.random() * streamProperties.maxLength) +
@@ -309,7 +309,7 @@ const updateStreams = (set) => {
 
     let rectTrim = 0.5 * streamProperties.fontSize;
     if (streamProperties.bold === true) {
-      rectTrim = 0.75 * streamProperties.fontSize;
+      rectTrim = 0.9 * streamProperties.fontSize;
     }
 
     const fillRectTweak = (context, xloc, yloc, charPos) => {
