@@ -45,18 +45,13 @@
         background-color: rgba(0, 0, 0, 0.75);
       }
 
-      #debug p {
-        margin: 5px 0;
-      }
-
-      #debug > p > span {
+      #debug * span {
         font-weight: bold;
         color: lightgray;
       }
-
-      #set-font-size {
-        width: 100%;
-        margin-top: 10px;
+      #debug > * {
+        display: block;
+        margin: 5px 0;
       }
 
       #profiles div {
@@ -124,8 +119,9 @@
         <p>Min Length: <span id="min-length"></span></p>
         <p>Max Length: <span id="max-length"></span></p>
         <p>Total Intervals: <span id="num-intervals"></span></p>
-        <p>Fastest Interval: <span id="fastest-interval"></span>ms</p>
-        <label for="set-fastest-interval">-- Set Fastest Interval</label>
+        <label for="set-fastest-interval">
+          Fastest Interval: <span id="fastest-interval"></span>ms
+        </label>
         <input
           id="set-fastest-interval"
           name="set-fastest-interval"
@@ -135,8 +131,9 @@
           max="1000"
           value="50"
         />
-        <p>Slowest Interval: <span id="slowest-interval"></span>ms</p>
-        <label for="set-slowest-interval">-- Set Slowest Interval</label>
+        <label for="set-slowest-interval">
+          Slowest Interval: <span id="slowest-interval"></span>ms
+        </label>
         <input
           id="set-slowest-interval"
           name="set-slowest-interval"
@@ -146,11 +143,9 @@
           max="1000"
           value="500"
         />
-        <p>Font Size: <span id="font-size"></span>px</p>
-      </div>
-
-      <div id="change-stream-properties">
-        <label for="set-font-size">-- Set Font Size</label>
+        <label for="set-font-size">
+          Font Size: <span id="font-size"></span>px
+        </label>
         <input
           id="set-font-size"
           name="set-font-size"
@@ -161,7 +156,9 @@
           value="20"
           oninput="getFontSizeFromSlider()"
         />
+      </div>
 
+      <div id="change-stream-properties">
         <div style="display: flex; align-items: center; margin: 10px">
           <label
             style="font-weight: bold; margin-right: 15px; font-size: 20px"
