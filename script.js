@@ -99,7 +99,7 @@ const getFontSizeFromSlider = () => {
   streamFontSizeSpan.innerText = setFontSizeSlider.value;
   window.clearInterval(getFontTimeout);
   getFontTimeout = window.setTimeout(() => {
-    setFontSize(setFontSizeSlider.value);
+    setFontSize(parseInt(setFontSizeSlider.value));
   }, 1500);
 };
 
@@ -219,12 +219,12 @@ const setTheme = (themeName) => {
 const setFontSize = (fontSize) => {
   clearAllIntervals();
 
-  if (fontSize < 5) {
-    streamProperties.fontSize = 5;
+  if (fontSize < 10) {
+    streamProperties.fontSize = 10;
   } else if (fontSize > 100) {
     streamProperties.fontSize = 100;
   } else {
-    streamProperties.fontSize = parseInt(setFontSizeSlider.value);
+    streamProperties.fontSize = fontSize;
   }
 
   setCanvasSize();
