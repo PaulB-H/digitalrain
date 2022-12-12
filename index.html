@@ -117,8 +117,30 @@
 
       <div id="debug">
         <p>Total Streams: <span id="active-streams"></span></p>
-        <p>Min Length: <span id="min-length"></span></p>
-        <p>Max Length: <span id="max-length"></span></p>
+        <label for="set-min-length">
+          Min Length: <span id="min-length"></span>
+        </label>
+        <input
+          id="set-min-length"
+          name="set-min-length"
+          autocomplete="off"
+          type="range"
+          min="5"
+          max="100"
+          value="5"
+        />
+        <label for="set-max-length">
+          Max Length: <span id="max-length"></span>
+        </label>
+        <input
+          id="set-max-length"
+          name="set-max-length"
+          autocomplete="off"
+          type="range"
+          min="5"
+          max="100"
+          value="20"
+        />
         <p>Total Intervals: <span id="num-intervals"></span></p>
         <label for="set-fastest-interval">
           Fastest Interval: <span id="fastest-interval"></span>ms

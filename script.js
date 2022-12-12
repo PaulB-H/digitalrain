@@ -12,6 +12,8 @@ const mainDetailsDiv = document.getElementById("details");
 const activeStreamsSpan = document.getElementById("active-streams");
 const streamMaxLengthSpan = document.getElementById("max-length");
 const streamMinLengthSpan = document.getElementById("min-length");
+const setMinLenSlider = document.getElementById("set-min-length");
+const setMaxLenSlider = document.getElementById("set-max-length");
 const numOfIntervalsSpan = document.getElementById("num-intervals");
 const setFastestSlider = document.getElementById("set-fastest-interval");
 const setSlowestSlider = document.getElementById("set-slowest-interval");
@@ -73,7 +75,6 @@ setFastestSlider.addEventListener("input", (e) => {
     setStreamSpeed(null, parseInt(e.target.value));
   }, 750);
 });
-
 let setSlowestTimeout;
 setSlowestSlider.addEventListener("input", (e) => {
   window.clearTimeout(setSlowestTimeout);
@@ -82,6 +83,33 @@ setSlowestSlider.addEventListener("input", (e) => {
   slowestIntervalSpan.innerText = e.target.value;
   setSlowestTimeout = window.setTimeout(() => {
     setStreamSpeed(parseInt(e.target.value), null);
+  }, 750);
+});
+
+let setMinLenTimeout;
+setMinLenSlider.addEventListener("input", (e) => {
+  window.clearTimeout(setMinLenTimeout);
+  if (parseInt(e.target.value) > parseInt(setMaxLenSlider.value))
+    e.target.value = setMaxLenSlider.value;
+  streamMinLengthSpan.innerText = e.target.value;
+  setMinLenTimeout = window.setTimeout(() => {
+    clearAllIntervals();
+    setCanvasSize();
+    streamProperties.minLength = parseInt(e.target.value);
+    genStreamsAndIntervals();
+  }, 750);
+});
+let setMaxLenTimeout;
+setMaxLenSlider.addEventListener("input", (e) => {
+  window.clearTimeout(setMaxLenTimeout);
+  if (parseInt(e.target.value) < parseInt(setMinLenSlider.value))
+    e.target.value = setMinLenSlider.value;
+  streamMaxLengthSpan.innerText = e.target.value;
+  setMaxLenTimeout = window.setTimeout(() => {
+    clearAllIntervals();
+    setCanvasSize();
+    streamProperties.maxLength = parseInt(e.target.value);
+    genStreamsAndIntervals();
   }, 750);
 });
 
@@ -273,12 +301,13 @@ const genStreamsAndIntervals = () => {
   do {
     const randStream = Math.floor(Math.random() * allSets.length);
 
+    const min = Math.ceil(streamProperties.minLength);
+    const max = Math.floor(streamProperties.maxLength);
+
     allSets[randStream].add({
       XLOC: Math.floor(randomColumn() * 0.9 * streamProperties.fontSize),
       YLOC: randomYStart(),
-      streamLength:
-        Math.ceil(Math.random() * streamProperties.maxLength) +
-        streamProperties.minLength,
+      streamLength: Math.floor(Math.random() * (max - min + 1)) + min,
       firstChar: null,
       secondChar: null,
     });
