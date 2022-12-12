@@ -10,17 +10,17 @@ const characters =
 // Spans to update with stream info...
 const mainDetailsDiv = document.getElementById("details");
 const activeStreamsSpan = document.getElementById("active-streams");
-const streamMaxLengthSpan = document.getElementById("max-length");
 const streamMinLengthSpan = document.getElementById("min-length");
+const streamMaxLengthSpan = document.getElementById("max-length");
 const setMinLenSlider = document.getElementById("set-min-length");
 const setMaxLenSlider = document.getElementById("set-max-length");
 const numOfIntervalsSpan = document.getElementById("num-intervals");
-const setFastestSlider = document.getElementById("set-fastest-interval");
-const setSlowestSlider = document.getElementById("set-slowest-interval");
 const fastestIntervalSpan = document.getElementById("fastest-interval");
 const slowestIntervalSpan = document.getElementById("slowest-interval");
-const streamFontSize = document.getElementById("font-size");
-const setFontSizeInput = document.getElementById("set-font-size");
+const setFastestSlider = document.getElementById("set-fastest-interval");
+const setSlowestSlider = document.getElementById("set-slowest-interval");
+const streamFontSizeSpan = document.getElementById("font-size");
+const setFontSizeSlider = document.getElementById("set-font-size");
 const toggleDetailsButton = document.getElementById("toggle-details-btn");
 const toggleBoldCheckbox = document.getElementById("bold-checkbox");
 const toggleShadingCheckbox = document.getElementById("shading-checkbox");
@@ -30,7 +30,7 @@ const updateReadout = () => {
   streamMaxLengthSpan.innerText = streamProperties.maxLength;
   streamMinLengthSpan.innerText = streamProperties.minLength;
   numOfIntervalsSpan.innerText = streamProperties.maxIntervals;
-  streamFontSize.innerText = streamProperties.fontSize;
+  streamFontSizeSpan.innerText = streamProperties.fontSize;
   fastestIntervalSpan.innerText = streamProperties.fastestInterval;
   slowestIntervalSpan.innerText = streamProperties.slowestInterval;
 };
@@ -45,46 +45,6 @@ const toggleDetailsDiv = () => {
     ? toggleDetailsButton.classList.remove("fade-button")
     : toggleDetailsButton.classList.add("fade-button");
 };
-let getFontTimeout;
-const getFontSizeFromSlider = () => {
-  streamFontSize.innerText = setFontSizeInput.value;
-  window.clearInterval(getFontTimeout);
-  getFontTimeout = window.setTimeout(() => {
-    setFontSize(setFontSizeInput.value);
-  }, 1500);
-};
-toggleBoldCheckbox.addEventListener("change", (e) => {
-  if (e.target.checked) streamProperties.bold = true;
-  else streamProperties.bold = false;
-  clearAllIntervals();
-  setCanvasSize();
-  genStreamsAndIntervals();
-});
-toggleShadingCheckbox.addEventListener("change", (e) => {
-  if (e.target.checked) streamProperties.shading = true;
-  else streamProperties.shading = false;
-});
-
-let setFastestTimeout;
-setFastestSlider.addEventListener("input", (e) => {
-  window.clearTimeout(setFastestTimeout);
-  if (parseInt(e.target.value) > parseInt(setSlowestSlider.value))
-    e.target.value = setSlowestSlider.value;
-  fastestIntervalSpan.innerText = e.target.value;
-  setFastestTimeout = window.setTimeout(() => {
-    setStreamSpeed(null, parseInt(e.target.value));
-  }, 750);
-});
-let setSlowestTimeout;
-setSlowestSlider.addEventListener("input", (e) => {
-  window.clearTimeout(setSlowestTimeout);
-  if (parseInt(e.target.value) < parseInt(setFastestSlider.value))
-    e.target.value = setFastestSlider.value;
-  slowestIntervalSpan.innerText = e.target.value;
-  setSlowestTimeout = window.setTimeout(() => {
-    setStreamSpeed(parseInt(e.target.value), null);
-  }, 750);
-});
 
 let setMinLenTimeout;
 setMinLenSlider.addEventListener("input", (e) => {
@@ -111,6 +71,48 @@ setMaxLenSlider.addEventListener("input", (e) => {
     streamProperties.maxLength = parseInt(e.target.value);
     genStreamsAndIntervals();
   }, 750);
+});
+
+let setFastestTimeout;
+setFastestSlider.addEventListener("input", (e) => {
+  window.clearTimeout(setFastestTimeout);
+  if (parseInt(e.target.value) > parseInt(setSlowestSlider.value))
+    e.target.value = setSlowestSlider.value;
+  fastestIntervalSpan.innerText = e.target.value;
+  setFastestTimeout = window.setTimeout(() => {
+    setStreamSpeed(null, parseInt(e.target.value));
+  }, 750);
+});
+let setSlowestTimeout;
+setSlowestSlider.addEventListener("input", (e) => {
+  window.clearTimeout(setSlowestTimeout);
+  if (parseInt(e.target.value) < parseInt(setFastestSlider.value))
+    e.target.value = setFastestSlider.value;
+  slowestIntervalSpan.innerText = e.target.value;
+  setSlowestTimeout = window.setTimeout(() => {
+    setStreamSpeed(parseInt(e.target.value), null);
+  }, 750);
+});
+
+let getFontTimeout;
+const getFontSizeFromSlider = () => {
+  streamFontSizeSpan.innerText = setFontSizeSlider.value;
+  window.clearInterval(getFontTimeout);
+  getFontTimeout = window.setTimeout(() => {
+    setFontSize(setFontSizeSlider.value);
+  }, 1500);
+};
+
+toggleBoldCheckbox.addEventListener("change", (e) => {
+  if (e.target.checked) streamProperties.bold = true;
+  else streamProperties.bold = false;
+  clearAllIntervals();
+  setCanvasSize();
+  genStreamsAndIntervals();
+});
+toggleShadingCheckbox.addEventListener("change", (e) => {
+  if (e.target.checked) streamProperties.shading = true;
+  else streamProperties.shading = false;
 });
 
 // Canvas sizing
@@ -222,7 +224,7 @@ const setFontSize = (fontSize) => {
   } else if (fontSize > 100) {
     streamProperties.fontSize = 100;
   } else {
-    streamProperties.fontSize = parseInt(setFontSizeInput.value);
+    streamProperties.fontSize = parseInt(setFontSizeSlider.value);
   }
 
   setCanvasSize();
@@ -250,7 +252,7 @@ const setStreamSpeed = (slowestInterval = null, fastestInterval = null) => {
   genStreamsAndIntervals();
   updateReadout();
 };
-// END streamProperties & functions
+/* END streamProperties & functions */
 
 // Interval Management
 let intervalStore = [];
@@ -482,7 +484,7 @@ const updateStreams = (set) => {
     }
   });
 };
-// END Stream Generation & Update
+/* END Stream Generation & Update */
 
 // Resize function
 let resizeTimer;
