@@ -270,22 +270,16 @@ const randomColumn = () => {
 };
 
 const randomYStart = () => {
-  return (
-    Math.floor(Math.random() * canvas.height) * streamProperties.fontSize * -1
-  );
+  return -1 - streamProperties.fontSize * Math.ceil(Math.random() * 10);
 };
 
 const calculateMaxStreams = () => {
   const columns = Math.floor(
     window.innerWidth / (0.9 * streamProperties.fontSize)
   );
-  let totalStreams = Math.floor(
-    columns * (canvas.height / streamProperties.maxLength)
+  const totalStreams = Math.floor(
+    0.1 * (columns * (canvas.height / streamProperties.maxLength))
   );
-
-  totalStreams = Math.floor(0.5 * totalStreams);
-
-  if (totalStreams > 15000) totalStreams = 15000;
 
   streamProperties.maxStreams = totalStreams;
   activeStreamsSpan.innerText = totalStreams;
