@@ -254,18 +254,12 @@ const setStreamSpeed = (slowestInterval = null, fastestInterval = null) => {
 };
 /* END streamProperties & functions */
 
-// Interval Management
-let intervalStore = [];
-const clearAllIntervals = () => {
-  intervalStore.forEach((interval, idx) => {
-    window.clearInterval(interval);
-  });
-  intervalStore = [];
-};
-
 // Stream Generation & Update
+const getTotalColumns = () =>
+  window.innerWidth / (0.9 * streamProperties.fontSize);
+
 const randomColumn = () => {
-  const columns = window.innerWidth / (0.9 * streamProperties.fontSize);
+  const columns = getTotalColumns();
   return Math.floor(Math.random() * columns);
 };
 
@@ -274,9 +268,7 @@ const randomYStart = () => {
 };
 
 const calculateMaxStreams = () => {
-  const columns = Math.floor(
-    window.innerWidth / (0.9 * streamProperties.fontSize)
-  );
+  const columns = getTotalColumns();
   const totalStreams = Math.floor(
     0.1 * (columns * (canvas.height / streamProperties.maxLength))
   );
@@ -286,40 +278,65 @@ const calculateMaxStreams = () => {
   return totalStreams;
 };
 
-const genStreamsAndIntervals = () => {
+const clearAllIntervals = () => {
+  streamIntervalStore.forEach((interval, idx) => {
+    window.clearInterval(interval);
+  });
+  streamIntervalStore = [];
+  window.clearInterval(generatingInterval);
+  arrayOfStreamSets = [];
+};
+
+// Each set item contains multiple different stream objects
+let arrayOfStreamSets = [];
+const fillStreams = () => {
   let numOfStreams = calculateMaxStreams();
 
-  const allSets = [];
   for (let i = 0; i < streamProperties.maxIntervals; i++) {
-    allSets.push(new Set());
+    arrayOfStreamSets.push(new Set());
   }
 
-  do {
-    const randStream = Math.floor(Math.random() * allSets.length);
-
+  for (let i = 0; i < numOfStreams; i++) {
+    const randomSet = Math.floor(Math.random() * arrayOfStreamSets.length);
     const min = Math.ceil(streamProperties.minLength);
     const max = Math.floor(streamProperties.maxLength);
 
-    allSets[randStream].add({
+    const newStream = {
       XLOC: Math.floor(randomColumn() * 0.9 * streamProperties.fontSize),
       YLOC: randomYStart(),
       streamLength: Math.floor(Math.random() * (max - min + 1)) + min,
       firstChar: null,
       secondChar: null,
-    });
-    numOfStreams--;
-  } while (numOfStreams > 0);
+    };
 
-  for (let i = 0; i < streamProperties.maxIntervals; i++) {
+    arrayOfStreamSets[randomSet].add(newStream);
+  }
+};
+
+// Each set of stream items is assigned to a random interval
+// which triggers the draw update for the streams in that set
+let streamIntervalStore = [];
+let generatingInterval;
+const startGeneratingInterval = () => {
+  generatingInterval = window.setInterval(() => {
+    if (streamIntervalStore.length >= 100) {
+      window.clearInterval(generatingInterval);
+      return;
+    }
+    const length = streamIntervalStore.length;
     const randSpeed =
       Math.floor(Math.random() * streamProperties.slowestInterval) +
       streamProperties.fastestInterval;
     let newInterval = window.setInterval(() => {
-      updateStreams(allSets[i]);
+      updateStreams(arrayOfStreamSets[length]);
     }, randSpeed);
-    intervalStore.push(newInterval);
-  }
+    streamIntervalStore.push(newInterval);
+  }, 150);
+};
 
+const genStreamsAndIntervals = () => {
+  fillStreams();
+  startGeneratingInterval();
   updateReadout();
 };
 
