@@ -117,6 +117,20 @@
 
       <div id="debug">
         <p>Total Streams: <span id="active-streams"></span></p>
+        <label for="adjust-total-streams">
+          Total adjusted by: <span id="adjust-total"></span>%
+        </label>
+        <input
+          id="adjust-total-streams"
+          name="adjust-total-streams"
+          autocomplete="off"
+          type="range"
+          min="0.025"
+          max="0.175"
+          step="0.001"
+          value="0.1"
+        />
+        <p>25% &nbsp;&nbsp;&nbsp; 100% &nbsp;&nbsp;&nbsp; 175%</p>
         <label for="set-min-length">
           Min Length: <span id="min-length"></span>
         </label>

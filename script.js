@@ -10,6 +10,8 @@ const characters =
 // Spans to update with stream info...
 const mainDetailsDiv = document.getElementById("details");
 const activeStreamsSpan = document.getElementById("active-streams");
+const adjustTotalStreamSpan = document.getElementById("adjust-total");
+const adjustTotalStreamSlider = document.getElementById("adjust-total-streams");
 const streamMinLengthSpan = document.getElementById("min-length");
 const streamMaxLengthSpan = document.getElementById("max-length");
 const setMinLenSlider = document.getElementById("set-min-length");
@@ -33,6 +35,7 @@ const updateReadout = () => {
   streamFontSizeSpan.innerText = streamProperties.fontSize;
   fastestIntervalSpan.innerText = streamProperties.fastestInterval;
   slowestIntervalSpan.innerText = streamProperties.slowestInterval;
+  adjustTotalStreamSpan.innerText = streamProperties.maxStreamAdjustment * 1000;
 };
 const toggleDetailsDiv = () => {
   const allDetails = document.querySelectorAll("#details div");
@@ -45,6 +48,19 @@ const toggleDetailsDiv = () => {
     ? toggleDetailsButton.classList.remove("fade-button")
     : toggleDetailsButton.classList.add("fade-button");
 };
+
+let adjustTotalStreamTimeout;
+adjustTotalStreamSlider.addEventListener("input", (e) => {
+  adjustTotalStreamSpan.innerText = e.target.value * 1000;
+  window.clearTimeout(adjustTotalStreamTimeout);
+  adjustTotalStreamTimeout = window.setTimeout(() => {
+    clearAllIntervals();
+    setCanvasSize();
+    streamProperties.maxStreamAdjustment = parseFloat(e.target.value);
+    genStreamsAndIntervals();
+    updateReadout();
+  }, 750);
+});
 
 let setMinLenTimeout;
 setMinLenSlider.addEventListener("input", (e) => {
@@ -153,6 +169,8 @@ const streamProperties = {
 
   maxIntervals: 100,
   maxStreams: null,
+
+  maxStreamAdjustment: 0.1,
 
   bold: true,
   shading: true,
@@ -270,7 +288,8 @@ const randomYStart = () => {
 const calculateMaxStreams = () => {
   const columns = getTotalColumns();
   const totalStreams = Math.floor(
-    0.1 * (columns * (canvas.height / streamProperties.maxLength))
+    streamProperties.maxStreamAdjustment *
+      (columns * (canvas.height / streamProperties.maxLength))
   );
 
   streamProperties.maxStreams = totalStreams;
