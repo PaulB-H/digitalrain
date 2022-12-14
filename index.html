@@ -62,20 +62,19 @@
         margin: 10px 0;
       }
 
+      #color-selectors {
+        display: flex;
+        justify-content: space-between;
+        margin: 5px 10px;
+      }
       .color-input-div {
         display: flex;
         flex-direction: column;
         align-items: center;
       }
-
-      #color-selectors {
-        display: flex;
-        justify-content: center;
-        margin: 0 20px;
-      }
-
-      #color-selectors input {
-        margin: 5px;
+      .color-input-div > input {
+        margin: 5px 0;
+        border: none;
       }
 
       .big-gray-btn {
@@ -226,7 +225,7 @@
           />
         </div>
 
-        <p style="text-align: center; margin-bottom: 5px">
+        <p style="text-align: center; margin-bottom: 5px; font-size: 20px">
           &darr; Tap to set a color &darr;
         </p>
         <div id="color-selectors">
