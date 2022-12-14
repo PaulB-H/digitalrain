@@ -491,6 +491,7 @@ const updateStreams = (set) => {
       canvas.offsetHeight + streamProperties.fontSize * item.streamLength
     ) {
       item.YLOC = randomYStart();
+      item.XLOC = Math.floor(randomColumn() * 0.9 * streamProperties.fontSize);
       item.firstChar = null;
     }
   });
