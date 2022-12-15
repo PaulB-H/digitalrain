@@ -237,8 +237,8 @@ const setTheme = (themeName) => {
 const setFontSize = (fontSize) => {
   clearAllIntervals();
 
-  if (fontSize < 10) {
-    streamProperties.fontSize = 10;
+  if (fontSize < 5) {
+    streamProperties.fontSize = 5;
   } else if (fontSize > 100) {
     streamProperties.fontSize = 100;
   } else {
@@ -368,61 +368,37 @@ const updateStreams = (set) => {
 
     ctx.textBaseline = "top";
 
-    let rectTrim = 0.5 * streamProperties.fontSize;
-    if (streamProperties.bold === true) {
-      rectTrim = 0.9 * streamProperties.fontSize;
-    }
+    // If I want to tweak column width
+    // this may be useful again...
+    let rectTrim = 1 * streamProperties.fontSize;
+    // if (streamProperties.bold === true) {
+    //   rectTrim = 1 * streamProperties.fontSize;
+    // }
 
     const fillRectTweak = (context, xloc, yloc, charPos) => {
-      if (streamProperties.bold) {
-        context.fillRect(
-          Math.floor(xloc - 0.05 * streamProperties.fontSize),
-          Math.floor(
-            yloc -
-              streamProperties.fontSize * charPos -
-              0.1 * streamProperties.fontSize
-          ),
-          rectTrim,
-          streamProperties.fontSize
-        );
-      } else {
-        context.fillRect(
-          Math.floor(xloc),
-          Math.floor(
-            yloc -
-              streamProperties.fontSize * charPos -
-              0.1 * streamProperties.fontSize
-          ),
-          rectTrim,
-          streamProperties.fontSize
-        );
-      }
+      context.fillRect(
+        Math.floor(xloc - 0.2 * streamProperties.fontSize),
+        Math.floor(
+          yloc -
+            streamProperties.fontSize * charPos -
+            0.1 * streamProperties.fontSize
+        ),
+        rectTrim,
+        streamProperties.fontSize
+      );
     };
 
     const clearRectTweak = (context, xloc, yloc, charPos) => {
-      if (streamProperties.bold) {
-        context.clearRect(
-          Math.floor(xloc - 0.05 * streamProperties.fontSize),
-          Math.floor(
-            yloc -
-              streamProperties.fontSize * charPos -
-              0.1 * streamProperties.fontSize
-          ),
-          rectTrim,
-          streamProperties.fontSize
-        );
-      } else {
-        context.clearRect(
-          Math.floor(xloc - 0.05 * streamProperties.fontSize),
-          Math.floor(
-            yloc -
-              streamProperties.fontSize * charPos -
-              0.1 * streamProperties.fontSize
-          ),
-          rectTrim,
-          streamProperties.fontSize
-        );
-      }
+      context.clearRect(
+        Math.floor(xloc - 0.2 * streamProperties.fontSize),
+        Math.floor(
+          yloc -
+            streamProperties.fontSize * charPos -
+            0.1 * streamProperties.fontSize
+        ),
+        rectTrim,
+        streamProperties.fontSize
+      );
     };
 
     const textTweak = (context, character, xloc, yloc, charPos) => {
