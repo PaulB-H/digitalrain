@@ -365,18 +365,23 @@ let streamIntervalStore = [];
 let generatingInterval;
 const startGeneratingInterval = () => {
   generatingInterval = window.setInterval(() => {
+    const length = streamIntervalStore.length;
+
     if (streamIntervalStore.length >= 100) {
       window.clearInterval(generatingInterval);
       return;
+    } else if (arrayOfStreamSets[length].size === 0) {
+      // If there are no items in the set we don't give it an interval...
+      streamIntervalStore.push(null);
+    } else {
+      const min = streamProperties.fastestInterval;
+      const max = streamProperties.slowestInterval;
+      const randSpeed = Math.floor(Math.random() * (max - min + 1)) + min;
+      let newInterval = window.setInterval(() => {
+        updateStreams(arrayOfStreamSets[length]);
+      }, randSpeed);
+      streamIntervalStore.push(newInterval);
     }
-    const length = streamIntervalStore.length;
-    const min = streamProperties.fastestInterval;
-    const max = streamProperties.slowestInterval;
-    const randSpeed = Math.floor(Math.random() * (max - min + 1)) + min;
-    let newInterval = window.setInterval(() => {
-      updateStreams(arrayOfStreamSets[length]);
-    }, randSpeed);
-    streamIntervalStore.push(newInterval);
   }, 150);
 };
 
