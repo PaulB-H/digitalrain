@@ -320,7 +320,7 @@ const clearAllIntervals = () => {
 // Each set item contains multiple different stream objects
 let arrayOfStreamSets = [];
 const fillStreams = () => {
-  let numOfStreams = calculateMaxStreams();
+  const numOfStreams = calculateMaxStreams();
 
   for (let i = 0; i < streamProperties.maxIntervals; i++) {
     arrayOfStreamSets.push(new Set());
@@ -370,8 +370,8 @@ const genStreamsAndIntervals = () => {
   updateReadout();
 };
 
-const updateStreams = (set) => {
-  set.forEach((item, idx) => {
+const updateStreams = (setOfStreams) => {
+  setOfStreams.forEach((stream, idx) => {
     ctx.font = `${streamProperties.fontSize}px "Cutive Mono", monospace`;
     if (streamProperties.bold === true) {
       ctx.font = `bold ${streamProperties.fontSize}px "Cutive Mono", monospace`;
@@ -432,73 +432,73 @@ const updateStreams = (set) => {
 
     // Clean up at the end of the stream
     ctx2.fillStyle = "black";
-    fillRectTweak(ctx2, item.XLOC, item.YLOC, item.streamLength);
+    fillRectTweak(ctx2, stream.XLOC, stream.YLOC, stream.streamLength);
     ctx.fillStyle = "black";
-    fillRectTweak(ctx, item.XLOC, item.YLOC, item.streamLength);
+    fillRectTweak(ctx, stream.XLOC, stream.YLOC, stream.streamLength);
 
     // Shading with rgba() is detrimental to performance because
     // the browser has to calculate the blending on each draw
     if (streamProperties.shading) {
-      for (let i = 4; i < item.streamLength - 3; i++) {
+      for (let i = 4; i < stream.streamLength - 3; i++) {
         ctx2.fillStyle = "rgba(0, 0, 0, 0.075)";
-        fillRectTweak(ctx2, item.XLOC, item.YLOC, i);
+        fillRectTweak(ctx2, stream.XLOC, stream.YLOC, i);
       }
     }
 
     // Chance to flip an already placed character
     if (Math.floor(Math.random() * 3) === 1) {
-      let loc = Math.floor(Math.random() * (item.streamLength - 4) + 4);
+      let loc = Math.floor(Math.random() * (stream.streamLength - 4) + 4);
 
       ctx.fillStyle = "black";
-      fillRectTweak(ctx, item.XLOC, item.YLOC, loc);
+      fillRectTweak(ctx, stream.XLOC, stream.YLOC, loc);
 
       ctx.fillStyle = `${streamProperties.settledColor}`;
-      textTweak(ctx, getRandomChar(), item.XLOC, item.YLOC, loc);
+      textTweak(ctx, getRandomChar(), stream.XLOC, stream.YLOC, loc);
     }
 
     // Third character
-    if (item.secondChar) {
+    if (stream.secondChar) {
       ctx.fillStyle = "black";
-      fillRectTweak(ctx, item.XLOC, item.YLOC, 2);
+      fillRectTweak(ctx, stream.XLOC, stream.YLOC, 2);
 
       ctx.fillStyle = `${streamProperties.settledColor}`;
-      textTweak(ctx, item.secondChar, item.XLOC, item.YLOC, 2);
+      textTweak(ctx, stream.secondChar, stream.XLOC, stream.YLOC, 2);
     }
 
     // Second Character
-    if (item.firstChar) {
+    if (stream.firstChar) {
       // Clear square to clean glow from first char
       ctx.fillStyle = "black";
-      fillRectTweak(ctx, item.XLOC, item.YLOC, 1);
+      fillRectTweak(ctx, stream.XLOC, stream.YLOC, 1);
 
       ctx.fillStyle = `${streamProperties.secondColor}`;
-      textTweak(ctx, item.firstChar, item.XLOC, item.YLOC, 1);
-      item.secondChar = item.firstChar;
+      textTweak(ctx, stream.firstChar, stream.XLOC, stream.YLOC, 1);
+      stream.secondChar = stream.firstChar;
     }
 
     // Paint area for new character black
     ctx.fillStyle = "black";
-    fillRectTweak(ctx, item.XLOC, item.YLOC, 0);
+    fillRectTweak(ctx, stream.XLOC, stream.YLOC, 0);
 
     // Clear the shadow layer at the same spot
-    clearRectTweak(ctx2, item.XLOC, item.YLOC, 0);
+    clearRectTweak(ctx2, stream.XLOC, stream.YLOC, 0);
 
     // First (new) character
     const randNum = Math.floor(Math.random() * characters.length);
-    item.firstChar = characters.charAt(randNum);
+    stream.firstChar = characters.charAt(randNum);
     ctx.fillStyle = `${streamProperties.initialColor}`;
-    textTweak(ctx, item.firstChar, item.XLOC, item.YLOC, 0);
+    textTweak(ctx, stream.firstChar, stream.XLOC, stream.YLOC, 0);
 
     // Set YLOC for next draw interval...
     // ... or send to top if entire stream off page
-    item.YLOC += streamProperties.fontSize;
+    stream.YLOC += streamProperties.fontSize;
     if (
-      item.YLOC >
-      canvas.offsetHeight + streamProperties.fontSize * item.streamLength
+      stream.YLOC >
+      canvas.offsetHeight + streamProperties.fontSize * stream.streamLength
     ) {
-      item.YLOC = randomYStart();
-      item.XLOC = randomColumn();
-      item.firstChar = null;
+      stream.YLOC = randomYStart();
+      stream.XLOC = randomColumn();
+      stream.firstChar = null;
     }
   });
 };
