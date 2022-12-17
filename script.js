@@ -272,13 +272,24 @@ const setStreamSpeed = (slowestInterval = null, fastestInterval = null) => {
 };
 /* END streamProperties & functions */
 
+// Affects column width
+const columnWidthTweak = 1;
+
 // Stream Generation & Update
-const getTotalColumns = () =>
-  window.innerWidth / (0.9 * streamProperties.fontSize);
+const getTotalColumns = () => {
+  return Math.floor(
+    window.innerWidth / (columnWidthTweak * streamProperties.fontSize) +
+      streamProperties.fontSize
+  );
+};
 
 const randomColumn = () => {
   const columns = getTotalColumns();
-  return Math.floor(Math.random() * columns);
+  return (
+    Math.floor(Math.random() * columns) *
+      (columnWidthTweak * streamProperties.fontSize) +
+    streamProperties.fontSize
+  );
 };
 
 const randomYStart = () => {
@@ -321,7 +332,7 @@ const fillStreams = () => {
     const max = Math.floor(streamProperties.maxLength);
 
     const newStream = {
-      XLOC: Math.floor(randomColumn() * 0.9 * streamProperties.fontSize),
+      XLOC: randomColumn(),
       YLOC: randomYStart(),
       streamLength: Math.floor(Math.random() * (max - min + 1)) + min,
       firstChar: null,
@@ -368,9 +379,9 @@ const updateStreams = (set) => {
 
     ctx.textBaseline = "top";
 
-    // If I want to tweak column width
-    // this may be useful again...
+    // Affects width of fill/clear/fillText
     let rectTrim = 1 * streamProperties.fontSize;
+    // Optional adjustment if bold font
     // if (streamProperties.bold === true) {
     //   rectTrim = 1 * streamProperties.fontSize;
     // }
@@ -486,7 +497,7 @@ const updateStreams = (set) => {
       canvas.offsetHeight + streamProperties.fontSize * item.streamLength
     ) {
       item.YLOC = randomYStart();
-      item.XLOC = Math.floor(randomColumn() * 0.9 * streamProperties.fontSize);
+      item.XLOC = randomColumn();
       item.firstChar = null;
     }
   });
