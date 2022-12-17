@@ -273,7 +273,7 @@ const setStreamSpeed = (slowestInterval = null, fastestInterval = null) => {
 /* END streamProperties & functions */
 
 // Affects column width
-const columnWidthTweak = 1;
+const columnWidthTweak = 0.85;
 
 // Stream Generation & Update
 const getTotalColumns = () => {
