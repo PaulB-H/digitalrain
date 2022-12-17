@@ -354,9 +354,9 @@ const startGeneratingInterval = () => {
       return;
     }
     const length = streamIntervalStore.length;
-    const randSpeed =
-      Math.floor(Math.random() * streamProperties.slowestInterval) +
-      streamProperties.fastestInterval;
+    const min = streamProperties.fastestInterval;
+    const max = streamProperties.slowestInterval;
+    const randSpeed = Math.floor(Math.random() * (max - min + 1)) + min;
     let newInterval = window.setInterval(() => {
       updateStreams(arrayOfStreamSets[length]);
     }, randSpeed);
