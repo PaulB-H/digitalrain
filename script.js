@@ -296,6 +296,12 @@ const randomYStart = () => {
   return -1 - streamProperties.fontSize * Math.ceil(Math.random() * 10);
 };
 
+const randomStreamLength = () =>
+  Math.floor(
+    Math.random() *
+      (streamProperties.maxLength - streamProperties.minLength + 1)
+  ) + streamProperties.minLength;
+
 const calculateMaxStreams = () => {
   const columns = getTotalColumns();
   const totalStreams = Math.floor(
@@ -317,6 +323,24 @@ const clearAllIntervals = () => {
   arrayOfStreamSets = [];
 };
 
+class Stream {
+  constructor() {
+    this.XLOC = randomColumn();
+    this.YLOC = randomYStart();
+    this.streamLength = randomStreamLength();
+    this.firstChar = null;
+    this.secondChar = null;
+  }
+
+  reset() {
+    this.XLOC = randomColumn();
+    this.YLOC = randomYStart();
+    this.streamLength = randomStreamLength();
+    this.firstChar = null;
+    this.secondChar = null;
+  }
+}
+
 // Each set item contains multiple different stream objects
 let arrayOfStreamSets = [];
 const fillStreams = () => {
@@ -328,16 +352,8 @@ const fillStreams = () => {
 
   for (let i = 0; i < numOfStreams; i++) {
     const randomSet = Math.floor(Math.random() * arrayOfStreamSets.length);
-    const min = Math.ceil(streamProperties.minLength);
-    const max = Math.floor(streamProperties.maxLength);
 
-    const newStream = {
-      XLOC: randomColumn(),
-      YLOC: randomYStart(),
-      streamLength: Math.floor(Math.random() * (max - min + 1)) + min,
-      firstChar: null,
-      secondChar: null,
-    };
+    const newStream = new Stream();
 
     arrayOfStreamSets[randomSet].add(newStream);
   }
@@ -496,9 +512,7 @@ const updateStreams = (setOfStreams) => {
       stream.YLOC >
       canvas.offsetHeight + streamProperties.fontSize * stream.streamLength
     ) {
-      stream.YLOC = randomYStart();
-      stream.XLOC = randomColumn();
-      stream.firstChar = null;
+      stream.reset();
     }
   });
 };
