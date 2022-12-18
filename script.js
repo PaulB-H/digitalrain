@@ -28,14 +28,16 @@ const toggleBoldCheckbox = document.getElementById("bold-checkbox");
 const toggleShadingCheckbox = document.getElementById("shading-checkbox");
 // ... and a function update them
 const updateReadout = () => {
-  activeStreamsSpan.innerText = streamProperties.maxStreams;
+  // activeStreamsSpan.innerText = streamProperties.maxStreams;
   streamMaxLengthSpan.innerText = streamProperties.maxLength;
   streamMinLengthSpan.innerText = streamProperties.minLength;
   numOfIntervalsSpan.innerText = streamProperties.maxIntervals;
   streamFontSizeSpan.innerText = streamProperties.fontSize;
   fastestIntervalSpan.innerText = streamProperties.fastestInterval;
   slowestIntervalSpan.innerText = streamProperties.slowestInterval;
-  adjustTotalStreamSpan.innerText = streamProperties.maxStreamAdjustment * 1000;
+  adjustTotalStreamSpan.innerText = parseInt(
+    streamProperties.maxStreamAdjustment * 100
+  );
 };
 const toggleDetailsDiv = () => {
   const allDetails = document.querySelectorAll("#details div");
@@ -51,12 +53,12 @@ const toggleDetailsDiv = () => {
 
 let adjustTotalStreamTimeout;
 adjustTotalStreamSlider.addEventListener("input", (e) => {
-  adjustTotalStreamSpan.innerText = e.target.value * 1000;
+  adjustTotalStreamSpan.innerText = parseInt(e.target.value * 100);
   window.clearTimeout(adjustTotalStreamTimeout);
   adjustTotalStreamTimeout = window.setTimeout(() => {
     clearAllIntervals();
     setCanvasSize();
-    streamProperties.maxStreamAdjustment = parseFloat(e.target.value);
+    streamProperties.maxStreamAdjustment = e.target.value;
     genStreamsAndIntervals();
     updateReadout();
   }, 750);
@@ -170,7 +172,7 @@ const streamProperties = {
   maxIntervals: 100,
   maxStreams: null,
 
-  maxStreamAdjustment: 0.1,
+  maxStreamAdjustment: 1,
 
   bold: true,
   shading: true,
@@ -296,17 +298,28 @@ const randomYStart = () => {
   return -1 - streamProperties.fontSize * Math.ceil(Math.random() * 10);
 };
 
-const randomStreamLength = () =>
-  Math.floor(
+const randomStreamLength = () => {
+  return Math.floor(
     Math.random() *
-      (streamProperties.maxLength - streamProperties.minLength + 1)
-  ) + streamProperties.minLength;
+      (streamProperties.maxLength - streamProperties.minLength + 1) +
+      streamProperties.minLength
+  );
+};
 
 const calculateMaxStreams = () => {
   const columns = getTotalColumns();
+
+  const avgStreamLength =
+    streamProperties.minLength + streamProperties.maxLength / 2;
+
+  // How many streams of average length can fit vertically?
+  let streamsToHeight = Math.floor(
+    canvas.height / (avgStreamLength * streamProperties.fontSize)
+  );
+  if (streamsToHeight <= 0) streamsToHeight = 1;
+
   const totalStreams = Math.floor(
-    streamProperties.maxStreamAdjustment *
-      (columns * (canvas.height / streamProperties.maxLength))
+    columns * streamsToHeight * streamProperties.maxStreamAdjustment
   );
 
   streamProperties.maxStreams = totalStreams;
