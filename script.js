@@ -652,6 +652,8 @@ const generateAndRun = () => {
     i++;
     if (i === controllerArr.length) window.clearInterval(newGeneratingInterval);
   }, 250);
+
+  updateReadout();
 };
 
 // Start drawing (requestAnimationFrame version)
