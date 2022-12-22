@@ -42,13 +42,9 @@ const updateReadout = () => {
 const toggleDetailsDiv = () => {
   const allDetails = document.querySelectorAll("#details div");
   allDetails.forEach((element, idx) => {
-    element.classList.contains("d-none")
-      ? element.classList.remove("d-none")
-      : element.classList.add("d-none");
+    element.classList.toggle("d-none");
   });
-  toggleDetailsButton.classList.contains("fade-button")
-    ? toggleDetailsButton.classList.remove("fade-button")
-    : toggleDetailsButton.classList.add("fade-button");
+  toggleDetailsButton.classList.toggle("fade-button");
 };
 
 let adjustTotalStreamTimeout;
