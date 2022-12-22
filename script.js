@@ -59,7 +59,8 @@ adjustTotalStreamSlider.addEventListener("input", (e) => {
     clearAllIntervals();
     setCanvasSize();
     streamProperties.maxStreamAdjustment = e.target.value;
-    genStreamsAndIntervals();
+    // genStreamsAndIntervals();
+    generateAndRun();
     updateReadout();
   }, 750);
 });
@@ -74,7 +75,8 @@ setMinLenSlider.addEventListener("input", (e) => {
     clearAllIntervals();
     setCanvasSize();
     streamProperties.minLength = parseInt(e.target.value);
-    genStreamsAndIntervals();
+    // genStreamsAndIntervals();
+    generateAndRun();
   }, 750);
 });
 let setMaxLenTimeout;
@@ -87,7 +89,8 @@ setMaxLenSlider.addEventListener("input", (e) => {
     clearAllIntervals();
     setCanvasSize();
     streamProperties.maxLength = parseInt(e.target.value);
-    genStreamsAndIntervals();
+    // genStreamsAndIntervals();
+    generateAndRun();
   }, 750);
 });
 
@@ -126,7 +129,8 @@ toggleBoldCheckbox.addEventListener("change", (e) => {
   else streamProperties.bold = false;
   clearAllIntervals();
   setCanvasSize();
-  genStreamsAndIntervals();
+  // genStreamsAndIntervals();
+  generateAndRun();
 });
 toggleShadingCheckbox.addEventListener("change", (e) => {
   if (e.target.checked) streamProperties.shading = true;
@@ -249,7 +253,8 @@ const setFontSize = (fontSize) => {
 
   setCanvasSize();
 
-  genStreamsAndIntervals();
+  // genStreamsAndIntervals();
+  generateAndRun();
 };
 
 const setStreamLength = (min = null, max = null) => {
@@ -257,7 +262,8 @@ const setStreamLength = (min = null, max = null) => {
   if (min) streamProperties.minLength = min;
   if (max) streamProperties.maxLength = max;
   setCanvasSize();
-  genStreamsAndIntervals();
+  // genStreamsAndIntervals();
+  generateAndRun();
   updateReadout();
 };
 
@@ -269,7 +275,8 @@ const setStreamSpeed = (slowestInterval = null, fastestInterval = null) => {
   if (slowestInterval) streamProperties.slowestInterval = slowestInterval;
   if (fastestInterval) streamProperties.fastestInterval = fastestInterval;
   setCanvasSize();
-  genStreamsAndIntervals();
+  // genStreamsAndIntervals();
+  generateAndRun();
   updateReadout();
 };
 /* END streamProperties & functions */
@@ -295,7 +302,7 @@ const randomColumn = () => {
 };
 
 const randomYStart = () => {
-  return -1 - streamProperties.fontSize * Math.ceil(Math.random() * 10);
+  return -1 - streamProperties.fontSize * Math.ceil(Math.random() * 50);
 };
 
 const randomStreamLength = () => {
@@ -327,13 +334,23 @@ const calculateMaxStreams = () => {
   return totalStreams;
 };
 
+/* Clears interval version */
+// const clearAllIntervals = () => {
+//   streamIntervalStore.forEach((interval, idx) => {
+//     window.clearInterval(interval);
+//   });
+//   streamIntervalStore = [];
+//   window.clearInterval(generatingInterval);
+//   arrayOfStreamSets = [];
+// };
+
+/* Clears requestAnimationFrame version */
 const clearAllIntervals = () => {
-  streamIntervalStore.forEach((interval, idx) => {
-    window.clearInterval(interval);
+  window.clearInterval(newGeneratingInterval);
+  controllerArr.forEach((controller) => {
+    window.cancelAnimationFrame(controller.frameRef);
   });
-  streamIntervalStore = [];
-  window.clearInterval(generatingInterval);
-  arrayOfStreamSets = [];
+  controllerArr = [];
 };
 
 class Stream {
@@ -343,6 +360,20 @@ class Stream {
     this.streamLength = randomStreamLength();
     this.firstChar = null;
     this.secondChar = null;
+    this.interval = genInterval();
+    this.lastUpdate = null;
+    this.frameRef = null;
+    this.animateMe = this.animateMe.bind(this);
+  }
+
+  animateMe(timestamp) {
+    if (!this.lastUpdate) this.lastUpdate = timestamp;
+    if (timestamp - this.lastUpdate >= this.interval) {
+      updateAnStream(this);
+      this.lastUpdate = timestamp;
+    }
+
+    this.frameRef = window.requestAnimationFrame(this.animateMe);
   }
 
   reset() {
@@ -351,6 +382,7 @@ class Stream {
     this.streamLength = randomStreamLength();
     this.firstChar = null;
     this.secondChar = null;
+    this.interval = genInterval();
   }
 }
 
@@ -543,13 +575,14 @@ window.addEventListener("resize", () => {
   resizeTimer = window.setTimeout(() => {
     clearAllIntervals();
     setCanvasSize();
-    genStreamsAndIntervals();
+    // genStreamsAndIntervals();
+    generateAndRun();
     updateReadout();
   }, 750);
 });
 
-// Start drawing
-genStreamsAndIntervals();
+// Start drawing (interval version)
+// genStreamsAndIntervals();
 
 let discoInterval;
 const discoMode = () => {
@@ -566,3 +599,60 @@ const discoMode = () => {
     if (currentTheme === themes.length) currentTheme = 0;
   }, 250);
 };
+
+const genInterval = () => {
+  return (
+    Math.floor(
+      Math.random() *
+        (streamProperties.slowestInterval -
+          streamProperties.fastestInterval +
+          1)
+    ) + streamProperties.fastestInterval
+  );
+};
+
+class StreamController {
+  constructor() {
+    this.interval = genInterval();
+    this.lastUpdate = null;
+    this.frameRef = null;
+    this.animateMe = this.animateMe.bind(this);
+    this.streams = new Set();
+  }
+
+  animateMe(timestamp) {
+    if (!this.lastUpdate) this.lastUpdate = timestamp;
+    if (timestamp - this.lastUpdate >= this.interval) {
+      updateStreams(this.streams);
+      this.lastUpdate = timestamp;
+    }
+
+    this.frameRef = window.requestAnimationFrame(this.animateMe);
+  }
+}
+
+let controllerArr = [];
+
+let newGeneratingInterval;
+const generateAndRun = () => {
+  for (let i = 0; i < 100; i++) {
+    controllerArr.push(new StreamController());
+  }
+
+  const maxStreams = calculateMaxStreams();
+
+  for (let i = 0; i < maxStreams; i++) {
+    const rand = Math.floor(Math.random() * controllerArr.length);
+    controllerArr[rand].streams.add(new Stream());
+  }
+
+  let i = 0;
+  newGeneratingInterval = window.setInterval(() => {
+    if (controllerArr[i].streams.size > 0) controllerArr[i].animateMe();
+    i++;
+    if (i === controllerArr.length) window.clearInterval(newGeneratingInterval);
+  }, 250);
+};
+
+// Start drawing (requestAnimationFrame version)
+generateAndRun();
