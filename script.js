@@ -9,6 +9,8 @@ const characters =
 
 // Spans to update with stream info...
 const mainDetailsDiv = document.getElementById("details");
+const useReqAnimFrameRadio = document.getElementById("use-reqAnimFrame-radio");
+const useIntervalsRadio = document.getElementById("use-intervals-radio");
 const activeStreamsSpan = document.getElementById("active-streams");
 const adjustTotalStreamSpan = document.getElementById("adjust-total");
 const adjustTotalStreamSlider = document.getElementById("adjust-total-streams");
@@ -47,6 +49,17 @@ const toggleDetailsDiv = () => {
   toggleDetailsButton.classList.toggle("fade-button");
 };
 
+[useReqAnimFrameRadio, useIntervalsRadio].forEach((radioInput) => {
+  radioInput.addEventListener("change", (e) => {
+    clearAllIntervals();
+    setCanvasSize();
+    streamProperties.animationMode = e.target.value;
+    startAnimation();
+  });
+});
+
+const setAnimationMode = () => {};
+
 let adjustTotalStreamTimeout;
 adjustTotalStreamSlider.addEventListener("input", (e) => {
   adjustTotalStreamSpan.innerText = parseInt(e.target.value * 100);
@@ -55,8 +68,7 @@ adjustTotalStreamSlider.addEventListener("input", (e) => {
     clearAllIntervals();
     setCanvasSize();
     streamProperties.maxStreamAdjustment = e.target.value;
-    // genStreamsAndIntervals();
-    generateAndRun();
+    startAnimation();
     updateReadout();
   }, 750);
 });
@@ -71,8 +83,7 @@ setMinLenSlider.addEventListener("input", (e) => {
     clearAllIntervals();
     setCanvasSize();
     streamProperties.minLength = parseInt(e.target.value);
-    // genStreamsAndIntervals();
-    generateAndRun();
+    startAnimation();
   }, 750);
 });
 let setMaxLenTimeout;
@@ -85,8 +96,7 @@ setMaxLenSlider.addEventListener("input", (e) => {
     clearAllIntervals();
     setCanvasSize();
     streamProperties.maxLength = parseInt(e.target.value);
-    // genStreamsAndIntervals();
-    generateAndRun();
+    startAnimation();
   }, 750);
 });
 
@@ -125,8 +135,7 @@ toggleBoldCheckbox.addEventListener("change", (e) => {
   else streamProperties.bold = false;
   clearAllIntervals();
   setCanvasSize();
-  // genStreamsAndIntervals();
-  generateAndRun();
+  startAnimation();
 });
 toggleShadingCheckbox.addEventListener("change", (e) => {
   if (e.target.checked) streamProperties.shading = true;
@@ -158,6 +167,8 @@ setCanvasSize();
 
 // streamProperties & functions
 const streamProperties = {
+  animationMode: "requestAnimationFrame",
+
   initialColor: "#e4e6e3",
   secondColor: "#6cfe6b",
   settledColor: "#00dd00",
@@ -249,8 +260,7 @@ const setFontSize = (fontSize) => {
 
   setCanvasSize();
 
-  // genStreamsAndIntervals();
-  generateAndRun();
+  startAnimation();
 };
 
 const setStreamLength = (min = null, max = null) => {
@@ -258,8 +268,7 @@ const setStreamLength = (min = null, max = null) => {
   if (min) streamProperties.minLength = min;
   if (max) streamProperties.maxLength = max;
   setCanvasSize();
-  // genStreamsAndIntervals();
-  generateAndRun();
+  startAnimation();
   updateReadout();
 };
 
@@ -271,8 +280,7 @@ const setStreamSpeed = (slowestInterval = null, fastestInterval = null) => {
   if (slowestInterval) streamProperties.slowestInterval = slowestInterval;
   if (fastestInterval) streamProperties.fastestInterval = fastestInterval;
   setCanvasSize();
-  // genStreamsAndIntervals();
-  generateAndRun();
+  startAnimation();
   updateReadout();
 };
 /* END streamProperties & functions */
@@ -330,18 +338,15 @@ const calculateMaxStreams = () => {
   return totalStreams;
 };
 
-/* Clears interval version */
-// const clearAllIntervals = () => {
-//   streamIntervalStore.forEach((interval, idx) => {
-//     window.clearInterval(interval);
-//   });
-//   streamIntervalStore = [];
-//   window.clearInterval(generatingInterval);
-//   arrayOfStreamSets = [];
-// };
-
-/* Clears requestAnimationFrame version */
+/* Clears requestAnimationFrame and interval version now... */
 const clearAllIntervals = () => {
+  streamIntervalStore.forEach((interval, idx) => {
+    window.clearInterval(interval);
+  });
+  streamIntervalStore = [];
+  window.clearInterval(generatingInterval);
+  arrayOfStreamSets = [];
+
   window.clearInterval(newGeneratingInterval);
   controllerArr.forEach((controller) => {
     window.cancelAnimationFrame(controller.frameRef);
@@ -571,8 +576,7 @@ window.addEventListener("resize", () => {
   resizeTimer = window.setTimeout(() => {
     clearAllIntervals();
     setCanvasSize();
-    // genStreamsAndIntervals();
-    generateAndRun();
+    startAnimation();
     updateReadout();
   }, 750);
 });
@@ -654,3 +658,10 @@ const generateAndRun = () => {
 
 // Start drawing (requestAnimationFrame version)
 generateAndRun();
+
+const startAnimation = () => {
+  if (streamProperties.animationMode === "requestAnimationFrame")
+    generateAndRun();
+  else if (streamProperties.animationMode === "intervals")
+    genStreamsAndIntervals();
+};
