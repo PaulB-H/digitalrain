@@ -58,8 +58,6 @@ const toggleDetailsDiv = () => {
   });
 });
 
-const setAnimationMode = () => {};
-
 let adjustTotalStreamTimeout;
 adjustTotalStreamSlider.addEventListener("input", (e) => {
   adjustTotalStreamSpan.innerText = parseInt(e.target.value * 100);
