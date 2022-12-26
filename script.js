@@ -7,28 +7,43 @@ const ctx2 = canvas2.getContext("2d");
 const characters =
   "MATRIXMATRIXMATRIXMATRIXMAØ1Ø1Ø1Ø1Ø#$%@&#$%@&ｦｧｨｩｪｫｬｭｮｯｱｲｳｴｵｶｷｸｹｺｻｼｽｾｿﾀﾁﾂﾃﾄﾅﾇﾈﾉﾊﾋﾌﾍﾎﾏﾐﾑﾒﾓﾔﾕﾖﾗﾘﾙﾚﾛﾜﾝｦｧｨｩｪｫｬｭｮｯｱｲｳｴｵｶｷｸｹｺｻｼｽｾｿﾀﾁﾂﾃﾄﾅﾇﾈﾉﾊﾋﾌﾍﾎﾏﾐﾑﾒﾓﾔﾕﾖﾗﾘﾙﾚﾛﾜﾝｦｧｨｩｪｫｬｭｮｯｱｲｳｴｵｶｷｸｹｺｻｼｽｾｿﾀﾁﾂﾃﾄﾅﾇﾈﾉﾊﾋﾌﾍﾎﾏﾐﾑﾒﾓﾔﾕﾖﾗﾘﾙﾚﾛﾜﾝｦｧｨｩｪｫｬｭｮｯｱｲｳｴｵｶｷｸｹｺｻｼｽｾｿﾀﾁﾂﾃﾄﾅﾇﾈﾉﾊﾋﾌﾍﾎﾏﾐﾑﾒﾓﾔﾕﾖﾗﾘﾙﾚﾛﾜﾝ";
 
-// Spans to update with stream info...
+/**/
+//// UI Elements
+/**/
+
 const mainDetailsDiv = document.getElementById("details");
+const toggleDetailsButton = document.getElementById("toggle-details-btn");
+
 const useReqAnimFrameRadio = document.getElementById("use-reqAnimFrame-radio");
 const useIntervalsRadio = document.getElementById("use-intervals-radio");
+
 const activeStreamsSpan = document.getElementById("active-streams");
+
 const adjustTotalStreamSpan = document.getElementById("adjust-total");
 const adjustTotalStreamSlider = document.getElementById("adjust-total-streams");
+
 const streamMinLengthSpan = document.getElementById("min-length");
-const streamMaxLengthSpan = document.getElementById("max-length");
 const setMinLenSlider = document.getElementById("set-min-length");
+const streamMaxLengthSpan = document.getElementById("max-length");
 const setMaxLenSlider = document.getElementById("set-max-length");
+
 const numOfIntervalsSpan = document.getElementById("num-intervals");
+
 const fastestIntervalSpan = document.getElementById("fastest-interval");
-const slowestIntervalSpan = document.getElementById("slowest-interval");
 const setFastestSlider = document.getElementById("set-fastest-interval");
+const slowestIntervalSpan = document.getElementById("slowest-interval");
 const setSlowestSlider = document.getElementById("set-slowest-interval");
+
 const streamFontSizeSpan = document.getElementById("font-size");
 const setFontSizeSlider = document.getElementById("set-font-size");
-const toggleDetailsButton = document.getElementById("toggle-details-btn");
+
 const toggleBoldCheckbox = document.getElementById("bold-checkbox");
 const toggleShadingCheckbox = document.getElementById("shading-checkbox");
-// ... and a function update them
+
+/**/
+//// UI Input Actions
+/**/
+
 const updateReadout = () => {
   // activeStreamsSpan.innerText = streamProperties.maxStreams;
   streamMaxLengthSpan.innerText = streamProperties.maxLength;
@@ -161,9 +176,23 @@ const setCanvasSize = () => {
   ctx.fillStyle = "black";
   ctx.fillRect(0, 0, canvas.width, canvas.height);
 };
-setCanvasSize();
+// setCanvasSize();
 
-// streamProperties & functions
+// Resize function
+let resizeTimer;
+window.addEventListener("resize", () => {
+  window.clearInterval(resizeTimer);
+  resizeTimer = window.setTimeout(() => {
+    clearAllIntervals();
+    setCanvasSize();
+    startAnimation();
+    updateReadout();
+  }, 750);
+});
+
+/**/
+//// Main object to control stream properties
+/**/
 const streamProperties = {
   animationMode: "requestAnimationFrame",
 
@@ -187,24 +216,9 @@ const streamProperties = {
   shading: true,
 };
 
-const changeDiscoColors = (color1, color2, color3) => {
-  if (color1) streamProperties.initialColor = color1;
-  if (color2) streamProperties.secondColor = color2;
-  if (color3) streamProperties.settledColor = color3;
-};
-
-const changeStreamColors = (color1, color2, color3) => {
-  window.clearInterval(discoInterval);
-  if (color1) streamProperties.initialColor = color1;
-  if (color2) streamProperties.secondColor = color2;
-  if (color3) streamProperties.settledColor = color3;
-};
-const useTheseColors = () => {
-  const color1 = document.getElementById("color1").value;
-  const color2 = document.getElementById("color2").value;
-  const color3 = document.getElementById("color3").value;
-  changeStreamColors(color1, color2, color3);
-};
+/**/
+//// Font Properties
+/**/
 const themes = [
   {
     name: "matrix",
@@ -245,6 +259,20 @@ const setTheme = (themeName) => {
   });
 };
 
+const changeStreamColors = (color1, color2, color3) => {
+  window.clearInterval(discoInterval);
+  if (color1) streamProperties.initialColor = color1;
+  if (color2) streamProperties.secondColor = color2;
+  if (color3) streamProperties.settledColor = color3;
+};
+
+const useTheseColors = () => {
+  const color1 = document.getElementById("color1").value;
+  const color2 = document.getElementById("color2").value;
+  const color3 = document.getElementById("color3").value;
+  changeStreamColors(color1, color2, color3);
+};
+
 const setFontSize = (fontSize) => {
   clearAllIntervals();
 
@@ -260,6 +288,13 @@ const setFontSize = (fontSize) => {
 
   startAnimation();
 };
+
+/**/
+//// Stream Properties
+/**/
+
+// Column width adjustment
+const columnWidthTweak = 0.85;
 
 const setStreamLength = (min = null, max = null) => {
   clearAllIntervals();
@@ -281,12 +316,7 @@ const setStreamSpeed = (slowestInterval = null, fastestInterval = null) => {
   startAnimation();
   updateReadout();
 };
-/* END streamProperties & functions */
 
-// Affects column width
-const columnWidthTweak = 0.85;
-
-// Stream Generation & Update
 const getTotalColumns = () => {
   return Math.floor(
     window.innerWidth / (columnWidthTweak * streamProperties.fontSize) +
@@ -336,20 +366,15 @@ const calculateMaxStreams = () => {
   return totalStreams;
 };
 
-/* Clears requestAnimationFrame and interval version now... */
-const clearAllIntervals = () => {
-  streamIntervalStore.forEach((interval, idx) => {
-    window.clearInterval(interval);
-  });
-  streamIntervalStore = [];
-  window.clearInterval(generatingInterval);
-  arrayOfStreamSets = [];
-
-  window.clearInterval(newGeneratingInterval);
-  controllerArr.forEach((controller) => {
-    window.cancelAnimationFrame(controller.frameRef);
-  });
-  controllerArr = [];
+const genInterval = () => {
+  return (
+    Math.floor(
+      Math.random() *
+        (streamProperties.slowestInterval -
+          streamProperties.fastestInterval +
+          1)
+    ) + streamProperties.fastestInterval
+  );
 };
 
 class Stream {
@@ -385,56 +410,8 @@ class Stream {
   }
 }
 
-// Each set item contains multiple different stream objects
-let arrayOfStreamSets = [];
-const fillStreams = () => {
-  const numOfStreams = calculateMaxStreams();
-
-  for (let i = 0; i < streamProperties.maxIntervals; i++) {
-    arrayOfStreamSets.push(new Set());
-  }
-
-  for (let i = 0; i < numOfStreams; i++) {
-    const randomSet = Math.floor(Math.random() * arrayOfStreamSets.length);
-
-    const newStream = new Stream();
-
-    arrayOfStreamSets[randomSet].add(newStream);
-  }
-};
-
-// Each set of stream items is assigned to a random interval
-// which triggers the draw update for the streams in that set
-let streamIntervalStore = [];
-let generatingInterval;
-const startGeneratingInterval = () => {
-  generatingInterval = window.setInterval(() => {
-    const length = streamIntervalStore.length;
-
-    if (streamIntervalStore.length >= 100) {
-      window.clearInterval(generatingInterval);
-      return;
-    } else if (arrayOfStreamSets[length].size === 0) {
-      // If there are no items in the set we don't give it an interval...
-      streamIntervalStore.push(null);
-    } else {
-      const min = streamProperties.fastestInterval;
-      const max = streamProperties.slowestInterval;
-      const randSpeed = Math.floor(Math.random() * (max - min + 1)) + min;
-      let newInterval = window.setInterval(() => {
-        updateStreams(arrayOfStreamSets[length]);
-      }, randSpeed);
-      streamIntervalStore.push(newInterval);
-    }
-  }, 150);
-};
-
-const genStreamsAndIntervals = () => {
-  fillStreams();
-  startGeneratingInterval();
-  updateReadout();
-};
-
+/* Both interval mode and requestAnimationFrame modes use updateStreams */
+/* to update positions & draw characters for each stream */
 const updateStreams = (setOfStreams) => {
   setOfStreams.forEach((stream, idx) => {
     ctx.font = `${streamProperties.fontSize}px "Cutive Mono", monospace`;
@@ -565,49 +542,82 @@ const updateStreams = (setOfStreams) => {
     }
   });
 };
-/* END Stream Generation & Update */
 
-// Resize function
-let resizeTimer;
-window.addEventListener("resize", () => {
-  window.clearInterval(resizeTimer);
-  resizeTimer = window.setTimeout(() => {
-    clearAllIntervals();
-    setCanvasSize();
-    startAnimation();
-    updateReadout();
-  }, 750);
-});
+/* Stops any intervals and/or requestAnimationFrame() requests */
+/* Does not clear canvas */
+const clearAllIntervals = () => {
+  streamIntervalStore.forEach((interval, idx) => {
+    window.clearInterval(interval);
+  });
+  streamIntervalStore = [];
+  window.clearInterval(generatingInterval);
+  arrayOfStreamSets = [];
 
-// Start drawing (interval version)
-// genStreamsAndIntervals();
-
-let discoInterval;
-const discoMode = () => {
-  window.clearInterval(discoInterval);
-
-  let currentTheme = 0;
-  discoInterval = window.setInterval(() => {
-    changeDiscoColors(
-      themes[currentTheme].color1,
-      themes[currentTheme].color2,
-      themes[currentTheme].color3
-    );
-    currentTheme++;
-    if (currentTheme === themes.length) currentTheme = 0;
-  }, 250);
+  window.clearInterval(newGeneratingInterval);
+  controllerArr.forEach((controller) => {
+    window.cancelAnimationFrame(controller.frameRef);
+  });
+  controllerArr = [];
 };
 
-const genInterval = () => {
-  return (
-    Math.floor(
-      Math.random() *
-        (streamProperties.slowestInterval -
-          streamProperties.fastestInterval +
-          1)
-    ) + streamProperties.fastestInterval
-  );
+/**/
+////  "intervals" animation mode
+/**/
+
+let arrayOfStreamSets = [];
+const fillStreams = () => {
+  const numOfStreams = calculateMaxStreams();
+
+  for (let i = 0; i < streamProperties.maxIntervals; i++) {
+    arrayOfStreamSets.push(new Set());
+  }
+
+  for (let i = 0; i < numOfStreams; i++) {
+    const randomSet = Math.floor(Math.random() * arrayOfStreamSets.length);
+
+    const newStream = new Stream();
+
+    arrayOfStreamSets[randomSet].add(newStream);
+  }
 };
+
+let streamIntervalStore = [];
+let generatingInterval;
+const startGeneratingInterval = () => {
+  generatingInterval = window.setInterval(() => {
+    const length = streamIntervalStore.length;
+
+    if (streamIntervalStore.length >= 100) {
+      window.clearInterval(generatingInterval);
+      return;
+    } else if (arrayOfStreamSets[length].size === 0) {
+      // If there are no items in the set we don't give it an interval...
+      streamIntervalStore.push(null);
+    } else {
+      const min = streamProperties.fastestInterval;
+      const max = streamProperties.slowestInterval;
+      const randSpeed = Math.floor(Math.random() * (max - min + 1)) + min;
+      let newInterval = window.setInterval(() => {
+        updateStreams(arrayOfStreamSets[length]);
+      }, randSpeed);
+      streamIntervalStore.push(newInterval);
+    }
+  }, 150);
+};
+
+const genStreamsAndIntervals = () => {
+  fillStreams();
+  startGeneratingInterval();
+  updateReadout();
+};
+
+/**/
+////  end "intervals" animation mode
+/**/
+
+/**/
+////  "requestAnimationFrame" animation mode
+/**/
 
 class StreamController {
   constructor() {
@@ -630,7 +640,6 @@ class StreamController {
 }
 
 let controllerArr = [];
-
 let newGeneratingInterval;
 const generateAndRun = () => {
   for (let i = 0; i < 100; i++) {
@@ -654,12 +663,38 @@ const generateAndRun = () => {
   updateReadout();
 };
 
-// Start drawing (requestAnimationFrame version)
-generateAndRun();
+/**/
+////  end "requestAnimationFrame" animation mode
+/**/
 
+// Start drawing - Depends on streamProperties.animationMode
 const startAnimation = () => {
+  setCanvasSize();
   if (streamProperties.animationMode === "requestAnimationFrame")
     generateAndRun();
   else if (streamProperties.animationMode === "intervals")
     genStreamsAndIntervals();
+};
+startAnimation();
+
+// Disco Mode
+const changeDiscoColors = (color1, color2, color3) => {
+  if (color1) streamProperties.initialColor = color1;
+  if (color2) streamProperties.secondColor = color2;
+  if (color3) streamProperties.settledColor = color3;
+};
+let discoInterval;
+const discoMode = () => {
+  window.clearInterval(discoInterval);
+
+  let currentTheme = 0;
+  discoInterval = window.setInterval(() => {
+    changeDiscoColors(
+      themes[currentTheme].color1,
+      themes[currentTheme].color2,
+      themes[currentTheme].color3
+    );
+    currentTheme++;
+    if (currentTheme === themes.length) currentTheme = 0;
+  }, 250);
 };
