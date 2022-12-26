@@ -8,189 +8,6 @@ const characters =
   "MATRIXMATRIXMATRIXMATRIXMAØ1Ø1Ø1Ø1Ø#$%@&#$%@&ｦｧｨｩｪｫｬｭｮｯｱｲｳｴｵｶｷｸｹｺｻｼｽｾｿﾀﾁﾂﾃﾄﾅﾇﾈﾉﾊﾋﾌﾍﾎﾏﾐﾑﾒﾓﾔﾕﾖﾗﾘﾙﾚﾛﾜﾝｦｧｨｩｪｫｬｭｮｯｱｲｳｴｵｶｷｸｹｺｻｼｽｾｿﾀﾁﾂﾃﾄﾅﾇﾈﾉﾊﾋﾌﾍﾎﾏﾐﾑﾒﾓﾔﾕﾖﾗﾘﾙﾚﾛﾜﾝｦｧｨｩｪｫｬｭｮｯｱｲｳｴｵｶｷｸｹｺｻｼｽｾｿﾀﾁﾂﾃﾄﾅﾇﾈﾉﾊﾋﾌﾍﾎﾏﾐﾑﾒﾓﾔﾕﾖﾗﾘﾙﾚﾛﾜﾝｦｧｨｩｪｫｬｭｮｯｱｲｳｴｵｶｷｸｹｺｻｼｽｾｿﾀﾁﾂﾃﾄﾅﾇﾈﾉﾊﾋﾌﾍﾎﾏﾐﾑﾒﾓﾔﾕﾖﾗﾘﾙﾚﾛﾜﾝ";
 
 /**/
-//// UI Elements
-/**/
-
-const mainDetailsDiv = document.getElementById("details");
-const toggleDetailsButton = document.getElementById("toggle-details-btn");
-
-const useReqAnimFrameRadio = document.getElementById("use-reqAnimFrame-radio");
-const useIntervalsRadio = document.getElementById("use-intervals-radio");
-
-const activeStreamsSpan = document.getElementById("active-streams");
-
-const adjustTotalStreamSpan = document.getElementById("adjust-total");
-const adjustTotalStreamSlider = document.getElementById("adjust-total-streams");
-
-const streamMinLengthSpan = document.getElementById("min-length");
-const setMinLenSlider = document.getElementById("set-min-length");
-const streamMaxLengthSpan = document.getElementById("max-length");
-const setMaxLenSlider = document.getElementById("set-max-length");
-
-const numOfIntervalsSpan = document.getElementById("num-intervals");
-
-const fastestIntervalSpan = document.getElementById("fastest-interval");
-const setFastestSlider = document.getElementById("set-fastest-interval");
-const slowestIntervalSpan = document.getElementById("slowest-interval");
-const setSlowestSlider = document.getElementById("set-slowest-interval");
-
-const streamFontSizeSpan = document.getElementById("font-size");
-const setFontSizeSlider = document.getElementById("set-font-size");
-
-const toggleBoldCheckbox = document.getElementById("bold-checkbox");
-const toggleShadingCheckbox = document.getElementById("shading-checkbox");
-
-/**/
-//// UI Input Actions
-/**/
-
-const updateReadout = () => {
-  // activeStreamsSpan.innerText = streamProperties.maxStreams;
-  streamMaxLengthSpan.innerText = streamProperties.maxLength;
-  streamMinLengthSpan.innerText = streamProperties.minLength;
-  numOfIntervalsSpan.innerText = streamProperties.maxIntervals;
-  streamFontSizeSpan.innerText = streamProperties.fontSize;
-  fastestIntervalSpan.innerText = streamProperties.fastestInterval;
-  slowestIntervalSpan.innerText = streamProperties.slowestInterval;
-  adjustTotalStreamSpan.innerText = parseInt(
-    streamProperties.maxStreamAdjustment * 100
-  );
-};
-const toggleDetailsDiv = () => {
-  const allDetails = document.querySelectorAll("#details div");
-  allDetails.forEach((element, idx) => {
-    element.classList.toggle("d-none");
-  });
-  toggleDetailsButton.classList.toggle("fade-button");
-};
-
-[useReqAnimFrameRadio, useIntervalsRadio].forEach((radioInput) => {
-  radioInput.addEventListener("change", (e) => {
-    clearAllIntervals();
-    setCanvasSize();
-    streamProperties.animationMode = e.target.value;
-    startAnimation();
-  });
-});
-
-let adjustTotalStreamTimeout;
-adjustTotalStreamSlider.addEventListener("input", (e) => {
-  adjustTotalStreamSpan.innerText = parseInt(e.target.value * 100);
-  window.clearTimeout(adjustTotalStreamTimeout);
-  adjustTotalStreamTimeout = window.setTimeout(() => {
-    clearAllIntervals();
-    setCanvasSize();
-    streamProperties.maxStreamAdjustment = e.target.value;
-    startAnimation();
-    updateReadout();
-  }, 750);
-});
-
-let setMinLenTimeout;
-setMinLenSlider.addEventListener("input", (e) => {
-  window.clearTimeout(setMinLenTimeout);
-  if (parseInt(e.target.value) > parseInt(setMaxLenSlider.value))
-    e.target.value = setMaxLenSlider.value;
-  streamMinLengthSpan.innerText = e.target.value;
-  setMinLenTimeout = window.setTimeout(() => {
-    clearAllIntervals();
-    setCanvasSize();
-    streamProperties.minLength = parseInt(e.target.value);
-    startAnimation();
-  }, 750);
-});
-let setMaxLenTimeout;
-setMaxLenSlider.addEventListener("input", (e) => {
-  window.clearTimeout(setMaxLenTimeout);
-  if (parseInt(e.target.value) < parseInt(setMinLenSlider.value))
-    e.target.value = setMinLenSlider.value;
-  streamMaxLengthSpan.innerText = e.target.value;
-  setMaxLenTimeout = window.setTimeout(() => {
-    clearAllIntervals();
-    setCanvasSize();
-    streamProperties.maxLength = parseInt(e.target.value);
-    startAnimation();
-  }, 750);
-});
-
-let setFastestTimeout;
-setFastestSlider.addEventListener("input", (e) => {
-  window.clearTimeout(setFastestTimeout);
-  if (parseInt(e.target.value) > parseInt(setSlowestSlider.value))
-    e.target.value = setSlowestSlider.value;
-  fastestIntervalSpan.innerText = e.target.value;
-  setFastestTimeout = window.setTimeout(() => {
-    setStreamSpeed(null, parseInt(e.target.value));
-  }, 750);
-});
-let setSlowestTimeout;
-setSlowestSlider.addEventListener("input", (e) => {
-  window.clearTimeout(setSlowestTimeout);
-  if (parseInt(e.target.value) < parseInt(setFastestSlider.value))
-    e.target.value = setFastestSlider.value;
-  slowestIntervalSpan.innerText = e.target.value;
-  setSlowestTimeout = window.setTimeout(() => {
-    setStreamSpeed(parseInt(e.target.value), null);
-  }, 750);
-});
-
-let getFontTimeout;
-const getFontSizeFromSlider = () => {
-  streamFontSizeSpan.innerText = setFontSizeSlider.value;
-  window.clearInterval(getFontTimeout);
-  getFontTimeout = window.setTimeout(() => {
-    setFontSize(parseInt(setFontSizeSlider.value));
-  }, 1500);
-};
-
-toggleBoldCheckbox.addEventListener("change", (e) => {
-  if (e.target.checked) streamProperties.bold = true;
-  else streamProperties.bold = false;
-  clearAllIntervals();
-  setCanvasSize();
-  startAnimation();
-});
-toggleShadingCheckbox.addEventListener("change", (e) => {
-  if (e.target.checked) streamProperties.shading = true;
-  else streamProperties.shading = false;
-});
-
-// Canvas sizing
-const setCanvasSize = () => {
-  canvas.width = document.querySelector("body").offsetWidth;
-  canvas2.width = document.querySelector("body").offsetWidth;
-
-  if (window.innerHeight > document.querySelector("body").offsetHeight) {
-    canvas.height = window.innerHeight;
-    canvas2.height = window.innerHeight;
-  } else {
-    canvas.height = document.querySelector("body").offsetHeight;
-    canvas2.height = document.querySelector("body").offsetHeight;
-  }
-
-  ctx.translate(canvas.width, 0);
-  ctx.scale(-1, 1);
-  ctx2.translate(canvas2.width, 0);
-  ctx2.scale(-1, 1);
-
-  ctx.fillStyle = "black";
-  ctx.fillRect(0, 0, canvas.width, canvas.height);
-};
-// setCanvasSize();
-
-// Resize function
-let resizeTimer;
-window.addEventListener("resize", () => {
-  window.clearInterval(resizeTimer);
-  resizeTimer = window.setTimeout(() => {
-    clearAllIntervals();
-    setCanvasSize();
-    startAnimation();
-    updateReadout();
-  }, 750);
-});
-
-/**/
 //// Main object to control stream properties
 /**/
 const streamProperties = {
@@ -215,6 +32,199 @@ const streamProperties = {
   bold: true,
   shading: true,
 };
+
+/**/
+//// UI Elements
+/**/
+
+const headless = false;
+
+if (!headless) {
+  const mainDetailsDiv = document.getElementById("details");
+
+  const toggleDetailsButton = document.getElementById("toggle-details-btn");
+  toggleDetailsButton.addEventListener("click", () => {
+    const allDetails = document.querySelectorAll("#details div");
+    allDetails.forEach((element) => {
+      element.classList.toggle("d-none");
+    });
+    toggleDetailsButton.classList.toggle("fade-button");
+  });
+
+  const useReqAnimFrameRadio = document.getElementById(
+    "use-reqAnimFrame-radio"
+  );
+  const useIntervalsRadio = document.getElementById("use-intervals-radio");
+
+  const activeStreamsSpan = document.getElementById("active-streams");
+
+  const adjustTotalStreamSpan = document.getElementById("adjust-total");
+  const adjustTotalStreamSlider = document.getElementById(
+    "adjust-total-streams"
+  );
+
+  const streamMinLengthSpan = document.getElementById("min-length");
+  const setMinLenSlider = document.getElementById("set-min-length");
+  const streamMaxLengthSpan = document.getElementById("max-length");
+  const setMaxLenSlider = document.getElementById("set-max-length");
+
+  // const numOfIntervalsSpan = document.getElementById("num-intervals");
+
+  const fastestIntervalSpan = document.getElementById("fastest-interval");
+  const setFastestSlider = document.getElementById("set-fastest-interval");
+  const slowestIntervalSpan = document.getElementById("slowest-interval");
+  const setSlowestSlider = document.getElementById("set-slowest-interval");
+
+  const streamFontSizeSpan = document.getElementById("font-size");
+  const setFontSizeSlider = document.getElementById("set-font-size");
+
+  const toggleBoldCheckbox = document.getElementById("bold-checkbox");
+  const toggleShadingCheckbox = document.getElementById("shading-checkbox");
+
+  /**/
+  //// UI Input Actions
+  /**/
+
+  const updateReadout = () => {
+    activeStreamsSpan.innerText = streamProperties.maxStreams;
+    streamMaxLengthSpan.innerText = streamProperties.maxLength;
+    streamMinLengthSpan.innerText = streamProperties.minLength;
+    // numOfIntervalsSpan.innerText = streamProperties.maxIntervals;
+    streamFontSizeSpan.innerText = streamProperties.fontSize;
+    fastestIntervalSpan.innerText = streamProperties.fastestInterval;
+    slowestIntervalSpan.innerText = streamProperties.slowestInterval;
+    adjustTotalStreamSpan.innerText = parseInt(
+      streamProperties.maxStreamAdjustment * 100
+    );
+  };
+
+  [useReqAnimFrameRadio, useIntervalsRadio].forEach((radioInput) => {
+    radioInput.addEventListener("change", (e) => {
+      clearAllIntervals();
+      setCanvasSize();
+      streamProperties.animationMode = e.target.value;
+      startAnimation();
+    });
+  });
+
+  let adjustTotalStreamTimeout;
+  adjustTotalStreamSlider.addEventListener("input", (e) => {
+    adjustTotalStreamSpan.innerText = parseInt(e.target.value * 100);
+    window.clearTimeout(adjustTotalStreamTimeout);
+    adjustTotalStreamTimeout = window.setTimeout(() => {
+      clearAllIntervals();
+      setCanvasSize();
+      streamProperties.maxStreamAdjustment = e.target.value;
+      startAnimation();
+    }, 750);
+  });
+
+  let setMinLenTimeout;
+  setMinLenSlider.addEventListener("input", (e) => {
+    window.clearTimeout(setMinLenTimeout);
+    if (parseInt(e.target.value) > parseInt(setMaxLenSlider.value))
+      e.target.value = setMaxLenSlider.value;
+    streamMinLengthSpan.innerText = e.target.value;
+    setMinLenTimeout = window.setTimeout(() => {
+      clearAllIntervals();
+      setCanvasSize();
+      streamProperties.minLength = parseInt(e.target.value);
+      startAnimation();
+    }, 750);
+  });
+  let setMaxLenTimeout;
+  setMaxLenSlider.addEventListener("input", (e) => {
+    window.clearTimeout(setMaxLenTimeout);
+    if (parseInt(e.target.value) < parseInt(setMinLenSlider.value))
+      e.target.value = setMinLenSlider.value;
+    streamMaxLengthSpan.innerText = e.target.value;
+    setMaxLenTimeout = window.setTimeout(() => {
+      clearAllIntervals();
+      setCanvasSize();
+      streamProperties.maxLength = parseInt(e.target.value);
+      startAnimation();
+    }, 750);
+  });
+
+  let setFastestTimeout;
+  setFastestSlider.addEventListener("input", (e) => {
+    window.clearTimeout(setFastestTimeout);
+    if (parseInt(e.target.value) > parseInt(setSlowestSlider.value))
+      e.target.value = setSlowestSlider.value;
+    fastestIntervalSpan.innerText = e.target.value;
+    setFastestTimeout = window.setTimeout(() => {
+      setStreamSpeed(null, parseInt(e.target.value));
+    }, 750);
+  });
+  let setSlowestTimeout;
+  setSlowestSlider.addEventListener("input", (e) => {
+    window.clearTimeout(setSlowestTimeout);
+    if (parseInt(e.target.value) < parseInt(setFastestSlider.value))
+      e.target.value = setFastestSlider.value;
+    slowestIntervalSpan.innerText = e.target.value;
+    setSlowestTimeout = window.setTimeout(() => {
+      setStreamSpeed(parseInt(e.target.value), null);
+    }, 750);
+  });
+
+  let getFontTimeout;
+  setFontSizeSlider.addEventListener("input", (e) => {
+    streamFontSizeSpan.innerText = setFontSizeSlider.value;
+    window.clearInterval(getFontTimeout);
+    getFontTimeout = window.setTimeout(() => {
+      setFontSize(parseInt(setFontSizeSlider.value));
+    }, 1500);
+  });
+
+  toggleBoldCheckbox.addEventListener("change", (e) => {
+    if (e.target.checked) streamProperties.bold = true;
+    else streamProperties.bold = false;
+    clearAllIntervals();
+    setCanvasSize();
+    startAnimation();
+  });
+  toggleShadingCheckbox.addEventListener("change", (e) => {
+    if (e.target.checked) streamProperties.shading = true;
+    else streamProperties.shading = false;
+  });
+
+  updateReadout();
+
+  uiUpdateInterval = window.setInterval(() => {
+    activeStreamsSpan.innerText = streamProperties.maxStreams;
+  }, 500);
+}
+
+// Canvas sizing
+const setCanvasSize = () => {
+  canvas.width = document.querySelector("body").offsetWidth;
+  canvas2.width = document.querySelector("body").offsetWidth;
+
+  if (window.innerHeight > document.querySelector("body").offsetHeight) {
+    canvas.height = window.innerHeight;
+    canvas2.height = window.innerHeight;
+  } else {
+    canvas.height = document.querySelector("body").offsetHeight;
+    canvas2.height = document.querySelector("body").offsetHeight;
+  }
+
+  ctx.translate(canvas.width, 0);
+  ctx.scale(-1, 1);
+  ctx2.translate(canvas2.width, 0);
+  ctx2.scale(-1, 1);
+
+  ctx.fillStyle = "black";
+  ctx.fillRect(0, 0, canvas.width, canvas.height);
+};
+let resizeTimer;
+window.addEventListener("resize", () => {
+  window.clearInterval(resizeTimer);
+  resizeTimer = window.setTimeout(() => {
+    clearAllIntervals();
+    setCanvasSize();
+    startAnimation();
+  }, 750);
+});
 
 /**/
 //// Font Properties
@@ -302,7 +312,6 @@ const setStreamLength = (min = null, max = null) => {
   if (max) streamProperties.maxLength = max;
   setCanvasSize();
   startAnimation();
-  updateReadout();
 };
 
 const setStreamSpeed = (slowestInterval = null, fastestInterval = null) => {
@@ -314,7 +323,6 @@ const setStreamSpeed = (slowestInterval = null, fastestInterval = null) => {
   if (fastestInterval) streamProperties.fastestInterval = fastestInterval;
   setCanvasSize();
   startAnimation();
-  updateReadout();
 };
 
 const getTotalColumns = () => {
@@ -362,7 +370,7 @@ const calculateMaxStreams = () => {
   );
 
   streamProperties.maxStreams = totalStreams;
-  activeStreamsSpan.innerText = totalStreams;
+
   return totalStreams;
 };
 
@@ -608,7 +616,6 @@ const startGeneratingInterval = () => {
 const genStreamsAndIntervals = () => {
   fillStreams();
   startGeneratingInterval();
-  updateReadout();
 };
 
 /**/
@@ -659,8 +666,6 @@ const generateAndRun = () => {
     i++;
     if (i === controllerArr.length) window.clearInterval(newGeneratingInterval);
   }, 250);
-
-  updateReadout();
 };
 
 /**/
