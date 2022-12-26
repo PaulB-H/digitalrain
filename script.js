@@ -74,7 +74,7 @@ if (!headless) {
     adjustTotalStreamTimeout = window.setTimeout(() => {
       clearAllIntervals();
       setCanvasSize();
-      streamProperties.maxStreamAdjustment = e.target.value;
+      streamProperties.maxStreamAdjustment = parseFloat(e.target.value);
       startAnimation();
     }, 750);
   });
