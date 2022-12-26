@@ -375,20 +375,6 @@ class Stream {
     this.streamLength = randomStreamLength();
     this.firstChar = null;
     this.secondChar = null;
-    this.interval = genInterval();
-    this.lastUpdate = null;
-    this.frameRef = null;
-    this.animateMe = this.animateMe.bind(this);
-  }
-
-  animateMe(timestamp) {
-    if (!this.lastUpdate) this.lastUpdate = timestamp;
-    if (timestamp - this.lastUpdate >= this.interval) {
-      updateAnStream(this);
-      this.lastUpdate = timestamp;
-    }
-
-    this.frameRef = window.requestAnimationFrame(this.animateMe);
   }
 
   reset() {
@@ -397,7 +383,6 @@ class Stream {
     this.streamLength = randomStreamLength();
     this.firstChar = null;
     this.secondChar = null;
-    this.interval = genInterval();
   }
 }
 
