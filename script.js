@@ -90,8 +90,7 @@ if (!headless) {
       e.target.value = setMaxLenSlider.value;
     streamMinLengthSpan.innerText = e.target.value;
     setMinLenTimeout = window.setTimeout(() => {
-      streamProperties.minLength = parseInt(e.target.value);
-      setStreamLength(streamProperties.minLength)
+      setStreamLength(parseInt(e.target.value))
     }, 750);
   });
   let setMaxLenTimeout;
@@ -101,8 +100,7 @@ if (!headless) {
       e.target.value = setMinLenSlider.value;
     streamMaxLengthSpan.innerText = e.target.value;
     setMaxLenTimeout = window.setTimeout(() => {
-      streamProperties.minLength = parseInt(e.target.value);
-      setStreamLength(null, streamProperties.minLength)
+      setStreamLength(null, parseInt(e.target.value))
     }, 750);
   });
 
