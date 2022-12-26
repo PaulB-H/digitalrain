@@ -188,6 +188,13 @@ if (!headless) {
     else streamProperties.shading = false;
   });
 
+  document.getElementById("use-these-colors").addEventListener("click", () => {
+    const color1 = document.getElementById("color1").value;
+    const color2 = document.getElementById("color2").value;
+    const color3 = document.getElementById("color3").value;
+    changeStreamColors(color1, color2, color3);
+  });
+
   updateReadout();
 
   uiUpdateInterval = window.setInterval(() => {
@@ -274,13 +281,6 @@ const changeStreamColors = (color1, color2, color3) => {
   if (color1) streamProperties.initialColor = color1;
   if (color2) streamProperties.secondColor = color2;
   if (color3) streamProperties.settledColor = color3;
-};
-
-const useTheseColors = () => {
-  const color1 = document.getElementById("color1").value;
-  const color2 = document.getElementById("color2").value;
-  const color3 = document.getElementById("color3").value;
-  changeStreamColors(color1, color2, color3);
 };
 
 const setFontSize = (fontSize) => {
