@@ -285,6 +285,13 @@ const setFontSize = (fontSize) => {
 // Column width adjustment
 const columnWidthTweak = 0.85;
 
+const adjustTotalStreams = (value) => {
+  clearAllIntervals();
+  setCanvasSize();
+  streamProperties.maxStreamAdjustment = value;
+  startAnimation();
+};
+
 const setStreamLength = (min = null, max = null) => {
   clearAllIntervals();
   if (min) streamProperties.minLength = min;
