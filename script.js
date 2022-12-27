@@ -56,10 +56,7 @@ if (!headless) {
   const useIntervalsRadio = document.getElementById("use-intervals-radio");
   [useReqAnimFrameRadio, useIntervalsRadio].forEach((radioInput) => {
     radioInput.addEventListener("change", (e) => {
-      clearAllIntervals();
-      setCanvasSize();
-      streamProperties.animationMode = e.target.value;
-      startAnimation();
+      changeAnimationMode(e.target.value);
     });
   });
 
@@ -282,6 +279,20 @@ const setFontSize = (fontSize) => {
 /**/
 //// Stream Properties
 /**/
+
+const changeAnimationMode = (animationMode) => {
+  if (
+    animationMode !== "intervals" &&
+    animationMode !== "requestAnimationFrame"
+  )
+    return;
+  else {
+    clearAllIntervals();
+    streamProperties.animationMode = animationMode;
+    setCanvasSize();
+    startAnimation();
+  }
+};
 
 // Column width adjustment
 const columnWidthTweak = 0.85;
