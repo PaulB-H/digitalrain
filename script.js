@@ -63,8 +63,8 @@ if (!headless) {
     });
   });
 
+ 
   const activeStreamsSpan = document.getElementById("active-streams");
-
   const adjustTotalStreamSpan = document.getElementById("adjust-total");
   const adjustTotalStreamSlider = document.getElementById("adjust-total-streams");
   let adjustTotalStreamTimeout;
@@ -72,10 +72,8 @@ if (!headless) {
     adjustTotalStreamSpan.innerText = parseInt(e.target.value * 100);
     window.clearTimeout(adjustTotalStreamTimeout);
     adjustTotalStreamTimeout = window.setTimeout(() => {
-      clearAllIntervals();
-      setCanvasSize();
-      streamProperties.maxStreamAdjustment = parseFloat(e.target.value);
-      startAnimation();
+      adjustTotalStreams(parseFloat(e.target.value));
+      updateReadout();
     }, 750);
   });
 
