@@ -31,7 +31,7 @@ const streamProperties = {
 
   totalStreams: null,
 
-  maxStreamAdjustment: 1,
+  totalStreamMultiplier: 1,
 
   bold: true,
   shading: true,
@@ -73,7 +73,7 @@ if (!headless) {
     adjustTotalStreamSpan.innerText = parseInt(e.target.value * 100);
     window.clearTimeout(adjustTotalStreamTimeout);
     adjustTotalStreamTimeout = window.setTimeout(() => {
-      adjustTotalStreams(parseFloat(e.target.value));
+      setTotalStreamMultiplier(parseFloat(e.target.value));
       updateReadout();
     }, 750);
   });
@@ -290,8 +290,8 @@ const changeAnimationMode = (animationMode) => {
 // Column width adjustment
 const columnWidthTweak = 0.85;
 
-const adjustTotalStreams = (value) => {
-  streamProperties.maxStreamAdjustment = value;
+const setTotalStreamMultiplier = (value) => {
+  streamProperties.totalStreamMultiplier = value;
   startAnimation();
 };
 
@@ -354,7 +354,7 @@ const calculateMaxStreams = () => {
   if (streamsToHeight <= 0) streamsToHeight = 1;
 
   const totalStreams = Math.floor(
-    columns * streamsToHeight * streamProperties.maxStreamAdjustment
+    columns * streamsToHeight * streamProperties.totalStreamMultiplier
   );
 
   streamProperties.totalStreams = totalStreams;
