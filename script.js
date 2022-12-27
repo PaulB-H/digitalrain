@@ -145,8 +145,6 @@ if (!headless) {
   toggleBoldCheckbox.addEventListener("change", (e) => {
     if (e.target.checked) streamProperties.bold = true;
     else streamProperties.bold = false;
-    clearAllIntervals();
-    setCanvasSize();
     startAnimation();
   });
   toggleShadingCheckbox.addEventListener("change", (e) => {
@@ -204,8 +202,6 @@ let resizeTimer;
 window.addEventListener("resize", () => {
   window.clearInterval(resizeTimer);
   resizeTimer = window.setTimeout(() => {
-    clearAllIntervals();
-    setCanvasSize();
     startAnimation();
   }, 750);
 });
@@ -261,8 +257,6 @@ const changeStreamColors = (color1, color2, color3) => {
 };
 
 const setFontSize = (fontSize) => {
-  clearAllIntervals();
-
   if (fontSize < 5) {
     streamProperties.fontSize = 5;
   } else if (fontSize > 100) {
@@ -270,8 +264,6 @@ const setFontSize = (fontSize) => {
   } else {
     streamProperties.fontSize = fontSize;
   }
-
-  setCanvasSize();
 
   startAnimation();
 };
@@ -287,9 +279,8 @@ const changeAnimationMode = (animationMode) => {
   )
     return;
   else {
-    clearAllIntervals();
     streamProperties.animationMode = animationMode;
-    setCanvasSize();
+
     startAnimation();
   }
 };
@@ -298,17 +289,14 @@ const changeAnimationMode = (animationMode) => {
 const columnWidthTweak = 0.85;
 
 const adjustTotalStreams = (value) => {
-  clearAllIntervals();
-  setCanvasSize();
   streamProperties.maxStreamAdjustment = value;
   startAnimation();
 };
 
 const setStreamLength = (min = null, max = null) => {
-  clearAllIntervals();
   if (min) streamProperties.minLength = min;
   if (max) streamProperties.maxLength = max;
-  setCanvasSize();
+
   startAnimation();
 };
 
@@ -316,10 +304,10 @@ const setStreamSpeed = (slowestInterval = null, fastestInterval = null) => {
   if (slowestInterval && fastestInterval) {
     if (slowestInterval < fastestInterval) return;
   }
-  clearAllIntervals();
+
   if (slowestInterval) streamProperties.slowestInterval = slowestInterval;
   if (fastestInterval) streamProperties.fastestInterval = fastestInterval;
-  setCanvasSize();
+
   startAnimation();
 };
 
@@ -657,6 +645,7 @@ const generateAndRun = () => {
 
 // Start drawing - Depends on streamProperties.animationMode
 const startAnimation = () => {
+  clearAllIntervals();
   setCanvasSize();
   if (streamProperties.animationMode === "requestAnimationFrame")
     generateAndRun();
