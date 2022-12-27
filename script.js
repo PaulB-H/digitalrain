@@ -25,7 +25,7 @@ const streamProperties = {
   fastestInterval: 50,
 
   maxIntervals: 100,
-  maxStreams: null,
+  totalStreams: null,
 
   maxStreamAdjustment: 1,
 
@@ -165,7 +165,7 @@ if (!headless) {
   });
 
   const updateReadout = () => {
-    activeStreamsSpan.innerText = streamProperties.maxStreams;
+    activeStreamsSpan.innerText = streamProperties.totalStreams;
     streamMaxLengthSpan.innerText = streamProperties.maxLength;
     streamMinLengthSpan.innerText = streamProperties.minLength;
     // numOfIntervalsSpan.innerText = streamProperties.maxIntervals;
@@ -173,7 +173,7 @@ if (!headless) {
     fastestIntervalSpan.innerText = streamProperties.fastestInterval;
     slowestIntervalSpan.innerText = streamProperties.slowestInterval;
     adjustTotalStreamSpan.innerText = parseInt(
-      streamProperties.maxStreamAdjustment * 100
+      adjustTotalStreamSlider.value * 100
     );
   };
   updateReadout();
@@ -350,7 +350,7 @@ const calculateMaxStreams = () => {
     columns * streamsToHeight * streamProperties.maxStreamAdjustment
   );
 
-  streamProperties.maxStreams = totalStreams;
+  streamProperties.totalStreams = totalStreams;
 
   return totalStreams;
 };
