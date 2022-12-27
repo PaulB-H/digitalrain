@@ -24,7 +24,11 @@ const streamProperties = {
   slowestInterval: 500,
   fastestInterval: 50,
 
-  maxIntervals: 100,
+  rampUp: 15000,
+
+  totalIntervals: 100,
+  totalStreamControllers: 100,
+
   totalStreams: null,
 
   maxStreamAdjustment: 1,
@@ -42,6 +46,7 @@ const headless = false;
 // prettier-ignore
 if (!headless) {
   // const mainDetailsDiv = document.getElementById("details");
+  // const numOfIntervalsSpan = document.getElementById("num-intervals");
 
   const toggleDetailsButton = document.getElementById("toggle-details-btn");
   toggleDetailsButton.addEventListener("click", () => {
@@ -60,7 +65,6 @@ if (!headless) {
     });
   });
 
- 
   const activeStreamsSpan = document.getElementById("active-streams");
   const adjustTotalStreamSpan = document.getElementById("adjust-total");
   const adjustTotalStreamSlider = document.getElementById("adjust-total-streams");
@@ -100,8 +104,6 @@ if (!headless) {
       updateReadout();
     }, 750);
   });
-
-  // const numOfIntervalsSpan = document.getElementById("num-intervals");
 
   const fastestIntervalSpan = document.getElementById("fastest-interval");
   const setFastestSlider = document.getElementById("set-fastest-interval");
@@ -164,7 +166,7 @@ if (!headless) {
     activeStreamsSpan.innerText = streamProperties.totalStreams;
     streamMaxLengthSpan.innerText = streamProperties.maxLength;
     streamMinLengthSpan.innerText = streamProperties.minLength;
-    // numOfIntervalsSpan.innerText = streamProperties.maxIntervals;
+    // numOfIntervalsSpan.innerText = streamProperties.totalIntervals;
     streamFontSizeSpan.innerText = streamProperties.fontSize;
     fastestIntervalSpan.innerText = streamProperties.fastestInterval;
     slowestIntervalSpan.innerText = streamProperties.slowestInterval;
@@ -547,7 +549,7 @@ let arrayOfStreamSets = [];
 const fillStreams = () => {
   const numOfStreams = calculateMaxStreams();
 
-  for (let i = 0; i < streamProperties.maxIntervals; i++) {
+  for (let i = 0; i < streamProperties.totalIntervals; i++) {
     arrayOfStreamSets.push(new Set());
   }
 
@@ -563,10 +565,12 @@ const fillStreams = () => {
 let streamIntervalStore = [];
 let generatingInterval;
 const startGeneratingInterval = () => {
+  const rampUpTime = streamProperties.rampUp / streamProperties.totalIntervals;
+
   generatingInterval = window.setInterval(() => {
     const length = streamIntervalStore.length;
 
-    if (streamIntervalStore.length >= 100) {
+    if (streamIntervalStore.length >= streamProperties.totalIntervals) {
       window.clearInterval(generatingInterval);
       return;
     } else if (arrayOfStreamSets[length].size === 0) {
@@ -581,7 +585,7 @@ const startGeneratingInterval = () => {
       }, randSpeed);
       streamIntervalStore.push(newInterval);
     }
-  }, 150);
+  }, rampUpTime);
 };
 
 const genStreamsAndIntervals = () => {
@@ -620,7 +624,9 @@ class StreamController {
 let controllerArr = [];
 let newGeneratingInterval;
 const generateAndRun = () => {
-  for (let i = 0; i < 100; i++) {
+  const totalStreamControllers = streamProperties.totalStreamControllers;
+
+  for (let i = 0; i < totalStreamControllers; i++) {
     controllerArr.push(new StreamController());
   }
 
@@ -631,12 +637,13 @@ const generateAndRun = () => {
     controllerArr[rand].streams.add(new Stream());
   }
 
+  const rampUpTime = streamProperties.rampUp / totalStreamControllers;
   let i = 0;
   newGeneratingInterval = window.setInterval(() => {
     if (controllerArr[i].streams.size > 0) controllerArr[i].animateMe();
     i++;
     if (i === controllerArr.length) window.clearInterval(newGeneratingInterval);
-  }, 250);
+  }, rampUpTime);
 };
 
 /**/
