@@ -88,7 +88,8 @@ if (!headless) {
       e.target.value = setMaxLenSlider.value;
     streamMinLengthSpan.innerText = e.target.value;
     setMinLenTimeout = window.setTimeout(() => {
-      setStreamLength(parseInt(e.target.value))
+      setStreamLength(parseInt(e.target.value));
+      updateReadout();
     }, 750);
   });
   let setMaxLenTimeout;
@@ -98,7 +99,8 @@ if (!headless) {
       e.target.value = setMinLenSlider.value;
     streamMaxLengthSpan.innerText = e.target.value;
     setMaxLenTimeout = window.setTimeout(() => {
-      setStreamLength(null, parseInt(e.target.value))
+      setStreamLength(null, parseInt(e.target.value));
+      updateReadout();
     }, 750);
   });
 
@@ -137,6 +139,7 @@ if (!headless) {
     window.clearInterval(getFontTimeout);
     getFontTimeout = window.setTimeout(() => {
       setFontSize(parseInt(setFontSizeSlider.value));
+      updateReadout();
     }, 1500);
   });
 
@@ -174,11 +177,9 @@ if (!headless) {
       adjustTotalStreamSlider.value * 100
     );
   };
-  updateReadout();
 
-  window.setInterval(() => {
-    activeStreamsSpan.innerText = streamProperties.maxStreams;
-  }, 500);
+  // Wait for a sec for total streams to update
+  window.setTimeout(() => updateReadout()), 250
 }
 
 // Canvas sizing
