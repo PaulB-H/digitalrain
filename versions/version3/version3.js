@@ -93,7 +93,7 @@ class DigitalRain {
     if (!fontLoaded) {
       const fontFile = new FontFace(
         "Cutive Mono",
-        "url(http://fonts.gstatic.com/s/cutivemono/v14/m8JWjfRfY7WVjVi2E-K9H6RCTm4.woff2)"
+        "url(https://fonts.gstatic.com/s/cutivemono/v14/m8JWjfRfY7WVjVi2E-K9H6RCTm4.woff2)"
       );
 
       document.fonts.add(fontFile);
