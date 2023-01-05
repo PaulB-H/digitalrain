@@ -84,7 +84,23 @@ class DigitalRain {
     this.newGeneratingInterval;
   }
 
-  setupCanvas = () => {
+  setupCanvas = async () => {
+    let fontLoaded = false;
+    document.fonts.forEach((item) => {
+      if (item.family === "Cutive Mono") fontLoaded = true;
+    });
+
+    if (!fontLoaded) {
+      const fontFile = new FontFace(
+        "Cutive Mono",
+        "url(http://fonts.gstatic.com/s/cutivemono/v14/m8JWjfRfY7WVjVi2E-K9H6RCTm4.woff2)"
+      );
+
+      document.fonts.add(fontFile);
+
+      fontFile.load();
+    }
+
     const canvasContainer = this.canvasContainer;
     canvasContainer.style.position = "relative";
     canvasContainer.style.backgroundColor = "black";
