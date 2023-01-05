@@ -1,27 +1,39 @@
-An implementation of "Matrix Digital Rain"
+# digitalrain
 
---
+### An implementation of "Matrix Digital Rain"
 
 There are 3 main versions so far:
 
 ---
 
+#### Version 1
+
 The first version just used intervals and didn't allow customization of stream properties beyond font size and theme
 
 <a href="https://paulb-h.github.io/digitalrain/versions/version1/version1.html" target="_blank">digitalrain - version1.html</a>
 
---
+---
+
+#### Version 2
 
 The second version was updated to use requestAnimationFrame() instead of intervals, and allowed a lot of customization of the stream properties through a UI. The interval version is actually still implemented and you can switch between versions
 
 <a href="https://paulb-h.github.io/digitalrain/versions/version2/version2.html" target="_blank">digitalrain - version2.html</a>
 
---
+---
+
+#### Version 3
 
 The third and current version the UI was separated from the main logic better, and is 3 main classes
 I made this so it would be easier to implement by just calling the class passing in a target container element, and possible to have multiple instances of the animation, each assigned to and managing their own canvas and properties
 
-// Link & image to third version
+Example 1\
+Should function exactly as version 2, except implements v3 class and attaches UI differently\
+<a href="https://paulb-h.github.io/digitalrain/versions/version3/version3-example/index.html" target="_blank">digitalrain - version3.html</a>
+
+Example 2\
+Multiple canvas, each with their own instance of the animation, with intervals setup to randomize each one\
+<a href="https://paulb-h.github.io/digitalrain/versions/version3/version3-example2/index.html" target="_blank">digitalrain - version3 - multiple canvas</a>
 
 ---
 
