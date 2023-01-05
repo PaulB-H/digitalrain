@@ -539,6 +539,8 @@ const clearAllIntervals = () => {
     window.cancelAnimationFrame(controller.frameRef);
   });
   controllerArr = [];
+
+  window.clearInterval(discoInterval);
 };
 
 /**/
