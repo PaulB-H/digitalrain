@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" style="height: 100%">
   <head>
     <meta charset="UTF-8" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
@@ -15,14 +15,23 @@
     <link rel="stylesheet" href="style.css" />
   </head>
 
-  <body>
-    <canvas id="canvas"></canvas>
-    <canvas
-      id="canvas2"
-      style="position: absolute; top: 0; left: 0; z-index: 10"
-    ></canvas>
+  <style>
+    .canvas-container {
+      /* border: 1px solid red; */
+      width: 25%;
+      height: 25%;
+      flex-grow: 1;
+      box-sizing: border-box;
+    }
+    body {
+      overflow: hidden;
+    }
+  </style>
 
-    <div id="details">
+  <body style="height: 100%">
+    <div id="canvas-container" style="height: 100%"></div>
+
+    <div id="details" style="">
       <button id="toggle-details-btn" class="big-gray-btn">
         Toggle Details
       </button>
@@ -176,7 +185,7 @@
               id="color1"
               autocomplete="off"
               value="#ff0000"
-              onchange="changeStreamColors(this.value, null, null)"
+              onchange="newRain.changeStreamColors(this.value, null, null)"
             />
           </div>
 
@@ -188,7 +197,7 @@
               id="color2"
               autocomplete="off"
               value="#ffff00"
-              onchange="changeStreamColors(null, this.value, null)"
+              onchange="newRain.changeStreamColors(null, this.value, null)"
             />
           </div>
 
@@ -200,7 +209,7 @@
               id="color3"
               autocomplete="off"
               value="#0000ff"
-              onchange="changeStreamColors(null, null, this.value)"
+              onchange="newRain.changeStreamColors(null, null, this.value)"
             />
           </div>
         </div>
@@ -216,18 +225,32 @@
           Or Pick a Theme:
         </p>
         <div>
-          <button class="big-gray-btn" onclick="setTheme('matrix')">
+          <button class="big-gray-btn" onclick="newRain.setTheme('matrix')">
             Matrix
           </button>
-          <button class="big-gray-btn" onclick="setTheme('fire')">Fire</button>
-          <button class="big-gray-btn" onclick="setTheme('ice')">Ice</button>
-          <button class="big-gray-btn" onclick="setTheme('pink')">Pink</button>
-          <button class="big-gray-btn" onclick="setTheme('vanu')">Vanu</button>
-          <button class="big-gray-btn" onclick="discoMode()">Disco</button>
+          <button class="big-gray-btn" onclick="newRain.setTheme('fire')">
+            Fire
+          </button>
+          <button class="big-gray-btn" onclick="newRain.setTheme('ice')">
+            Ice
+          </button>
+          <button class="big-gray-btn" onclick="newRain.setTheme('pink')">
+            Pink
+          </button>
+          <button class="big-gray-btn" onclick="newRain.setTheme('vanu')">
+            Vanu
+          </button>
+          <button class="big-gray-btn" onclick="newRain.discoMode()">
+            Disco
+          </button>
         </div>
       </div>
     </div>
 
+    <!-- <script src="./script.js" type="text/javascript"></script> -->
+
+    <script src="../version3.js" type="text/javascript"></script>
+    <!-- <script src="./version3-init.js" type="text/javascript"></script> -->
     <script src="./script.js" type="text/javascript"></script>
   </body>
 </html>

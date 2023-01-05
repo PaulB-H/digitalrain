@@ -341,7 +341,7 @@ const randomStreamLength = () => {
   );
 };
 
-const calculateTotalStreams = () => {
+const calculateMaxStreams = () => {
   const columns = getTotalColumns();
 
   const avgStreamLength =
@@ -547,7 +547,7 @@ const clearAllIntervals = () => {
 
 let arrayOfStreamSets = [];
 const fillStreams = () => {
-  const numOfStreams = calculateTotalStreams();
+  const numOfStreams = calculateMaxStreams();
 
   for (let i = 0; i < streamProperties.totalIntervals; i++) {
     arrayOfStreamSets.push(new Set());
@@ -630,7 +630,7 @@ const generateAndRun = () => {
     controllerArr.push(new StreamController());
   }
 
-  const maxStreams = calculateTotalStreams();
+  const maxStreams = calculateMaxStreams();
 
   for (let i = 0; i < maxStreams; i++) {
     const rand = Math.floor(Math.random() * controllerArr.length);
