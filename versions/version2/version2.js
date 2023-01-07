@@ -37,6 +37,8 @@ const streamProperties = {
   shading: true,
 };
 
+let discoInterval;
+
 /**/
 //// UI Elements
 /**/
@@ -669,7 +671,7 @@ const changeDiscoColors = (color1, color2, color3) => {
   if (color2) streamProperties.secondColor = color2;
   if (color3) streamProperties.settledColor = color3;
 };
-let discoInterval;
+
 const discoMode = () => {
   window.clearInterval(discoInterval);
 
