@@ -1,43 +1,70 @@
+const DEFAULT_OPTIONS = {
+  initialColor: "#e4e6e3",
+  secondColor: "#6cfe6b",
+  settledColor: "#00dd00",
+  bold: true,
+  shading: true,
+  fontSize: 20,
+  minLength: 5,
+  maxLength: 20,
+  slowestInterval: 500,
+  fastestInterval: 50,
+  columnWidthTweak: 0.85,
+  totalStreamMultiplier: 1,
+};
+
+const CHARACTERS =
+  "MATRIXMATRIXMATRIXMATRIXMAØ1Ø1Ø1Ø1Ø#$%@&#$%@&ｦｧｨｩｪｫｬｭｮｯｱｲｳｴｵｶｷｸｹｺｻｼｽｾｿﾀﾁﾂﾃﾄﾅﾇﾈﾉﾊﾋﾌﾍﾎﾏﾐﾑﾒﾓﾔﾕﾖﾗﾘﾙﾚﾛﾜﾝｦｧｨｩｪｫｬｭｮｯｱｲｳｴｵｶｷｸｹｺｻｼｽｾｿﾀﾁﾂﾃﾄﾅﾇﾈﾉﾊﾋﾌﾍﾎﾏﾐﾑﾒﾓﾔﾕﾖﾗﾘﾙﾚﾛﾜﾝｦｧｨｩｪｫｬｭｮｯｱｲｳｴｵｶｷｸｹｺｻｼｽｾｿﾀﾁﾂﾃﾄﾅﾇﾈﾉﾊﾋﾌﾍﾎﾏﾐﾑﾒﾓﾔﾕﾖﾗﾘﾙﾚﾛﾜﾝｦｧｨｩｪｫｬｭｮｯｱｲｳｴｵｶｷｸｹｺｻｼｽｾｿﾀﾁﾂﾃﾄﾅﾇﾈﾉﾊﾋﾌﾍﾎﾏﾐﾑﾒﾓﾔﾕﾖﾗﾘﾙﾚﾛﾜﾝ";
+
+const getRandomChar = () => {
+  const randNum = Math.floor(Math.random() * CHARACTERS.length);
+  return CHARACTERS.charAt(randNum);
+};
+
+const parseHex = (hex) => {
+  const colorRegex = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i;
+  const [, red, green, blue] = hex.match(colorRegex);
+  return {
+    red: parseInt(red, 16),
+    green: parseInt(green, 16),
+    blue: parseInt(blue, 16),
+  };
+};
+
+const multiplyRgb = (rgb, multiplier) => {
+  return {
+    red: Math.floor(rgb.red * multiplier),
+    blue: Math.floor(rgb.blue * multiplier),
+    green: Math.floor(rgb.green * multiplier),
+  };
+};
+
+function rgbToHex(rgb) {
+  // Convert the values to hex strings and return the concatenated string
+  return `#${rgb.red.toString(16).padStart(2, "0")}${rgb.green
+    .toString(16)
+    .padStart(2, "0")}${rgb.blue.toString(16).padStart(2, "0")}`;
+}
+
 class DigitalRain {
-  constructor(canvasContainer) {
+  constructor(canvasContainer, options) {
     this.canvasContainer = canvasContainer;
     this.canvas = null;
     this.canvas2 = null;
     this.ctx = null;
     this.ctx2 = null;
+    Object.assign(this, { ...DEFAULT_OPTIONS, ...options });
 
     this.resizeTimer;
 
     this.animationMode = "requestAnimationFrame";
-
-    this.characters =
-      "MATRIXMATRIXMATRIXMATRIXMAØ1Ø1Ø1Ø1Ø#$%@&#$%@&ｦｧｨｩｪｫｬｭｮｯｱｲｳｴｵｶｷｸｹｺｻｼｽｾｿﾀﾁﾂﾃﾄﾅﾇﾈﾉﾊﾋﾌﾍﾎﾏﾐﾑﾒﾓﾔﾕﾖﾗﾘﾙﾚﾛﾜﾝｦｧｨｩｪｫｬｭｮｯｱｲｳｴｵｶｷｸｹｺｻｼｽｾｿﾀﾁﾂﾃﾄﾅﾇﾈﾉﾊﾋﾌﾍﾎﾏﾐﾑﾒﾓﾔﾕﾖﾗﾘﾙﾚﾛﾜﾝｦｧｨｩｪｫｬｭｮｯｱｲｳｴｵｶｷｸｹｺｻｼｽｾｿﾀﾁﾂﾃﾄﾅﾇﾈﾉﾊﾋﾌﾍﾎﾏﾐﾑﾒﾓﾔﾕﾖﾗﾘﾙﾚﾛﾜﾝｦｧｨｩｪｫｬｭｮｯｱｲｳｴｵｶｷｸｹｺｻｼｽｾｿﾀﾁﾂﾃﾄﾅﾇﾈﾉﾊﾋﾌﾍﾎﾏﾐﾑﾒﾓﾔﾕﾖﾗﾘﾙﾚﾛﾜﾝ";
-
-    this.initialColor = "#e4e6e3";
-    this.secondColor = "#6cfe6b";
-    this.settledColor = "#00dd00";
-
-    this.bold = true;
-    this.shading = true;
-
-    this.fontSize = 20;
-
-    this.minLength = 5;
-    this.maxLength = 20;
-
-    this.slowestInterval = 500;
-    this.fastestInterval = 50;
 
     this.rampUp = 15000;
 
     this.totalIntervals = 100;
     this.totalStreamControllers = 100;
 
-    this.columnWidthTweak = 0.85;
-
     this.totalStreams = null;
-
-    this.totalStreamMultiplier = 1;
 
     // Perhaps we could check if the user has a stored
     // "themes" object we can load, if not load defaults
@@ -311,18 +338,18 @@ class DigitalRain {
         );
       };
 
-      const textTweak = (context, character, xloc, yloc, charPos) => {
+      const textTweak = (context, character, xloc, yloc, charPos, color) => {
+        const originalStyle = context.fillStyle;
+        if (color != null) {
+          context.fillStyle = color;
+        }
         context.fillText(
           character,
           Math.floor(xloc),
           Math.floor(yloc - this.fontSize * charPos),
           rectTrim
         );
-      };
-
-      const getRandomChar = () => {
-        const randNum = Math.floor(Math.random() * this.characters.length);
-        return this.characters.charAt(randNum);
+        context.fillStyle = originalStyle;
       };
 
       /*
@@ -330,17 +357,32 @@ class DigitalRain {
     */
 
       // Clean up at the end of the stream
-      this.ctx2.fillStyle = "black";
-      fillRectTweak(this.ctx2, stream.XLOC, stream.YLOC, stream.streamLength);
+      if (stream.characters.length > stream.streamLength) {
+        stream.characters.pop();
+      }
+      // this.ctx2.fillStyle = "black";
+      // fillRectTweak(this.ctx2, stream.XLOC, stream.YLOC, stream.streamLength);
       this.ctx.fillStyle = "black";
       fillRectTweak(this.ctx, stream.XLOC, stream.YLOC, stream.streamLength);
 
       // Shading with rgba() is detrimental to performance because
       // the browser has to calculate the blending on each draw
       if (this.shading) {
-        for (let i = 4; i < stream.streamLength - 3; i++) {
-          this.ctx2.fillStyle = "rgba(0, 0, 0, 0.075)";
-          fillRectTweak(this.ctx2, stream.XLOC, stream.YLOC, i);
+        for (let i = 4; i < stream.characters.length; i++) {
+          const char = stream.characters[i];
+          const settledRgb = parseHex(this.settledColor);
+          const multiplier = 1 - (i + 1) / stream.streamLength;
+          const shadedRgb = multiplyRgb(settledRgb, multiplier);
+          const shadedColor = rgbToHex(shadedRgb);
+          clearRectTweak(this.ctx, stream.XLOC, stream.YLOC, i + 1);
+          textTweak(
+            this.ctx,
+            char,
+            stream.XLOC,
+            stream.YLOC,
+            i + 1,
+            shadedColor
+          );
         }
       }
 
@@ -356,23 +398,22 @@ class DigitalRain {
       }
 
       // Third character
-      if (stream.secondChar) {
+      if (stream.characters.length > 1) {
         this.ctx.fillStyle = "black";
         fillRectTweak(this.ctx, stream.XLOC, stream.YLOC, 2);
 
         this.ctx.fillStyle = `${this.settledColor}`;
-        textTweak(this.ctx, stream.secondChar, stream.XLOC, stream.YLOC, 2);
+        textTweak(this.ctx, stream.characters[1], stream.XLOC, stream.YLOC, 2);
       }
 
       // Second Character
-      if (stream.firstChar) {
+      if (stream.characters.length > 0) {
         // Clear square to clean glow from first char
         this.ctx.fillStyle = "black";
         fillRectTweak(this.ctx, stream.XLOC, stream.YLOC, 1);
 
         this.ctx.fillStyle = `${this.secondColor}`;
-        textTweak(this.ctx, stream.firstChar, stream.XLOC, stream.YLOC, 1);
-        stream.secondChar = stream.firstChar;
+        textTweak(this.ctx, stream.characters[0], stream.XLOC, stream.YLOC, 1);
       }
 
       // Paint area for new character black
@@ -383,10 +424,11 @@ class DigitalRain {
       clearRectTweak(this.ctx2, stream.XLOC, stream.YLOC, 0);
 
       // First (new) character
-      const randNum = Math.floor(Math.random() * this.characters.length);
-      stream.firstChar = this.characters.charAt(randNum);
+      const randNum = Math.floor(Math.random() * CHARACTERS.length);
+      const newChar = CHARACTERS.charAt(randNum);
+      stream.characters.unshift(newChar);
       this.ctx.fillStyle = `${this.initialColor}`;
-      textTweak(this.ctx, stream.firstChar, stream.XLOC, stream.YLOC, 0);
+      textTweak(this.ctx, newChar, stream.XLOC, stream.YLOC, 0);
 
       // Set YLOC for next draw interval...
       // ... or send to top if entire stream off page
@@ -558,16 +600,14 @@ class Stream {
     this.XLOC = xloc;
     this.YLOC = yloc;
     this.streamLength = randomStreamLength;
-    this.firstChar = null;
-    this.secondChar = null;
+    this.characters = [];
   }
 
   reset(xloc, yloc, randomStreamLength) {
     this.XLOC = xloc;
     this.YLOC = yloc;
     this.streamLength = randomStreamLength;
-    this.firstChar = null;
-    this.secondChar = null;
+    this.characters = [];
   }
 }
 
